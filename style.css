@@ -1,0 +1,22 @@
+body {
+    background-color: #F7F2ED;
+    color: #0B243B;
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    padding: 50px;
+}
+h1, h2 {
+    font-family: 'Playfair Display', serif;
+}
+.cta-button {
+    background-color: #A68962;
+    color: white;
+    padding: 15px 30px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+}
+.contact {
+    margin-top: 50px;
+    font-weight: 700;
+}
