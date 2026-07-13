@@ -1,3 +1,6 @@
+നിങ്ങൾ പറഞ്ഞതുപോലെ ബുള്ളറ്റ് പോയിന്റുകൾ ഹെഡിംഗിന്റെ അതേ ലെവലിൽ (Left-aligned) വരുന്നതിനായി `style.css`-ൽ ചെറിയ മാറ്റം വരുത്തിയിട്ടുണ്ട്. താഴെയുള്ള കോഡ് കോപ്പി ചെയ്യുക:
+
+```css
 /* Premium Professional Styling */
 :root {
     --navy-blue: #0B243B;
@@ -73,6 +76,17 @@ header h1 {
     margin-bottom: 20px;
 }
 
+/* Updated List Styling for Alignment */
+.section ul {
+    padding-left: 0;
+    margin-left: 0;
+    list-style-position: inside;
+}
+
+.section li {
+    margin-bottom: 15px;
+}
+
 /* CTA Button Animation */
 .cta-button {
     display: inline-block;
@@ -102,7 +116,7 @@ header h1 {
     padding: 60px 20px;
     text-align: center;
     margin-top: 50px;
-    border-top: 2px solid var(--gold); /* Added separator line */
+    border-top: 2px solid var(--gold);
 }
 
 .contact h3 {
@@ -143,3 +157,5 @@ header h1 {
 a, button, .cta-button {
     cursor: none !important;
 }
+
+```
