@@ -1,3 +1,6 @@
+ബുള്ളറ്റ് പോയിന്റുകൾ ഹെഡിംഗിന്റെ ഇടതുവശത്തെ ലൈനുമായി കൃത്യമായി അലൈൻ ചെയ്യുന്നതിനായി `.section ul` എന്ന ഭാഗം മാത്രം ചേർത്ത് അപ്‌ഡേറ്റ് ചെയ്ത കോഡ് താഴെ നൽകുന്നു.
+
+```css
 /* Premium Professional Styling */
 :root {
     --navy-blue: #0B243B;
@@ -73,6 +76,12 @@ header h1 {
     margin-bottom: 20px;
 }
 
+/* Updated List Styling for Alignment */
+.section ul {
+    padding-left: 20px;
+    margin-left: 0;
+}
+
 /* CTA Button Animation */
 .cta-button {
     display: inline-block;
@@ -143,3 +152,5 @@ header h1 {
 a, button, .cta-button {
     cursor: none !important;
 }
+
+```
