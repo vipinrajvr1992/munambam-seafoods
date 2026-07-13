@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Munambam Seafoods | Coastal Provisions</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts for premium feel -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato&display=swap" rel="stylesheet">
 </head>
 <body>
 
+    <div id="cursor"></div>
+
     <header>
-        <!-- ലോഗോയുടെ പേര് ഇവിടെ നൽകുക -->
+        <img src="assets/MUNAMBAM_Seafood_Logo_HQ.png" alt="Munambam Seafoods Logo" style="width: 250px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">
         <h1>MUNAMBAM SEAFOODS</h1>
         <p>TRADITIONAL SEAFOOD & KITCHEN CRAFT</p>
     </header>
@@ -24,21 +25,37 @@
 
     <section class="section">
         <h3>Our Heritage</h3>
-        <p>Our mission is to combine the authenticity of Kerala's heritage seafood with modern, uncompromising quality standards. We bypass conventional middle-men, sourcing our catch directly from traditional day-boats.</p>
+        <p>At Munambam, quality is not just a standard; it is our foundation. We combine the authenticity of Kerala's heritage seafood with modern, uncompromising quality standards.</p>
 
-        <h3>Our Products</h3>
+        <h3>Our Quality Assurance Protocol</h3>
         <ul>
-            <li><strong>Premium Dried Seafood:</strong> 100% Naturally Sun-Dried using traditional coastal methods under strict hygienic conditions.</li>
-            <li><strong>Ready-to-Eat Coastal Delicacies:</strong> Authentic heritage recipes, cooked in small batches with premium ingredients.</li>
+            <li><strong>Direct Sourcing:</strong> We bypass middle-men, sourcing our catch directly from traditional day-boats at Munambam Harbour to ensure peak freshness.</li>
+            <li><strong>Natural Processing:</strong> Our drying and pickling techniques rely on time-honored artisanal methods, completely eliminating artificial colors, synthetic flavors, and chemical preservatives.</li>
         </ul>
+
+        <h3>Our Product Categories</h3>
+        <p><strong>Category 01: Premium Dried Seafood:</strong> 100% Naturally Sun-Dried, handpicked directly from local day-boats.</p>
+        <p><strong>Category 02: Ready-To-Eat Coastal Delicacies:</strong> Authentic heritage recipes, cooked in small batches with premium ingredients for an authentic home-cooked flavor.</p>
     </section>
 
     <footer class="contact">
         <h3>Contact Us</h3>
-        <p>Munambam Harbour, Kodungallur, Kerala, India</p>
+        <p>Munambam Coastal Provisions, Munambam Harbour, Kodungallur, Kerala, India</p>
         <p><strong>Call/WhatsApp:</strong> +91 9746 061 779 | +91 9745 499 444</p>
         <p><strong>Email:</strong> vipinrajvr4@gmail.com</p>
     </footer>
 
+    <script>
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        document.querySelectorAll('.cta-button').forEach(item => {
+            item.addEventListener('mouseover', () => cursor.style.transform = 'scale(2)');
+            item.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
+        });
+    </script>
 </body>
 </html>
