@@ -1,149 +1,69 @@
-/* Premium Professional Styling */
 :root {
-    --navy-blue: #0B243B;
+    --navy-blue: #0A1929;
+    --gold: #D4AF37;
     --cream: #FDFBF7;
-    --gold: #C5A059;
-    --text-dark: #1A1A1A;
     --white: #FFFFFF;
 }
 
 body {
-    background-color: var(--cream);
-    color: var(--text-dark);
+    background-color: var(--navy-blue);
+    color: var(--cream);
     font-family: 'Montserrat', sans-serif;
     margin: 0;
-    padding: 0;
-    cursor: none; 
-    line-height: 1.8;
+    cursor: none;
+    overflow-x: hidden;
 }
 
-/* Custom Cursor */
+/* Luxury Cursor */
 #cursor {
-    width: 25px;
-    height: 25px;
-    border: 1px solid var(--gold);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.1s ease;
+    width: 30px; height: 30px; border: 2px solid var(--gold);
+    border-radius: 50%; position: fixed; pointer-events: none;
+    z-index: 9999; transition: transform 0.1s ease;
 }
 
-#cursor::after {
-    content: '';
-    width: 6px;
-    height: 6px;
-    background-color: var(--gold);
-    border-radius: 50%;
-}
-
-/* Header Styling */
+/* Header & Hero */
 header {
-    background-color: var(--navy-blue);
-    color: var(--gold);
-    padding: 80px 20px;
+    background: linear-gradient(135deg, #0A1929 0%, #1A3A5A 100%);
+    padding: 100px 20px;
     text-align: center;
-    border-bottom: 5px solid var(--gold);
+    border-bottom: 2px solid var(--gold);
 }
 
-header img {
-    max-width: 250px;
-    height: auto;
-    display: block;
-    margin: 0 auto 20px auto;
-}
+header img { max-width: 280px; filter: drop-shadow(0px 0px 10px rgba(212, 175, 55, 0.5)); }
 
-header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 3rem;
-    margin: 10px 0;
-    letter-spacing: 4px;
-}
+header h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--gold); margin: 20px 0; }
 
-/* Hero Section */
 .hero {
-    padding: 80px 20px;
+    padding: 100px 20px;
     text-align: center;
     max-width: 800px;
     margin: 0 auto;
 }
 
-.hero h2 {
-    font-family: 'Playfair Display', serif;
-    color: var(--text-dark);
-    font-size: 2.2rem;
-}
+.hero h2 { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: var(--gold); margin-bottom: 20px; }
 
-/* Content Sections */
+/* Premium Section */
 .section {
-    padding: 60px 20px;
+    padding: 80px 20px;
     max-width: 900px;
     margin: 0 auto;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
 }
 
-.section h3 {
-    color: var(--gold);
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    border-bottom: 1px solid var(--gold);
-    display: inline-block;
-    padding-bottom: 5px;
-    margin-bottom: 20px;
-}
+.section h3 { color: var(--gold); font-family: 'Playfair Display', serif; font-size: 2rem; border-bottom: 2px solid var(--gold); display: inline-block; }
 
-/* CTA Button Animation */
 .cta-button {
-    display: inline-block;
-    background-color: var(--gold);
-    color: var(--white);
-    padding: 18px 40px;
-    text-decoration: none;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    transition: all 0.4s ease;
-    border: 1px solid var(--gold);
-    margin-top: 20px;
+    display: inline-block; padding: 20px 50px;
+    background: transparent; color: var(--gold);
+    border: 2px solid var(--gold); text-decoration: none;
+    font-weight: 600; transition: 0.5s;
 }
 
-.cta-button:hover {
-    background-color: transparent;
-    color: var(--gold);
-    transform: scale(1.05);
-}
+.cta-button:hover { background: var(--gold); color: var(--navy-blue); transform: scale(1.1); }
 
-/* Footer Icon Styling - Professional Look */
-.contact {
-    background-color: var(--navy-blue);
-    color: var(--white);
-    padding: 60px 20px;
-    text-align: center;
-    margin-top: 50px;
-}
-
-.contact h3 {
-    color: var(--gold);
-    font-size: 1.5rem;
-    margin-bottom: 25px;
-}
-
-.footer-icons {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    margin-top: 30px;
-}
-
-.footer-icons a {
-    color: var(--white);
-    font-size: 2.2rem;
-    transition: all 0.3s ease;
-}
-
-.footer-icons a:hover {
-    color: var(--gold);
-    transform: translateY(-8px) scale(1.1);
-}
+/* Footer Icons */
+.footer-icons { display: flex; justify-content: center; gap: 40px; margin-top: 30px; }
+.footer-icons a { color: var(--gold); font-size: 2rem; transition: 0.3s; }
+.footer-icons a:hover { transform: translateY(-10px); color: var(--white); }
