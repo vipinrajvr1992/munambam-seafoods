@@ -13,31 +13,8 @@ body {
     font-family: 'Montserrat', sans-serif;
     margin: 0;
     padding: 0;
-    cursor: none; 
+    cursor: none !important; 
     line-height: 1.8;
-}
-
-/* Custom Cursor */
-#cursor {
-    width: 25px;
-    height: 25px;
-    border: 1px solid var(--gold);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.1s ease;
-}
-
-#cursor::after {
-    content: '';
-    width: 6px;
-    height: 6px;
-    background-color: var(--gold);
-    border-radius: 50%;
 }
 
 /* Header Styling */
@@ -115,7 +92,7 @@ header h1 {
     transform: scale(1.05);
 }
 
-/* Footer Icon Styling - Professional Look */
+/* Footer Icon Styling */
 .contact {
     background-color: var(--navy-blue);
     color: var(--white);
