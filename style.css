@@ -7,7 +7,6 @@
     --white: #FFFFFF;
 }
 
-/* Custom Cursor with Dot */
 body {
     background-color: var(--cream);
     color: var(--text-dark);
@@ -15,8 +14,10 @@ body {
     margin: 0;
     padding: 0;
     cursor: none; 
+    text-align: center; /* എല്ലാം സെന്ററിൽ ആക്കാൻ */
 }
 
+/* Custom Cursor with central dot */
 #cursor {
     width: 25px;
     height: 25px;
@@ -25,10 +26,10 @@ body {
     position: fixed;
     pointer-events: none;
     z-index: 9999;
-    transition: transform 0.1s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: transform 0.1s ease;
 }
 
 #cursor::after {
@@ -39,22 +40,42 @@ body {
     border-radius: 50%;
 }
 
-/* Header & Logo Alignment */
+/* Header & Logo */
 header {
     background-color: var(--navy-blue);
     color: var(--gold);
     padding: 60px 20px;
-    text-align: center;
     border-bottom: 5px solid var(--gold);
 }
 
 header img {
     max-width: 250px;
-    height: auto;
-    margin-bottom: 20px;
+    display: block;
+    margin: 0 auto 20px auto; /* സെന്റർ അലൈൻമെന്റ് */
 }
 
-h1, h2, h3 { font-family: 'Playfair Display', serif; }
+/* Hero Section */
+.hero {
+    padding: 50px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* സെന്റർ അലൈൻമെന്റ് */
+}
+
+/* Content Sections */
+.section {
+    padding: 40px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center; /* ടെക്സ്റ്റ് സെന്റർ ആക്കാൻ */
+}
+
+h3 { 
+    color: var(--gold); 
+    border-bottom: 1px solid var(--gold); 
+    padding-bottom: 10px; 
+    display: inline-block; /* ബോർഡർ ടെക്സ്റ്റിന് അനുസരിച്ച് മാത്രം വരാൻ */
+}
 
 .cta-button {
     display: inline-block;
@@ -63,17 +84,7 @@ h1, h2, h3 { font-family: 'Playfair Display', serif; }
     padding: 15px 40px;
     text-decoration: none;
     font-weight: bold;
-    border-radius: 2px;
-    transition: all 0.4s ease;
+    margin-top: 20px;
 }
 
-.cta-button:hover {
-    transform: scale(1.05);
-    background-color: var(--white);
-    color: var(--navy-blue);
-}
-
-.section { padding: 40px 20px; max-width: 800px; margin: 0 auto; }
-h3 { color: var(--gold); border-bottom: 1px solid var(--gold); padding-bottom: 10px; }
-
-.contact { background-color: var(--navy-blue); color: var(--white); padding: 40px 20px; text-align: center; }
+.contact { background-color: var(--navy-blue); color: var(--white); padding: 40px 20px; }
