@@ -10,11 +10,13 @@
 body {
     background-color: var(--cream);
     color: var(--text-dark);
-    font-family: 'Montserrat', sans-serif;
+    /* പാരഗ്രാഫ് ഫോണ്ട് Lora-ലേക്ക് മാറ്റി */
+    font-family: 'Lora', serif;
     margin: 0;
     padding: 0;
     cursor: none !important; 
     line-height: 1.8;
+    font-size: 1.1rem;
 }
 
 /* Header Styling */
@@ -84,6 +86,8 @@ header h1 {
     transition: all 0.4s ease;
     border: 1px solid var(--gold);
     margin-top: 20px;
+    /* ബട്ടണിനായി മാത്രം Montserrat നിലനിർത്തി */
+    font-family: 'Montserrat', sans-serif;
 }
 
 .cta-button:hover {
@@ -105,6 +109,7 @@ header h1 {
     color: var(--gold);
     font-size: 1.5rem;
     margin-bottom: 25px;
+    font-family: 'Playfair Display', serif;
 }
 
 .footer-icons {
@@ -124,6 +129,7 @@ header h1 {
     color: var(--gold);
     transform: translateY(-8px) scale(1.1);
 }
+
 /* ക്ലിക്ക് ചെയ്യാവുന്നവയിൽ ഡിഫോൾട്ട് കഴ്‌സർ ഒഴിവാക്കുന്നു */
 a, button, .cta-button {
     cursor: none !important;
