@@ -1,4 +1,3 @@
-// cursor.js
 const fish = document.createElement('div');
 fish.id = 'fish-cursor';
 fish.innerHTML = `<svg width="32" height="32" viewBox="0 0 32 32" style="fill:none; stroke:#C5A059; stroke-width:2;">
@@ -13,7 +12,6 @@ style.innerHTML = `
         position: fixed;
         pointer-events: none;
         z-index: 9999;
-        transition: transform 0.1s ease;
     }
 `;
 document.head.appendChild(style);
