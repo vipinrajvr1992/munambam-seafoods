@@ -143,8 +143,3 @@ header h1 {
 a, button, .cta-button {
     cursor: none !important;
 }
-/* Bullet points alignment */
-.section ul {
-    padding-left: 20px;
-    margin-left: 0;
-}
