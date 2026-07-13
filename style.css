@@ -1,22 +1,78 @@
+/* General Styles */
 body {
-    background-color: #F7F2ED;
-    color: #0B243B;
-    font-family: 'Montserrat', sans-serif;
-    text-align: center;
-    padding: 50px;
-}
-h1, h2 {
+    background-color: #FDFBF7; /* Brochure base color */
+    color: #0B243B; /* Logo Navy Blue */
     font-family: 'Playfair Display', serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
 }
+
+/* Header Section */
+header {
+    background-color: #0B243B;
+    color: #C5A059; /* Logo Gold */
+    padding: 60px 20px;
+    text-align: center;
+    border-bottom: 5px solid #C5A059;
+}
+
+header h1 {
+    font-size: 3rem;
+    margin: 0;
+    letter-spacing: 2px;
+}
+
+/* Hero Section */
+.hero {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.hero h2 {
+    font-size: 2rem;
+    color: #0B243B;
+}
+
+/* Buttons */
 .cta-button {
-    background-color: #A68962;
-    color: white;
-    padding: 15px 30px;
+    display: inline-block;
+    background-color: #C5A059;
+    color: #ffffff;
+    padding: 15px 40px;
     text-decoration: none;
     font-weight: bold;
-    border-radius: 5px;
+    border-radius: 2px;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
 }
+
+.cta-button:hover {
+    background-color: #0B243B;
+}
+
+/* Content Sections */
+.section {
+    padding: 40px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h3 {
+    color: #C5A059;
+    border-bottom: 1px solid #C5A059;
+    padding-bottom: 10px;
+}
+
+/* Contact Section */
 .contact {
+    background-color: #0B243B;
+    color: #ffffff;
+    padding: 40px 20px;
+    text-align: center;
     margin-top: 50px;
-    font-weight: 700;
+}
+
+.contact p {
+    margin: 5px 0;
 }
