@@ -13,11 +13,11 @@ body {
     font-family: 'Montserrat', sans-serif;
     margin: 0;
     padding: 0;
-    cursor: none; /* Hide default cursor */
+    cursor: none; 
     line-height: 1.8;
 }
 
-/* Custom Cursor with central dot */
+/* Custom Cursor */
 #cursor {
     width: 25px;
     height: 25px;
@@ -94,7 +94,7 @@ header h1 {
     margin-bottom: 20px;
 }
 
-/* Buttons & Links Animation */
+/* CTA Button Animation */
 .cta-button {
     display: inline-block;
     background-color: var(--gold);
@@ -115,18 +115,7 @@ header h1 {
     transform: scale(1.05);
 }
 
-.contact-links a {
-    color: var(--navy-blue);
-    text-decoration: none;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.contact-links a:hover {
-    color: var(--gold);
-}
-
-/* Footer Styling */
+/* Footer Icon Styling - Professional Look */
 .contact {
     background-color: var(--navy-blue);
     color: var(--white);
@@ -137,6 +126,24 @@ header h1 {
 
 .contact h3 {
     color: var(--gold);
-    border-bottom: none;
     font-size: 1.5rem;
+    margin-bottom: 25px;
+}
+
+.footer-icons {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+.footer-icons a {
+    color: var(--white);
+    font-size: 2.2rem;
+    transition: all 0.3s ease;
+}
+
+.footer-icons a:hover {
+    color: var(--gold);
+    transform: translateY(-8px) scale(1.1);
 }
