@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Munambam Seafoods | Coastal Provisions & Heritage</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -25,25 +28,24 @@
 
     <section class="section">
         <h3>Our Heritage: From Muziris to Munambam</h3>
-        <p>Munambam Seafoods is not just a brand; it is a continuation of the maritime glory that defined this coast for millennia. Located near the ancient port of Muziris—the legendary gateway that connected Kerala to the Roman Empire and the world—we operate on the same shores where spice and seafood trade shaped civilizations.</p>
+        <p>Munambam Seafoods is not just a brand; it is a continuation of the maritime glory that defined this coast for millennia. Located near the ancient port of <strong>Muziris</strong>—the legendary gateway that connected Kerala to the Roman Empire and the world—we operate on the same shores where spice and seafood trade shaped civilizations.</p>
         <p>Today, Munambam Harbour stands as the heartbeat of Kerala’s fishing industry. We draw our inspiration from this rich history, blending the ancient wisdom of coastal preservation with modern craftsmanship to deliver products that honor our ancestors.</p>
 
         <h3>Our Commitment & Quality</h3>
-        <p>At Munambam, we uphold the integrity of the sea. We bypass the complex layers of modern supply chains, working directly with the traditional day-boat fishermen who venture into the deep waters to bring back the freshest catch.</p>
         <ul>
-            <li><strong>Direct Sourcing:</strong> Every batch is sourced directly from Munambam Harbour to ensure the catch is never more than a few hours old.</li>
-            <li><strong>Natural Processing:</strong> We utilize artisanal drying and traditional culinary methods. Our process strictly avoids artificial colors, synthetic flavors, and chemical preservatives.</li>
-            <li><strong>Crafted Excellence:</strong> Whether it is our sun-dried collection or our signature ready-to-eat delicacies, everything is prepared in small batches, ensuring home-cooked perfection.</li>
+            <li><strong>Direct Sourcing:</strong> Every batch is sourced directly from Munambam Harbour to ensure peak freshness.</li>
+            <li><strong>Natural Processing:</strong> We utilize artisanal drying and traditional methods, avoiding all synthetic additives.</li>
+            <li><strong>Small-Batch Excellence:</strong> Everything is crafted in limited batches to ensure authentic home-cooked perfection.</li>
         </ul>
     </section>
 
     <footer class="contact">
         <h3>Connect With Us</h3>
         <p>Munambam Coastal Provisions, Munambam Harbour, Kodungallur, Kerala, India</p>
-        <div class="contact-links">
-            <p><strong>Call/WhatsApp:</strong> <a href="https://wa.me/917907804747">+91 790 780 4747</a></p>
-            <p><strong>Email:</strong> <a href="mailto:connect.munambamseafoods@gmail.com">connect.munambamseafoods@gmail.com</a></p>
-            <p><strong>Instagram:</strong> <a href="https://www.instagram.com/munambamseafoods" target="_blank">@munambamseafoods</a></p>
+        <div class="footer-icons">
+            <a href="https://wa.me/917907804747" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <a href="mailto:connect.munambamseafoods@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+            <a href="https://www.instagram.com/munambamseafoods" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
         </div>
     </footer>
 
@@ -52,11 +54,6 @@
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
-        });
-
-        document.querySelectorAll('.cta-button, .contact-links a').forEach(item => {
-            item.addEventListener('mouseover', () => cursor.style.transform = 'scale(2)');
-            item.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
         });
     </script>
 </body>
