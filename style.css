@@ -10,7 +10,6 @@
 body {
     background-color: var(--cream);
     color: var(--text-dark);
-    /* പാരഗ്രാഫ് ഫോണ്ട് Lora-ലേക്ക് മാറ്റി */
     font-family: 'Lora', serif;
     margin: 0;
     padding: 0;
@@ -86,7 +85,6 @@ header h1 {
     transition: all 0.4s ease;
     border: 1px solid var(--gold);
     margin-top: 20px;
-    /* ബട്ടണിനായി മാത്രം Montserrat നിലനിർത്തി */
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -103,6 +101,7 @@ header h1 {
     padding: 60px 20px;
     text-align: center;
     margin-top: 50px;
+    border-top: 2px solid var(--gold); /* Added separator line */
 }
 
 .contact h3 {
@@ -128,6 +127,15 @@ header h1 {
 .footer-icons a:hover {
     color: var(--gold);
     transform: translateY(-8px) scale(1.1);
+}
+
+/* Copyright Styling */
+.copyright {
+    color: var(--gold);
+    margin-top: 30px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* ക്ലിക്ക് ചെയ്യാവുന്നവയിൽ ഡിഫോൾട്ട് കഴ്‌സർ ഒഴിവാക്കുന്നു */
