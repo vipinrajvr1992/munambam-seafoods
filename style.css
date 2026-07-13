@@ -124,3 +124,7 @@ header h1 {
     color: var(--gold);
     transform: translateY(-8px) scale(1.1);
 }
+/* ക്ലിക്ക് ചെയ്യാവുന്നവയിൽ ഡിഫോൾട്ട് കഴ്‌സർ ഒഴിവാക്കുന്നു */
+a, button, .cta-button {
+    cursor: none !important;
+}
