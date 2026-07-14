@@ -10,7 +10,7 @@
         button { background: var(--navy-blue); color: white; border: none; padding: 10px 15px; cursor: pointer; }
         .card { background: white; padding: 20px; border: 1px solid var(--gold); border-radius: 5px; margin-top: 10px; }
         .hidden { display: none; }
-        input, select { width: 100%; padding: 8px; margin: 5px 0; }
+        input, select { width: 100%; padding: 8px; margin: 5px 0; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -27,7 +27,7 @@
     <div id="transactions" class="card">
         <h2>Add New Entry</h2>
         <input type="date" id="date">
-        <select id="type"><option>Income</option><option>Expense</option></select>
+        <select id="type"><option value="Income">Income</option><option value="Expense">Expense</option></select>
         <input type="text" id="category" placeholder="Category">
         <input type="text" id="item" placeholder="Item Name">
         <input type="number" id="amount" placeholder="Amount">
@@ -38,7 +38,6 @@
     <div id="history" class="card hidden">
         <h2>Transaction History</h2>
         <input type="text" placeholder="Search by Category...">
-        <!-- ഇവിടെയാണ് ഗൂഗിൾ ഷീറ്റിലെ ഡാറ്റ വരുന്നത് -->
         <p>Data will be displayed here...</p>
     </div>
 
@@ -53,7 +52,34 @@
             document.querySelectorAll('.card').forEach(s => s.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
         }
-        function saveData() { alert("Data Saved! (Google Sheet connection pending)"); }
+
+        function saveData() {
+            var url = "https://script.google.com/macros/s/AKfycbxZR1eTR3MgOdSnBLMfrtba9nrtqanm10E2EYD-vY339VsAf6H2I_maC9Fyo2eEpBb-/exec";
+            
+            var data = {
+                date: document.getElementById("date").value,
+                type: document.getElementById("type").value,
+                category: document.getElementById("category").value,
+                item: document.getElementById("item").value,
+                amount: document.getElementById("amount").value
+            };
+
+            fetch(url, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                alert("Transaction saved successfully!");
+                // Clear form
+                document.getElementById("date").value = "";
+                document.getElementById("category").value = "";
+                document.getElementById("item").value = "";
+                document.getElementById("amount").value = "";
+            })
+            .catch(error => alert("Error: " + error));
+        }
     </script>
 </body>
 </html>
