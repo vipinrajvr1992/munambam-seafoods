@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | The Gypsy Cartel</title>
+    <style>
+        :root {
+            --navy-blue: #0B243B;
+            --cream: #FDFBF7;
+            --gold: #C5A059;
+        }
+        body {
+            background-color: var(--navy-blue);
+            color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-box {
+            background-color: var(--cream);
+            padding: 40px;
+            border-radius: 5px;
+            text-align: center;
+            width: 300px;
+            color: var(--navy-blue);
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 15px 0;
+            border: 1px solid var(--gold);
+            box-sizing: border-box;
+        }
+        button {
+            background-color: var(--gold);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-box">
+    <h2>Admin Login</h2>
+    <input type="password" id="password" placeholder="Enter Password">
+    <button onclick="checkPassword()">Login</button>
+</div>
+
+<script>
+    function checkPassword() {
+        // ഇവിടെ നിങ്ങൾക്ക് ഇഷ്ടമുള്ള പാസ്‌വേഡ് കൊടുക്കാം
+        var password = document.getElementById("password").value;
+        if (password === "vipin123") { 
+            window.location.href = "dashboard.html"; // ലോഗിൻ ചെയ്താൽ ഈ പേജിലേക്ക് പോകും
+        } else {
+            alert("Incorrect Password!");
+        }
+    }
+</script>
+
+</body>
+</html>
