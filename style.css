@@ -76,9 +76,9 @@ header h1 {
 
 /* Bullet Point Alignment */
 .section ul {
-    padding-left: 30px;
+    padding-left: 30px;          /* ബുള്ളറ്റുകളെ ഹെഡിംഗിന് താഴെയായി അല്പം വലത്തോട്ട് മാറ്റി അലൈൻ ചെയ്യുന്നു */
     margin-left: 0;
-    list-style-position: outside;
+    list-style-position: outside; /* ബുള്ളറ്റുകളെ പുറത്തേക്ക് അലൈൻ ചെയ്യുന്നു */
 }
 
 .section li {
