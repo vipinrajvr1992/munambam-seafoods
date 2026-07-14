@@ -10,8 +10,6 @@
         button { background: var(--navy-blue); color: white; border: none; padding: 10px 15px; cursor: pointer; }
         .card { background: white; padding: 20px; border: 1px solid var(--gold); border-radius: 5px; margin-top: 10px; }
         .hidden { display: none; }
-        input, select { width: 100%; padding: 8px; margin: 5px 0; box-sizing: border-box; }
-        #status { font-weight: bold; margin: 10px 0; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         .income { background-color: #d4edda; }
@@ -26,7 +24,7 @@
     <div class="nav">
         <button onclick="showSection('transactions')">Add Transaction</button>
         <button onclick="showSection('history')">History & Filter</button>
-        <button onclick="showSection('settings')">Settings</button>
+        <button onclick="showSection('logs')">View Logs</button>
     </div>
 
     <div id="transactions" class="card">
@@ -41,79 +39,89 @@
 
     <div id="history" class="card hidden">
         <h2>Transaction History</h2>
-        <select id="filter" onchange="applyFilter()">
+        <select id="filter" onchange="renderTable()">
             <option value="daily">Daily</option>
             <option value="weekly">Weekly</option>
             <option value="monthly">Monthly</option>
             <option value="all">All Data</option>
         </select>
-        <button onclick="loadData()">Refresh</button>
-        <button onclick="exportTable()">Export to Excel</button>
         <table id="historyTable">
-            <tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th></tr>
+            <tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th><th>Actions</th></tr>
         </table>
         <div id="calc" style="margin-top:15px; font-weight:bold;"></div>
     </div>
 
-    <div id="settings" class="card hidden">
-        <h2>Settings</h2>
-        <p>Manage Categories and Products here.</p>
+    <div id="logs" class="card hidden">
+        <h2>Activity Logs</h2>
+        <table id="logTable">
+            <tr><th>Timestamp</th><th>Action</th><th>Details</th><th>Device</th></tr>
+        </table>
     </div>
 
     <script>
         const scriptURL = "https://script.google.com/macros/s/AKfycbwfzRxGkq2pDcgCAp6EKTJx7n_Y2g-vtWgEpJ00p2WlD_NCCJPj3vDY4U3K8q01rdrN/exec";
         let rawData = [];
 
-        fetch(scriptURL).then(res => res.json()).then(data => {
-            let cat = document.getElementById("categorySelect");
-            let item = document.getElementById("itemSelect");
-            data.settings.forEach(row => {
-                if(row[0]) cat.innerHTML += `<option>${row[0]}</option>`;
-                if(row[1]) item.innerHTML += `<option>${row[1]}</option>`;
-            });
+        async function loadData() {
+            let res = await fetch(scriptURL);
+            let data = await res.json();
             rawData = data.transactions.slice(1);
-            applyFilter();
-        });
+            renderTable();
+        }
+
+        function formatDate(d) {
+            let date = new Date(d);
+            return date.toLocaleDateString('en-GB'); // DD/MM/YYYY Format
+        }
+
+        function renderTable() {
+            let table = document.getElementById("historyTable");
+            table.innerHTML = "<tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th><th>Actions</th></tr>";
+            let income = 0, expense = 0;
+
+            rawData.forEach((row, index) => {
+                let cls = row[1] === 'Income' ? 'income' : 'expense';
+                table.innerHTML += `<tr class="${cls}">
+                    <td>${formatDate(row[0])}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td>${row[4]}</td>
+                    <td>
+                        <button onclick="editEntry(${index})">Edit</button>
+                        <button onclick="deleteEntry(${index})">Delete</button>
+                    </td>
+                </tr>`;
+                if(row[1] === 'Income') income += parseFloat(row[4] || 0);
+                else expense += parseFloat(row[4] || 0);
+            });
+            document.getElementById("calc").innerHTML = `Income: ${income} | Expense: ${expense} | Balance: ${income - expense}`;
+        }
+
+        function deleteEntry(index) {
+            if(!confirm("ഈ ട്രാൻസാക്ഷൻ ഡിലീറ്റ് ചെയ്യണോ?")) return;
+            // ലോഗ് സേവ് ചെയ്യുക
+            logAction("Delete", "Index: " + index);
+            // Delete API call logic here
+        }
+
+        function editEntry(index) {
+            if(!confirm("ഈ ട്രാൻസാക്ഷൻ എഡിറ്റ് ചെയ്യണോ?")) return;
+            logAction("Edit", "Index: " + index);
+        }
+
+        function logAction(action, details) {
+            let log = {
+                action: 'add',
+                sheetName: 'Logs',
+                values: [new Date().toLocaleString(), action, details, navigator.userAgent]
+            };
+            fetch(scriptURL, { method: "POST", mode: "no-cors", body: JSON.stringify(log) });
+        }
 
         function showSection(id) {
             document.querySelectorAll('.card').forEach(s => s.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
+            if(id === 'history') loadData();
         }
-
-        function applyFilter() {
-            let filter = document.getElementById("filter").value;
-            let table = document.getElementById("historyTable");
-            let calc = document.getElementById("calc");
-            table.innerHTML = "<tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th></tr>";
-            let income = 0, expense = 0;
-
-            rawData.forEach(row => {
-                let d = new Date(row[0]);
-                let now = new Date();
-                if(filter === 'daily' && d.toDateString() !== now.toDateString()) return;
-                // Add weekly/monthly logic here if needed
-                
-                let cls = row[1] === 'Income' ? 'income' : 'expense';
-                table.innerHTML += `<tr class="${cls}"><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td>${row[4]}</td></tr>`;
-                
-                if(row[1] === 'Income') income += parseFloat(row[4] || 0);
-                else expense += parseFloat(row[4] || 0);
-            });
-            calc.innerHTML = `Total Income: ${income} | Total Expense: ${expense} | Balance: ${income - expense}`;
-        }
-
-        function exportTable() {
-            let table = document.getElementById("historyTable");
-            let html = table.outerHTML;
-            let blob = new Blob(['\ufeff', html], {type: 'application/vnd.ms-excel'});
-            let url = URL.createObjectURL(blob);
-            let a = document.createElement('a');
-            a.href = url; a.download = 'History.xls'; a.click();
-        }
-
-        function saveData() {
-            // ... (Save logic remains same)
-        }
+        
+        loadData();
     </script>
 </body>
 </html>
