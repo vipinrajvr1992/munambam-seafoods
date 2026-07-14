@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard | The Gypsy Cartel</title>
+    <title>Founder's Dashboard | The Gypsy Cartel</title>
     <style>
-        body { font-family: 'Montserrat', sans-serif; background-color: #FDFBF7; padding: 20px; }
-        .nav { display: flex; gap: 20px; margin-bottom: 30px; }
-        .card { background: white; padding: 20px; border: 1px solid #C5A059; border-radius: 5px; }
+        :root { --navy-blue: #0B243B; --gold: #C5A059; --cream: #FDFBF7; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--cream); margin: 0; padding: 20px; }
+        .nav { display: flex; gap: 10px; margin-bottom: 20px; }
+        button { background: var(--navy-blue); color: white; border: none; padding: 10px 15px; cursor: pointer; }
+        .card { background: white; padding: 20px; border: 1px solid var(--gold); border-radius: 5px; margin-top: 10px; }
+        .hidden { display: none; }
+        input, select { width: 100%; padding: 8px; margin: 5px 0; }
     </style>
 </head>
 <body>
@@ -19,26 +23,37 @@
         <button onclick="showSection('settings')">Settings</button>
     </div>
 
+    <!-- Transaction Section -->
     <div id="transactions" class="card">
         <h2>Add New Entry</h2>
-        <!-- ഫോം ഇവിടെ വരും -->
+        <input type="date" id="date">
+        <select id="type"><option>Income</option><option>Expense</option></select>
+        <input type="text" id="category" placeholder="Category">
+        <input type="text" id="item" placeholder="Item Name">
+        <input type="number" id="amount" placeholder="Amount">
+        <button onclick="saveData()">Save Transaction</button>
     </div>
 
-    <div id="history" class="card" style="display:none;">
+    <!-- History Section -->
+    <div id="history" class="card hidden">
         <h2>Transaction History</h2>
-        <!-- ഫിൽറ്റർ ടേബിൾ ഇവിടെ വരും -->
+        <input type="text" placeholder="Search by Category...">
+        <!-- ഇവിടെയാണ് ഗൂഗിൾ ഷീറ്റിലെ ഡാറ്റ വരുന്നത് -->
+        <p>Data will be displayed here...</p>
     </div>
 
-    <div id="settings" class="card" style="display:none;">
+    <!-- Settings Section -->
+    <div id="settings" class="card hidden">
         <h2>Settings</h2>
-        <!-- കാറ്റഗറി മാനേജ്‌മെന്റ് ഇവിടെ വരും -->
+        <p>Manage Categories and Products here.</p>
     </div>
 
     <script>
         function showSection(id) {
-            document.querySelectorAll('.card').forEach(s => s.style.display = 'none');
-            document.getElementById(id).style.display = 'block';
+            document.querySelectorAll('.card').forEach(s => s.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
         }
+        function saveData() { alert("Data Saved! (Google Sheet connection pending)"); }
     </script>
 </body>
 </html>
