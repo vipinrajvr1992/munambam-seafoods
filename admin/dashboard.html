@@ -12,116 +12,65 @@
         .hidden { display: none; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        .income { background-color: #d4edda; }
-        .expense { background-color: #f8d7da; }
+        
+        /* Custom Modal Style */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 20px; border-radius: 5px; text-align: center; }
     </style>
 </head>
 <body>
 
     <h1>Founder's Dashboard</h1>
-    <div id="status"></div>
-    
     <div class="nav">
         <button onclick="showSection('transactions')">Add Transaction</button>
         <button onclick="showSection('history')">History & Filter</button>
-        <button onclick="showSection('logs')">View Logs</button>
+        <button onclick="showSection('settings')">Settings</button>
+        <button onclick="showSection('logs')">View Logs</button> <!-- Always visible -->
     </div>
 
-    <div id="transactions" class="card">
-        <h2>Add New Entry</h2>
-        <input type="date" id="date">
-        <select id="type"><option value="Income">Income</option><option value="Expense">Expense</option></select>
-        <select id="categorySelect"></select>
-        <select id="itemSelect"></select>
-        <input type="number" id="amount" placeholder="Amount">
-        <button onclick="saveData()">Save Transaction</button>
+    <!-- Custom Confirm Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <p id="modalMsg"></p>
+            <button onclick="proceedAction()">Confirm</button>
+            <button onclick="closeModal()">Cancel</button>
+        </div>
     </div>
 
-    <div id="history" class="card hidden">
-        <h2>Transaction History</h2>
-        <select id="filter" onchange="renderTable()">
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-            <option value="all">All Data</option>
-        </select>
+    <!-- Sections (Transactions, History, Logs, etc.) -->
+    <div id="history" class="card">
+        <h2>Transaction History <button onclick="loadData()">Refresh</button></h2>
         <table id="historyTable">
             <tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th><th>Actions</th></tr>
-        </table>
-        <div id="calc" style="margin-top:15px; font-weight:bold;"></div>
-    </div>
-
-    <div id="logs" class="card hidden">
-        <h2>Activity Logs</h2>
-        <table id="logTable">
-            <tr><th>Timestamp</th><th>Action</th><th>Details</th><th>Device</th></tr>
         </table>
     </div>
 
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbwfzRxGkq2pDcgCAp6EKTJx7n_Y2g-vtWgEpJ00p2WlD_NCCJPj3vDY4U3K8q01rdrN/exec";
-        let rawData = [];
+        let actionCallback = null;
 
-        async function loadData() {
-            let res = await fetch(scriptURL);
-            let data = await res.json();
-            rawData = data.transactions.slice(1);
-            renderTable();
+        // Custom Confirm Function
+        function customConfirm(msg, callback) {
+            document.getElementById('modalMsg').innerText = msg;
+            document.getElementById('confirmModal').style.display = 'flex';
+            actionCallback = callback;
         }
 
-        function formatDate(d) {
-            let date = new Date(d);
-            return date.toLocaleDateString('en-GB'); // DD/MM/YYYY Format
+        function closeModal() { document.getElementById('confirmModal').style.display = 'none'; }
+
+        function proceedAction() {
+            if(actionCallback) actionCallback();
+            closeModal();
         }
 
-        function renderTable() {
-            let table = document.getElementById("historyTable");
-            table.innerHTML = "<tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th><th>Actions</th></tr>";
-            let income = 0, expense = 0;
-
-            rawData.forEach((row, index) => {
-                let cls = row[1] === 'Income' ? 'income' : 'expense';
-                table.innerHTML += `<tr class="${cls}">
-                    <td>${formatDate(row[0])}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td>${row[4]}</td>
-                    <td>
-                        <button onclick="editEntry(${index})">Edit</button>
-                        <button onclick="deleteEntry(${index})">Delete</button>
-                    </td>
-                </tr>`;
-                if(row[1] === 'Income') income += parseFloat(row[4] || 0);
-                else expense += parseFloat(row[4] || 0);
-            });
-            document.getElementById("calc").innerHTML = `Income: ${income} | Expense: ${expense} | Balance: ${income - expense}`;
-        }
-
+        // Example Usage for Delete
         function deleteEntry(index) {
-            if(!confirm("ഈ ട്രാൻസാക്ഷൻ ഡിലീറ്റ് ചെയ്യണോ?")) return;
-            // ലോഗ് സേവ് ചെയ്യുക
-            logAction("Delete", "Index: " + index);
-            // Delete API call logic here
-        }
-
-        function editEntry(index) {
-            if(!confirm("ഈ ട്രാൻസാക്ഷൻ എഡിറ്റ് ചെയ്യണോ?")) return;
-            logAction("Edit", "Index: " + index);
-        }
-
-        function logAction(action, details) {
-            let log = {
-                action: 'add',
-                sheetName: 'Logs',
-                values: [new Date().toLocaleString(), action, details, navigator.userAgent]
-            };
-            fetch(scriptURL, { method: "POST", mode: "no-cors", body: JSON.stringify(log) });
-        }
-
-        function showSection(id) {
-            document.querySelectorAll('.card').forEach(s => s.classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
-            if(id === 'history') loadData();
+            customConfirm("ഈ ട്രാൻസാക്ഷൻ ഡിലീറ്റ് ചെയ്യണോ?", () => {
+                console.log("Deleted index:", index);
+                // API call here
+            });
         }
         
-        loadData();
+        // ... rest of your functions
     </script>
 </body>
 </html>
