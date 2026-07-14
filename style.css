@@ -68,9 +68,21 @@ header h1 {
     font-family: 'Playfair Display', serif;
     font-size: 1.8rem;
     border-bottom: 1px solid var(--gold);
-    display: inline-block;
+    display: block;           /* Changed from inline-block */
+    width: fit-content;       /* Ensures underline stays with text width */
     padding-bottom: 5px;
     margin-bottom: 20px;
+}
+
+/* Bullet Point Alignment */
+.section ul {
+    padding-left: 0;          /* Removed default padding */
+    margin-left: 0;
+    list-style-position: inside; /* Aligns bullets with text */
+}
+
+.section li {
+    margin-bottom: 10px;
 }
 
 /* CTA Button Animation */
@@ -102,7 +114,7 @@ header h1 {
     padding: 60px 20px;
     text-align: center;
     margin-top: 50px;
-    border-top: 2px solid var(--gold); /* Added separator line */
+    border-top: 2px solid var(--gold);
 }
 
 .contact h3 {
@@ -139,7 +151,7 @@ header h1 {
     font-family: 'Montserrat', sans-serif;
 }
 
-/* ക്ലിക്ക് ചെയ്യാവുന്നവയിൽ ഡിഫോൾട്ട് കഴ്‌സർ ഒഴിവാക്കുന്നു */
+/* Cursor handling */
 a, button, .cta-button {
     cursor: none !important;
 }
