@@ -11,74 +11,72 @@
         .card { background: white; padding: 20px; border: 1px solid var(--gold); border-radius: 5px; margin-top: 10px; }
         .hidden { display: none; }
         input, select { width: 100%; padding: 8px; margin: 5px 0; box-sizing: border-box; }
+        #status { font-weight: bold; margin: 10px 0; }
     </style>
 </head>
 <body>
 
     <h1>Founder's Dashboard</h1>
+    <div id="status"></div>
     
     <div class="nav">
         <button onclick="showSection('transactions')">Add Transaction</button>
         <button onclick="showSection('history')">History & Filter</button>
-        <button onclick="showSection('settings')">Settings</button>
     </div>
 
-    <!-- Transaction Section -->
     <div id="transactions" class="card">
         <h2>Add New Entry</h2>
         <input type="date" id="date">
         <select id="type"><option value="Income">Income</option><option value="Expense">Expense</option></select>
-        <input type="text" id="category" placeholder="Category">
-        <input type="text" id="item" placeholder="Item Name">
+        <select id="categorySelect"></select>
+        <select id="itemSelect"></select>
         <input type="number" id="amount" placeholder="Amount">
         <button onclick="saveData()">Save Transaction</button>
     </div>
 
-    <!-- History Section -->
-    <div id="history" class="card hidden">
-        <h2>Transaction History</h2>
-        <input type="text" placeholder="Search by Category...">
-        <p>Data will be displayed here...</p>
-    </div>
-
-    <!-- Settings Section -->
-    <div id="settings" class="card hidden">
-        <h2>Settings</h2>
-        <p>Manage Categories and Products here.</p>
-    </div>
-
     <script>
+        const scriptURL = "https://script.google.com/macros/s/AKfycbzMSjEMc7SCDkCjZos7Pharh4raDQZYPc2HpM99WkKj0GvPs7M2CT_a43NEq-N8ksc-/exec";
+
+        // പേജ് ലോഡ് ചെയ്യുമ്പോൾ Settings-ൽ നിന്ന് ഡാറ്റ എടുക്കുന്നു
+        fetch(scriptURL)
+            .then(res => res.json())
+            .then(data => {
+                let catSelect = document.getElementById("categorySelect");
+                let itemSelect = document.getElementById("itemSelect");
+                data.forEach(row => {
+                    catSelect.innerHTML += `<option value="${row[0]}">${row[0]}</option>`;
+                    itemSelect.innerHTML += `<option value="${row[1]}">${row[1]}</option>`;
+                });
+            });
+
         function showSection(id) {
             document.querySelectorAll('.card').forEach(s => s.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
         }
 
         function saveData() {
-            var url = "https://script.google.com/macros/s/AKfycbxZR1eTR3MgOdSnBLMfrtba9nrtqanm10E2EYD-vY339VsAf6H2I_maC9Fyo2eEpBb-/exec";
+            let statusDiv = document.getElementById("status");
+            statusDiv.innerText = "Saving...";
             
-            var data = {
+            let data = {
                 date: document.getElementById("date").value,
                 type: document.getElementById("type").value,
-                category: document.getElementById("category").value,
-                item: document.getElementById("item").value,
+                category: document.getElementById("categorySelect").value,
+                item: document.getElementById("itemSelect").value,
                 amount: document.getElementById("amount").value
             };
 
-            fetch(url, {
+            fetch(scriptURL, {
                 method: "POST",
                 mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
             })
             .then(() => {
-                alert("Transaction saved successfully!");
-                // Clear form
-                document.getElementById("date").value = "";
-                document.getElementById("category").value = "";
-                document.getElementById("item").value = "";
-                document.getElementById("amount").value = "";
+                statusDiv.innerText = "Success: Transaction saved!";
+                setTimeout(() => statusDiv.innerText = "", 3000);
             })
-            .catch(error => alert("Error: " + error));
+            .catch(err => statusDiv.innerText = "Error: " + err);
         }
     </script>
 </body>
