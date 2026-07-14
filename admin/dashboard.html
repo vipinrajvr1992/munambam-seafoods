@@ -12,6 +12,8 @@
         .hidden { display: none; }
         input, select { width: 100%; padding: 8px; margin: 5px 0; box-sizing: border-box; }
         #status { font-weight: bold; color: var(--navy-blue); margin: 10px 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
     </style>
 </head>
 <body>
@@ -38,8 +40,10 @@
 
     <!-- History Section -->
     <div id="history" class="card hidden">
-        <h2>Transaction History</h2>
-        <p>History data will be loaded here...</p>
+        <h2>Transaction History <button onclick="loadData()">Refresh</button></h2>
+        <table id="historyTable">
+            <tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th></tr>
+        </table>
     </div>
 
     <!-- Settings Section -->
@@ -49,14 +53,15 @@
     </div>
 
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbzMSjEMc7SCDkCjZos7Pharh4raDQZYPc2HpM99WkKj0GvPs7M2CT_a43NEq-N8ksc-/exec";
+        const scriptURL = "https://script.google.com/macros/s/AKfycbwfzRxGkq2pDcgCAp6EKTJx7n_Y2g-vtWgEpJ00p2WlD_NCCJPj3vDY4U3K8q01rdrN/exec";
 
+        // Initial load
         fetch(scriptURL)
             .then(res => res.json())
             .then(data => {
                 let catSelect = document.getElementById("categorySelect");
                 let itemSelect = document.getElementById("itemSelect");
-                data.forEach(row => {
+                data.settings.forEach(row => {
                     if(row[0]) catSelect.innerHTML += `<option value="${row[0]}">${row[0]}</option>`;
                     if(row[1]) itemSelect.innerHTML += `<option value="${row[1]}">${row[1]}</option>`;
                 });
@@ -67,16 +72,34 @@
             document.getElementById(id).classList.remove('hidden');
         }
 
+        function loadData() {
+            fetch(scriptURL)
+                .then(res => res.json())
+                .then(data => {
+                    let table = document.getElementById("historyTable");
+                    table.innerHTML = "<tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th></tr>";
+                    data.transactions.forEach((row, index) => {
+                        if(index > 0 && row[0]) {
+                            table.innerHTML += `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td>${row[4]}</td></tr>`;
+                        }
+                    });
+                });
+        }
+
         function saveData() {
             let statusDiv = document.getElementById("status");
             statusDiv.innerText = "Saving...";
             
             let data = {
-                date: document.getElementById("date").value,
-                type: document.getElementById("type").value,
-                category: document.getElementById("categorySelect").value,
-                item: document.getElementById("itemSelect").value,
-                amount: document.getElementById("amount").value
+                action: 'add',
+                sheetName: 'Sheet1',
+                values: [
+                    document.getElementById("date").value,
+                    document.getElementById("type").value,
+                    document.getElementById("categorySelect").value,
+                    document.getElementById("itemSelect").value,
+                    document.getElementById("amount").value
+                ]
             };
 
             fetch(scriptURL, {
