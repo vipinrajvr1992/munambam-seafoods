@@ -74,15 +74,16 @@ header h1 {
     margin-bottom: 20px;
 }
 
-/* Bullet Point Alignment - Fixed */
+/* Bullet Point Alignment - Final Corrected */
 .section ul {
-    padding-left: 0;           /* ഹെഡിംഗിന്റെ അതേ അലൈൻമെന്റിൽ വരാൻ */
+    padding-left: 20px;          /* ബുള്ളറ്റുകൾ പുറത്തേക്ക് വരാനും, ഹെഡിംഗിനോട് ചേരാനും */
     margin-left: 0;
-    list-style-position: inside; /* ബുള്ളറ്റുകളെ ടെക്സ്റ്റിന്റെ ഉള്ളിലേക്ക് കൊണ്ടുവരുന്നു */
+    list-style-position: outside; /* ടെക്സ്റ്റ് ബ്ലോക്ക് കൃത്യമായി ഒരേ ലൈനിൽ വരാൻ */
 }
 
 .section li {
     margin-bottom: 10px;
+    padding-left: 5px;           /* ബുള്ളറ്റും ടെക്സ്റ്റും തമ്മിലുള്ള ചെറിയ അകലം */
 }
 
 /* CTA Button Animation */
