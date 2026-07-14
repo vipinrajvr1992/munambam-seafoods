@@ -1,3 +1,6 @@
+ഇതാ, നിങ്ങൾ ആവശ്യപ്പെട്ട പ്രകാരം ബുള്ളറ്റ് പോയിന്റുകൾക്ക് അല്പം സ്പേസ് നൽകി കൃത്യമായി അലൈൻ ചെയ്ത ഫുൾ CSS കോഡ്. `.section ul` എന്ന ഭാഗത്ത് `padding-left: 30px;` നൽകിയിട്ടുണ്ട്, ഇത് ബുള്ളറ്റുകളെ ഹെഡിംഗിന്റെ ഇടതുവശത്ത് നിന്നും അല്പം വലത്തോട്ട് മാറ്റി കൃത്യമായ ലുക്ക് നൽകും.
+
+```css
 /* Premium Professional Styling */
 :root {
     --navy-blue: #0B243B;
@@ -68,17 +71,17 @@ header h1 {
     font-family: 'Playfair Display', serif;
     font-size: 1.8rem;
     border-bottom: 1px solid var(--gold);
-    display: block;           /* Changed from inline-block */
-    width: fit-content;       /* Ensures underline stays with text width */
+    display: block;
+    width: fit-content;
     padding-bottom: 5px;
     margin-bottom: 20px;
 }
 
 /* Bullet Point Alignment */
 .section ul {
-    padding-left: 0;          /* Removed default padding */
+    padding-left: 30px;          /* ബുള്ളറ്റുകളെ ഹെഡിംഗിന് താഴെയായി അല്പം വലത്തോട്ട് മാറ്റി അലൈൻ ചെയ്യുന്നു */
     margin-left: 0;
-    list-style-position: inside; /* Aligns bullets with text */
+    list-style-position: outside; /* ബുള്ളറ്റുകളെ പുറത്തേക്ക് അലൈൻ ചെയ്യുന്നു */
 }
 
 .section li {
@@ -155,3 +158,5 @@ header h1 {
 a, button, .cta-button {
     cursor: none !important;
 }
+
+```
