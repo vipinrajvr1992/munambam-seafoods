@@ -11,7 +11,7 @@
         .card { background: white; padding: 20px; border: 1px solid var(--gold); border-radius: 5px; margin-top: 10px; }
         .hidden { display: none; }
         input, select { width: 100%; padding: 8px; margin: 5px 0; box-sizing: border-box; }
-        #status { font-weight: bold; margin: 10px 0; }
+        #status { font-weight: bold; color: var(--navy-blue); margin: 10px 0; }
     </style>
 </head>
 <body>
@@ -22,8 +22,10 @@
     <div class="nav">
         <button onclick="showSection('transactions')">Add Transaction</button>
         <button onclick="showSection('history')">History & Filter</button>
+        <button onclick="showSection('settings')">Settings</button>
     </div>
 
+    <!-- Transaction Section -->
     <div id="transactions" class="card">
         <h2>Add New Entry</h2>
         <input type="date" id="date">
@@ -34,18 +36,29 @@
         <button onclick="saveData()">Save Transaction</button>
     </div>
 
+    <!-- History Section -->
+    <div id="history" class="card hidden">
+        <h2>Transaction History</h2>
+        <p>History data will be loaded here...</p>
+    </div>
+
+    <!-- Settings Section -->
+    <div id="settings" class="card hidden">
+        <h2>Settings</h2>
+        <p>Manage Categories and Products here.</p>
+    </div>
+
     <script>
         const scriptURL = "https://script.google.com/macros/s/AKfycbzMSjEMc7SCDkCjZos7Pharh4raDQZYPc2HpM99WkKj0GvPs7M2CT_a43NEq-N8ksc-/exec";
 
-        // പേജ് ലോഡ് ചെയ്യുമ്പോൾ Settings-ൽ നിന്ന് ഡാറ്റ എടുക്കുന്നു
         fetch(scriptURL)
             .then(res => res.json())
             .then(data => {
                 let catSelect = document.getElementById("categorySelect");
                 let itemSelect = document.getElementById("itemSelect");
                 data.forEach(row => {
-                    catSelect.innerHTML += `<option value="${row[0]}">${row[0]}</option>`;
-                    itemSelect.innerHTML += `<option value="${row[1]}">${row[1]}</option>`;
+                    if(row[0]) catSelect.innerHTML += `<option value="${row[0]}">${row[0]}</option>`;
+                    if(row[1]) itemSelect.innerHTML += `<option value="${row[1]}">${row[1]}</option>`;
                 });
             });
 
