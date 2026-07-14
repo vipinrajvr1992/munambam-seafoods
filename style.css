@@ -74,11 +74,11 @@ header h1 {
     margin-bottom: 20px;
 }
 
-/* Bullet Point Alignment */
+/* Bullet Point Alignment - Fixed */
 .section ul {
-    padding-left: 30px;          /* ബുള്ളറ്റുകളെ ഹെഡിംഗിന് താഴെയായി അല്പം വലത്തോട്ട് മാറ്റി അലൈൻ ചെയ്യുന്നു */
+    padding-left: 0;           /* ഹെഡിംഗിന്റെ അതേ അലൈൻമെന്റിൽ വരാൻ */
     margin-left: 0;
-    list-style-position: outside; /* ബുള്ളറ്റുകളെ പുറത്തേക്ക് അലൈൻ ചെയ്യുന്നു */
+    list-style-position: inside; /* ബുള്ളറ്റുകളെ ടെക്സ്റ്റിന്റെ ഉള്ളിലേക്ക് കൊണ്ടുവരുന്നു */
 }
 
 .section li {
@@ -127,7 +127,7 @@ header h1 {
 .footer-icons {
     display: flex;
     justify-content: center;
-    gap: 40px;
+    gap: 30px;
     margin-top: 30px;
 }
 
