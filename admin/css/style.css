@@ -6,7 +6,7 @@
     --red: #e74c3c;
     --green: #2ecc71;
     --shadow: 0 10px 30px rgba(0,0,0,0.08);
-    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 /* Base Reset & Typography */
@@ -17,6 +17,31 @@ body {
     margin: 0;
     color: var(--navy-blue);
     line-height: 1.6;
+}
+
+/* --- Loader Style (ക്ലീൻ ലോഡർ ബാക്ക്ഗ്രൗണ്ട്) --- */
+.loader-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(11, 36, 59, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.loader-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid var(--gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* --- Premium Navigation --- */
@@ -168,6 +193,29 @@ th { background-color: var(--navy-blue); color: var(--gold); padding: 18px; text
 td { padding: 16px; border-bottom: 1px solid #f4f4f4; }
 tbody tr:hover { background-color: #f9f9f9; }
 
+/* --- Premium Badges (Green/Red Fills with Black Text) --- */
+.badge-income {
+    background-color: var(--green) !important; /* Green Fill */
+    color: #000000 !important;                  /* Black Font */
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+    text-align: center;
+    font-size: 13px;
+}
+
+.badge-expense {
+    background-color: var(--red) !important;   /* Red Fill */
+    color: #000000 !important;                  /* Black Font */
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+    text-align: center;
+    font-size: 13px;
+}
+
 /* --- Custom Glass Modal (Confirm & Edit) --- */
 .modal {
     display: none;
@@ -196,7 +244,7 @@ tbody tr:hover { background-color: #f9f9f9; }
     to { transform: scale(1); opacity: 1; }
 }
 
-/* --- Toast --- */
+/* --- Toast Notification Styles --- */
 #toast {
     position: fixed;
     bottom: 20px;
@@ -209,6 +257,17 @@ tbody tr:hover { background-color: #f9f9f9; }
     font-weight: bold;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     z-index: 9999;
+}
+
+/* Custom Error Toast (Yellow Fill, Red Text) */
+#toast.error {
+    background-color: #ffeb3b !important; /* Yellow Fill */
+    color: #c0392b !important;            /* Red Text */
+    border-left: 6px solid #d32f2f !important;
+    border-top: 1px solid #f1c40f !important;
+    border-bottom: 1px solid #f1c40f !important;
+    border-right: 1px solid #f1c40f !important;
+    box-shadow: 0 8px 24px rgba(241, 196, 15, 0.3) !important;
 }
 
 /* --- Utility Classes --- */
