@@ -1,74 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login | The Gypsy Cartel</title>
-    <style>
-        :root {
-            --navy-blue: #0B243B;
-            --cream: #FDFBF7;
-            --gold: #C5A059;
-            --white: #FFFFFF;
-        }
-        body {
-            background-color: var(--navy-blue);
-            color: var(--white);
-            font-family: 'Montserrat', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .login-box {
-            background-color: var(--cream);
-            padding: 40px;
-            border-radius: 5px;
-            text-align: center;
-            width: 300px;
-            color: var(--navy-blue);
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 15px 0;
-            border: 1px solid var(--gold);
-            box-sizing: border-box;
-        }
-        button {
-            background-color: var(--gold);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            width: 100%;
-            text-transform: uppercase;
-        }
-        button:hover {
-            opacity: 0.9;
-        }
-    </style>
+
+    <title>Admin Login | Munambam Seafoods</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
 </head>
+
 <body>
 
-<div class="login-box">
-    <h2>Admin Login</h2>
-    <input type="password" id="password" placeholder="Enter Password">
-    <button onclick="checkPassword()">Login</button>
+<div class="login-container">
+
+    <div class="login-card">
+
+        <img src="../assets/logo.png"
+             class="logo"
+             alt="Munambam Seafoods"
+             onerror="this.style.display='none'">
+
+        <h2>Admin Login</h2>
+
+        <p class="subtitle">
+            Core Team Dashboard
+        </p>
+
+        <form id="loginForm">
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter Admin Password"
+                autocomplete="current-password"
+                required>
+
+            <button
+                type="submit"
+                id="loginBtn">
+
+                Login
+
+            </button>
+
+        </form>
+
+        <div id="loginMessage"></div>
+
+    </div>
+
 </div>
 
-<script>
-    function checkPassword() {
-        var password = document.getElementById("password").value;
-        // ഇവിടെ പാസ്‌വേഡ് 'Pra@vip2026' ആയി സെറ്റ് ചെയ്തിരിക്കുന്നു
-        if (password === "Pra@vip2026") { 
-            window.location.href = "dashboard.html"; 
-        } else {
-            alert("Incorrect Password!");
-        }
-    }
-</script>
+<!-- CONFIG -->
+<script src="js/config.js"></script>
+
+<!-- AUDIT -->
+<script src="js/audit.js"></script>
+
+<!-- AUTH -->
+<script src="js/auth.js"></script>
 
 </body>
+
 </html>
