@@ -3,6 +3,8 @@
     --gold: #C5A059;
     --cream: #FDFBF7;
     --white: #FFFFFF;
+    --red: #d9534f;
+    --green: #27ae60;
     --shadow: 0 10px 30px rgba(0,0,0,0.08);
     --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
@@ -91,6 +93,13 @@ button {
 .btn-primary { background: var(--navy-blue); color: var(--gold); }
 .btn-primary:hover { background: #081a2b; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 
+/* Edit & Delete Buttons */
+.btn-edit { background: #f0f0f0; color: #333; padding: 8px 15px; font-size: 12px; }
+.btn-edit:hover { background: var(--gold); color: white; transform: scale(1.05); }
+
+.btn-delete { background: #ffebee; color: var(--red); padding: 8px 15px; font-size: 12px; }
+.btn-delete:hover { background: var(--red); color: white; transform: scale(1.05); }
+
 /* --- Table Styling --- */
 table {
     width: 100%;
@@ -129,6 +138,9 @@ tbody tr:hover { background-color: #f9f9f9; }
     animation: zoomIn 0.3s ease;
 }
 
+.btn-confirm { background: var(--navy-blue); color: var(--gold); width: 100px; }
+.btn-cancel { background: #f0f0f0; color: #555; width: 100px; margin-right: 10px; }
+
 @keyframes zoomIn {
     from { transform: scale(0.9); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
@@ -146,7 +158,7 @@ tbody tr:hover { background-color: #f9f9f9; }
     border-left: 4px solid var(--gold);
     font-weight: bold;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    display: none; /* ഡിഫോൾട്ടായി ഹൈഡ് ചെയ്യുന്നു */
+    display: none;
 }
 
 /* --- Utility Classes --- */
