@@ -1,17 +1,19 @@
 // ========================================
-// EXPORT.JS
+// EXPORT.JS (Updated with Custom Toast)
 // Export History Table to Excel
 // ========================================
 
-// SheetJS Required
-// https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js
-
 function exportToExcel() {
-
+    // dashboard.html-ൽ നമ്മൾ ഉപയോഗിക്കുന്ന table-ന്റെ ID 'historyTable' ആണെന്ന് ഉറപ്പാക്കുക
     const table = document.getElementById("historyTable");
 
     if (!table) {
-        alert("History table not found.");
+        // alert()-ന് പകരം showToast ഉപയോഗിക്കുന്നു
+        if (typeof showToast === "function") {
+            showToast("History table not found.", "error");
+        } else {
+            alert("History table not found.");
+        }
         return;
     }
 
@@ -20,10 +22,8 @@ function exportToExcel() {
         sheet: "Transactions"
     });
 
-    // File Name
-
+    // File Name (Date formatted)
     const today = new Date();
-
     const filename =
         "Munambam_Transactions_" +
         today.getFullYear() + "-" +
@@ -31,6 +31,11 @@ function exportToExcel() {
         String(today.getDate()).padStart(2, "0") +
         ".xlsx";
 
+    // Export file
     XLSX.writeFile(workbook, filename);
-
+    
+    // ടോസ്റ്റ് നോട്ടിഫിക്കേഷൻ[cite: 12]
+    if (typeof showToast === "function") {
+        showToast("Excel file exported successfully!");
+    }
 }
