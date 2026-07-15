@@ -1,0 +1,62 @@
+/* Premium Layout for Munambam Seafoods */
+
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.card-summary {
+    background: var(--white);
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 5px solid var(--gold);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.card-summary h3 {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--navy-blue);
+    text-transform: uppercase;
+}
+
+.card-summary p {
+    margin: 10px 0 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--navy-blue);
+}
+
+/* Toolbar in History Section */
+.toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.toolbar input, .toolbar select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Audit Log Table Styling */
+#auditTable {
+    font-size: 0.85rem;
+    background: #f9f9f9;
+}
+
+#auditTable th {
+    background: var(--navy-blue);
+    color: var(--white);
+}
+
+/* Responsive Handling */
+@media (max-width: 768px) {
+    .toolbar {
+        flex-direction: column;
+    }
+}
