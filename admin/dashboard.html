@@ -35,12 +35,23 @@
             </div>
         </section>
 
+        <!-- Add Transaction Section -->
         <section id="addTransaction" class="card hidden">
             <h2>Add New Entry</h2>
             <input type="date" id="date">
-            <select id="type"><option value="Income">Income</option><option value="Expense">Expense</option></select>
-            <select id="categorySelect"></select>
-            <select id="itemSelect"></select>
+            <select id="type">
+                <option value="Income">Income</option>
+                <option value="Expense">Expense</option>
+            </select>
+            
+            <!-- ഇവിടെയാണ് ഡ്രോപ്പ്‌ഡൗൺ ലോജിക് പ്രവർത്തിക്കുക -->
+            <select id="categorySelect">
+                <option value="">Select Category</option>
+            </select>
+            <select id="itemSelect">
+                <option value="">Select Item</option>
+            </select>
+            
             <input type="number" id="amount" placeholder="Amount">
             <textarea id="notes" placeholder="Notes"></textarea>
             <button id="saveBtn">Save Transaction</button>
@@ -73,7 +84,7 @@
         </section>
     </main>
 
-    <!-- Modals & UI -->
+    <!-- Modals -->
     <div id="editModal" class="modal">
         <div class="modal-content">
             <input type="date" id="editDate">
