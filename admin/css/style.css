@@ -146,4 +146,14 @@ tbody tr:hover { background-color: #f9f9f9; }
     border-left: 4px solid var(--gold);
     font-weight: bold;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    display: none; /* ഡിഫോൾട്ടായി ഹൈഡ് ചെയ്യുന്നു */
+}
+
+/* --- Utility Classes --- */
+.hidden { display: none !important; }
+
+/* --- Responsive Design --- */
+@media (max-width: 600px) {
+    .nav { flex-direction: column; gap: 5px; }
+    .modal-content-confirm { width: 90%; margin: 30% auto; }
 }
