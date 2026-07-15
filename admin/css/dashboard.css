@@ -90,6 +90,16 @@
 /* --- Audit Log --- */
 #auditBody { font-size: 0.9rem; color: #475569; }
 
+/* --- Utility & Loader --- */
+.hidden { display: none !important; }
+
+#loader {
+    text-align: center;
+    padding: 20px;
+    font-weight: bold;
+    color: var(--navy-blue);
+}
+
 /* --- Responsive --- */
 @media (max-width: 768px) {
     .summary-cards { grid-template-columns: 1fr; }
