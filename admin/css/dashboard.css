@@ -1,107 +1,295 @@
-/* --- Root Variables (Dashboard Specific) --- */
-:root {
-    --navy-blue: #0B243B;
-    --gold: #C5A059;
-    --white: #FFFFFF;
-    --shadow: 0 10px 30px rgba(0,0,0,0.08);
-    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+// ==========================================
+// Munambam Seafoods Dashboard - Fully Updated
+// dashboard.js
+// ==========================================
+
+let settingsData = [];
+let transactionData = [];
+let currentEditIndex = null;
+
+document.addEventListener("DOMContentLoaded", () => {
+    if (typeof protectPage === "function") protectPage();
+    initDashboard();
+    
+    // Category മാറുമ്പോൾ അതിനനുസരിച്ചുള്ള Items ലോഡ് ചെയ്യാൻ
+    const catSelect = document.getElementById("categorySelect");
+    if (catSelect) {
+        catSelect.addEventListener("change", loadItems);
+    }
+});
+
+async function initDashboard() {
+    await loadDashboard();
 }
 
-/* --- Summary Cards --- */
-.summary-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 25px;
-    margin-bottom: 30px;
+async function loadDashboard() {
+    showLoader(true);
+    try {
+        const response = await fetch(CONFIG.SCRIPT_URL + "?action=getDashboard");
+        const data = await response.json();
+        
+        settingsData = data.settings || [];
+        transactionData = data.transactions || [];
+        
+        renderHistory();
+        updateSummaryCards();
+        updateRecordCount();
+        loadCategories(); 
+    } catch (e) {
+        console.error(e);
+        showToast("Unable to load dashboard", "error");
+    }
+    showLoader(false);
 }
 
-.card-item {
-    background: var(--white);
-    padding: 25px;
-    border-radius: 12px;
-    border-left: 6px solid var(--gold);
-    box-shadow: var(--shadow);
-    transition: var(--transition);
+// 1. DELETE TRANSACTION WITH CUSTOM CONFIRMATION
+async function deleteTransaction(rowIndex) {
+    showConfirm("Are you sure you want to delete this entry?", async () => {
+        showLoader(true);
+        try {
+            await api({
+                action: "Delete",
+                sheetName: "Sheet1",
+                index: rowIndex
+            });
+            showToast("Transaction Deleted Successfully");
+            loadDashboard(); 
+            if (typeof auditDelete === "function") auditDelete("Row " + rowIndex);
+        } catch (e) {
+            console.error(e);
+            showToast("Failed to delete entry", "error");
+        }
+        showLoader(false);
+    });
 }
 
-.card-item:hover { 
-    transform: translateY(-8px); 
-    box-shadow: 0 15px 30px rgba(0,0,0,0.15); 
+// 2. EDIT TRANSACTION (Opens Custom Edit Modal)
+function editTransaction(rowIndex) {
+    currentEditIndex = rowIndex;
+    let row = transactionData[rowIndex];
+    
+    const inputField = document.getElementById("editAmountInput");
+    if (inputField) {
+        inputField.value = row[4]; // നിലവിലുള്ള എമൗണ്ട് ഇൻപുട്ടിൽ കാണിക്കുന്നു
+    }
+    
+    // Edit Modal കാണിക്കുക
+    const editModal = document.getElementById("editModal");
+    if (editModal) {
+        editModal.style.display = "block";
+    }
 }
 
-.card-item h3 { 
-    margin: 0; 
-    font-size: 0.85rem; 
-    color: #64748b; 
-    text-transform: uppercase; 
-    letter-spacing: 1px; 
+function closeEditModal() {
+    const editModal = document.getElementById("editModal");
+    if (editModal) {
+        editModal.style.display = "none";
+    }
+    currentEditIndex = null;
 }
 
-.card-item p { 
-    margin: 12px 0 0; 
-    font-size: 1.8rem; 
-    font-weight: 700; 
-    color: var(--navy-blue); 
+// 3. SAVE EDIT WITH SAME CUSTOM CONFIRMATION
+async function saveEditAmount() {
+    const inputField = document.getElementById("editAmountInput");
+    if (!inputField || currentEditIndex === null) return;
+
+    const newAmount = inputField.value;
+    if (newAmount === "" || newAmount === null) {
+        showToast("Please enter a valid amount", "error");
+        return;
+    }
+
+    closeEditModal(); // ആദ്യം ഇൻപുട്ട് വിൻഡോ ക്ലോസ് ചെയ്യുക
+
+    // ഡിലീറ്റ് ചെയ്യുന്നതുപോലെയുള്ള കസ്റ്റം പോപ്പ്-അപ്പ് ഇവിടെയും കാണിക്കുന്നു
+    showConfirm("Are you sure you want to save these changes?", async () => {
+        showLoader(true);
+        try {
+            let row = [...transactionData[currentEditIndex]];
+            row[4] = Number(newAmount);
+
+            await api({
+                action: "Edit",
+                sheetName: "Sheet1",
+                index: currentEditIndex,
+                values: row
+            });
+            showToast("Transaction Updated Successfully");
+            loadDashboard();
+        } catch (e) {
+            console.error(e);
+            showToast("Failed to update transaction", "error");
+        }
+        showLoader(false);
+    });
 }
 
-/* --- Transaction Form --- */
-.card h2 { color: var(--navy-blue); margin-top: 0; font-size: 1.5rem; }
+// 4. SAVE NEW TRANSACTION WITH SAME CUSTOM CONFIRMATION
+async function saveTransaction() {
+    const date = document.getElementById("date").value;
+    const type = document.getElementById("type").value;
+    const category = document.getElementById("categorySelect").value;
+    const item = document.getElementById("itemSelect").value;
+    const amount = document.getElementById("amount").value;
+    const notes = document.getElementById("notes").value;
 
-/* --- History Section Filters --- */
-.filters {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-    background: #f1f5f9;
-    padding: 15px;
-    border-radius: 10px;
+    if (!date || !amount) {
+        showToast("Please fill in Date and Amount", "error");
+        return;
+    }
+
+    const values = [date, type, category, item, Number(amount), notes];
+
+    // കസ്റ്റം കൺഫർമേഷൻ പോപ്പ്-അപ്പ്
+    showConfirm("Are you sure you want to save this transaction?", async () => {
+        showLoader(true);
+        try {
+            await api({
+                action: "addTransaction",
+                values: values
+            });
+            showToast("Transaction Saved Successfully");
+            
+            // ഫോം റീസെറ്റ് ചെയ്യുക
+            document.getElementById("amount").value = "";
+            document.getElementById("notes").value = "";
+            
+            loadDashboard();
+            if (typeof showSection === "function") showSection("dashboard");
+        } catch (e) {
+            console.error(e);
+            showToast("Failed to save transaction", "error");
+        }
+        showLoader(false);
+    });
 }
 
-.filters input, .filters select {
-    flex: 1;
-    min-width: 150px;
-    padding: 10px;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    outline: none;
+// CORS ISSUE പരിഹരിക്കാൻ നവീകരിച്ച API CALL ഫങ്ഷൻ
+async function api(data) {
+    const response = await fetch(CONFIG.SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" }, // Bypasses CORS Preflight
+        body: JSON.stringify(data)
+    });
+    return await response.json();
 }
 
-/* --- Table Styles --- */
-#historyBody tr:hover { background-color: #f8fafc; }
-
-#historyBody td button {
-    padding: 8px 15px;
-    margin-right: 5px;
-    border-radius: 6px;
-    border: 1px solid var(--gold);
-    background: transparent;
-    color: var(--navy-blue);
-    cursor: pointer;
-    font-weight: 600;
-    transition: var(--transition);
+// HISTORY TABLE RENDER (With Dynamic Colors)
+function renderHistory() {
+    const tbody = document.getElementById("historyBody");
+    if (!tbody) return;
+    tbody.innerHTML = "";
+    
+    transactionData.forEach((row, index) => {
+        if (index === 0) return; // Skip headers
+        
+        const tr = document.createElement("tr");
+        const typeColor = row[1] === "Income" ? "var(--green)" : "var(--red)";
+        
+        tr.innerHTML = `
+            <td>${formatDate(row[0])}</td>
+            <td style="color: ${typeColor}; font-weight: bold;">${row[1]}</td>
+            <td>${row[2] || ""}</td>
+            <td>${row[3] || ""}</td>
+            <td style="font-weight: bold;">₹ ${row[4]}</td>
+            <td>
+                <button onclick="editTransaction(${index})" class="btn-edit">Edit</button>
+                <button onclick="deleteTransaction(${index})" class="btn-delete">Delete</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
 }
 
-#historyBody td button:hover {
-    background: var(--gold);
-    color: var(--white);
+function updateSummaryCards() {
+    let income = 0, expense = 0;
+    transactionData.forEach((r, i) => {
+        if (i === 0) return;
+        if (r[1] === "Income") income += Number(r[4]) || 0;
+        else expense += Number(r[4]) || 0;
+    });
+
+    const elInc = document.getElementById("totalIncome");
+    const elExp = document.getElementById("totalExpense");
+    const elNet = document.getElementById("netProfit");
+
+    if (elInc) elInc.innerText = "₹ " + income.toFixed(2);
+    if (elExp) elExp.innerText = "₹ " + expense.toFixed(2);
+    if (elNet) elNet.innerText = "₹ " + (income - expense).toFixed(2);
 }
 
-/* --- Audit Log --- */
-#auditBody { font-size: 0.9rem; color: #475569; }
-
-/* --- Utility & Loader --- */
-.hidden { display: none !important; }
-
-#loader {
-    text-align: center;
-    padding: 20px;
-    font-weight: bold;
-    color: var(--navy-blue);
+function updateRecordCount() {
+    const el = document.getElementById("recordCount");
+    if (el) el.innerText = Math.max(0, transactionData.length - 1);
 }
 
-/* --- Responsive --- */
-@media (max-width: 768px) {
-    .summary-cards { grid-template-columns: 1fr; }
-    .filters { flex-direction: column; }
+function showLoader(show) {
+    const loader = document.getElementById("loader");
+    if (loader) loader.style.display = show ? "flex" : "none";
+}
+
+function showToast(message, type = "success") {
+    const toast = document.getElementById("toast");
+    if (!toast) return;
+    toast.innerText = message;
+    toast.className = "toast " + type;
+    toast.style.display = "block";
+    setTimeout(() => toast.style.display = "none", 3000);
+}
+
+function formatDate(date) {
+    if (!date) return "";
+    return new Date(date).toLocaleDateString("en-GB");
+}
+
+function refreshDashboard() {
+    loadDashboard();
+}
+
+// Settings ഷീറ്റിൽ നിന്നുള്ള കാറ്റഗറികൾ ഡ്രോപ്പ്ഡൗണിലേക്ക് ലോഡ് ചെയ്യാൻ
+function loadCategories() {
+    const categorySelect = document.getElementById("categorySelect");
+    if (!categorySelect) return;
+    
+    categorySelect.innerHTML = '<option value="">Select Category</option>';
+    let categories = [];
+    
+    if (settingsData && settingsData.length > 0) {
+        settingsData.forEach((row, i) => {
+            if (i === 0) return;
+            if (row[0] && !categories.includes(row[0])) {
+                categories.push(row[0]);
+            }
+        });
+    }
+    
+    categories.forEach(cat => {
+        const opt = document.createElement("option");
+        opt.value = cat;
+        opt.innerText = cat;
+        categorySelect.appendChild(opt);
+    });
+}
+
+// കാറ്റഗറിക്ക് അനുസരിച്ച് ഐറ്റംസ് ലോഡ് ചെയ്യാൻ
+function loadItems() {
+    const itemSelect = document.getElementById("itemSelect");
+    if (!itemSelect) return;
+    
+    const selectedCat = document.getElementById("categorySelect").value;
+    itemSelect.innerHTML = '<option value="">Select Item</option>';
+    
+    if (!selectedCat) return;
+    
+    if (settingsData && settingsData.length > 0) {
+        settingsData.forEach((row, i) => {
+            if (i === 0) return;
+            if (row[0] === selectedCat && row[1]) {
+                const opt = document.createElement("option");
+                opt.value = row[1];
+                opt.innerText = row[1];
+                itemSelect.appendChild(opt);
+            }
+        });
+    }
 }
