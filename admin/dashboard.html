@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Munambam Seafoods</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <!-- SheetJS for Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -13,7 +16,7 @@
         <button onclick="showSection('transactions')">Add Transaction</button>
         <button onclick="showSection('history')">History & Filter</button>
         <button onclick="showSection('auditLogs')">Audit Logs</button>
-        <button onclick="exportToExcel()">Export Excel</button>
+        <button onclick="exportExcel()">Export Excel</button>
     </div>
 
     <!-- Confirm Modal -->
@@ -33,12 +36,12 @@
         <select id="categorySelect"></select>
         <select id="itemSelect"></select>
         <input type="number" id="amount" placeholder="Amount">
-        <button id="saveBtn" onclick="prepareSave()">Save Transaction</button>
+        <button id="saveBtn" onclick="saveTransaction()">Save Transaction</button>
     </div>
 
     <!-- History Section -->
     <div id="history" class="card hidden">
-        <h2>Transaction History <button onclick="init()">Refresh</button></h2>
+        <h2>Transaction History <button onclick="refreshDashboard()">Refresh</button></h2>
         <table id="historyTable">
             <thead>
                 <tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th><th>Actions</th></tr>
@@ -59,7 +62,7 @@
     </div>
 
     <!-- Loader & Toast -->
-    <div id="loader" class="hidden">Saving...</div>
+    <div id="loader" class="hidden">Processing...</div>
     <div id="toast" class="hidden"></div>
 
     <script src="js/config.js"></script>
