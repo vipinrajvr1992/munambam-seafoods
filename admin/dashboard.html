@@ -6,62 +6,88 @@
     <title>Admin Dashboard | Munambam Seafoods</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <!-- SheetJS for Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
-    <!-- Navigation -->
-    <div class="nav">
-        <button onclick="showSection('transactions')">Add Transaction</button>
-        <button onclick="showSection('history')">History & Filter</button>
+    <header class="navbar">
+        <div class="logo">Munambam Seafoods</div>
+        <div class="user-info">
+            <span id="loggedUser">Admin</span>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <nav class="sub-nav">
+        <button onclick="showSection('dashboard')">Dashboard</button>
+        <button onclick="showSection('addTransaction')">Add Transaction</button>
+        <button onclick="showSection('history')">History</button>
         <button onclick="showSection('auditLogs')">Audit Logs</button>
         <button onclick="exportExcel()">Export Excel</button>
-    </div>
+    </nav>
 
-    <!-- Confirm Modal -->
-    <div id="confirmModal" class="modal">
+    <main>
+        <section id="dashboard" class="card">
+            <div class="summary-cards">
+                <div class="card-item"><h3>Total Income</h3><p id="totalIncome">₹ 0</p></div>
+                <div class="card-item"><h3>Total Expense</h3><p id="totalExpense">₹ 0</p></div>
+                <div class="card-item"><h3>Net Profit</h3><p id="netProfit">₹ 0</p></div>
+            </div>
+        </section>
+
+        <section id="addTransaction" class="card hidden">
+            <h2>Add New Entry</h2>
+            <input type="date" id="date">
+            <select id="type"><option value="Income">Income</option><option value="Expense">Expense</option></select>
+            <select id="categorySelect"></select>
+            <select id="itemSelect"></select>
+            <input type="number" id="amount" placeholder="Amount">
+            <textarea id="notes" placeholder="Notes"></textarea>
+            <button id="saveBtn">Save Transaction</button>
+        </section>
+
+        <section id="history" class="card hidden">
+            <h2>Transaction History (<span id="recordCount">0</span>)</h2>
+            <div class="filters">
+                <input id="searchInput" placeholder="Search...">
+                <select id="filterType"></select>
+                <select id="filterCategory"></select>
+                <input type="date" id="fromDate">
+                <input type="date" id="toDate">
+                <button onclick="refreshDashboard()">Refresh</button>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="historyBody"></tbody>
+            </table>
+        </section>
+
+        <section id="auditLogs" class="card hidden">
+            <h2>Audit Logs</h2>
+            <table>
+                <thead><tr><th>Timestamp</th><th>Action</th><th>Details</th><th>Browser</th></tr></thead>
+                <tbody id="auditBody"></tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Modals & UI -->
+    <div id="editModal" class="modal">
         <div class="modal-content">
-            <p id="modalMsg">Are you sure?</p>
-            <button onclick="executeAction()">Confirm</button>
-            <button onclick="closeModal()" style="background:#666;">Cancel</button>
+            <input type="date" id="editDate">
+            <select id="editType"></select>
+            <select id="editCategory"></select>
+            <select id="editItem"></select>
+            <input type="number" id="editAmount">
+            <textarea id="editNotes"></textarea>
+            <button id="updateBtn">Update</button>
+            <button onclick="closeEditModal()">Cancel</button>
         </div>
     </div>
-
-    <!-- Add Entry Section -->
-    <div id="transactions" class="card">
-        <h2>Add New Entry</h2>
-        <input type="date" id="date">
-        <select id="type"><option value="Income">Income</option><option value="Expense">Expense</option></select>
-        <select id="categorySelect"></select>
-        <select id="itemSelect"></select>
-        <input type="number" id="amount" placeholder="Amount">
-        <button id="saveBtn" onclick="saveTransaction()">Save Transaction</button>
-    </div>
-
-    <!-- History Section -->
-    <div id="history" class="card hidden">
-        <h2>Transaction History <button onclick="refreshDashboard()">Refresh</button></h2>
-        <table id="historyTable">
-            <thead>
-                <tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th><th>Actions</th></tr>
-            </thead>
-            <tbody id="historyBody"></tbody>
-        </table>
-    </div>
-
-    <!-- Audit Logs Section -->
-    <div id="auditLogs" class="card hidden">
-        <h2>Audit Logs</h2>
-        <table id="auditTable">
-            <thead>
-                <tr><th>Timestamp</th><th>Action</th><th>Details</th><th>Browser</th></tr>
-            </thead>
-            <tbody id="auditBody"></tbody>
-        </table>
-    </div>
-
-    <!-- Loader & Toast -->
+    
+    <div id="confirmModal" class="modal"><div class="modal-content"><p>Are you sure?</p></div></div>
     <div id="loader" class="hidden">Processing...</div>
     <div id="toast" class="hidden"></div>
 
@@ -71,10 +97,9 @@
     <script src="js/history.js"></script>
     <script src="js/export.js"></script>
     <script src="js/audit.js"></script>
-    
     <script>
         function showSection(id) {
-            document.querySelectorAll('.card').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
         }
     </script>
