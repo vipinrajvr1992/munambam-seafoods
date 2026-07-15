@@ -24,12 +24,11 @@ async function loadDashboard() {
         settingsData = data.settings || [];
         transactionData = data.transactions || [];
         
-        // UI അപ്‌ഡേറ്റുകൾ
         renderHistory();
         updateSummaryCards();
         updateRecordCount();
         
-        // ഡ്രോപ്പ്‌ഡൗൺ ലോഡ് ചെയ്യുന്നു
+        // ഡ്രോപ്പ്‌ഡൗൺ ലോഡ് ചെയ്യുന്നു (ഹെഡർ ഒഴിവാക്കി)
         loadCategories(); 
     } catch (e) {
         console.error(e);
@@ -38,32 +37,41 @@ async function loadDashboard() {
     showLoader(false);
 }
 
-// ഡ്രോപ്പ്‌ഡൗൺ ലോജിക്
+// ഡ്രോപ്പ്‌ഡൗൺ ലോജിക് - ഹെഡർ ഒഴിവാക്കി
 function loadCategories() {
     const categorySelect = document.getElementById("categorySelect");
     const itemSelect = document.getElementById("itemSelect");
     
     if (!categorySelect || !itemSelect) return;
 
-    // കാറ്റഗറി ലിസ്റ്റ് സെറ്റ് ചെയ്യുന്നു
-    const categories = [...new Set(settingsData.map(r => r[0]))];
+    // settingsData-യിൽ നിന്ന് ഒന്നാമത്തെ റോ (Header) ഒഴിവാക്കുന്നു
+    const dataRows = settingsData.slice(1);
+    
+    // Unique കാറ്റഗറികൾ മാത്രം എടുക്കുന്നു
+    const categories = [...new Set(dataRows.map(r => r[0]))];
     
     categorySelect.innerHTML = '<option value="">Select Category</option>';
     categories.forEach(cat => {
-        categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+        if (cat) { // ശൂന്യമായ കാറ്റഗറികൾ ഒഴിവാക്കാൻ
+            categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+        }
     });
 
-    // കാറ്റഗറി മാറുമ്പോൾ ഐറ്റം മാറുന്നു
     categorySelect.addEventListener("change", function() {
         const selectedCat = this.value;
         itemSelect.innerHTML = '<option value="">Select Item</option>';
         
-        settingsData.filter(r => r[0] === selectedCat).forEach(r => {
-            itemSelect.innerHTML += `<option value="${r[1]}">${r[1]}</option>`;
+        // സെലക്ട് ചെയ്ത കാറ്റഗറിക്ക് അനുസരിച്ചുള്ള ഐറ്റം ഫിൽട്ടർ ചെയ്യുന്നു
+        dataRows.filter(r => r[0] === selectedCat).forEach(r => {
+            if (r[1]) {
+                itemSelect.innerHTML += `<option value="${r[1]}">${r[1]}</option>`;
+            }
         });
         itemSelect.classList.add('fade-in');
     });
 }
+
+// ... ബാക്കി ഫങ്ഷനുകൾ അതേപടി നിലനിർത്തുക ...
 
 async function api(data) {
     const response = await fetch(CONFIG.SCRIPT_URL, {
