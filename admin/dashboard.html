@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Munambam Seafoods</title>
+    <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
@@ -25,6 +28,7 @@
     </nav>
 
     <main>
+        <!-- Sections -->
         <section id="dashboard" class="card">
             <div class="summary-cards">
                 <div class="card-item"><h3>Total Income</h3><p id="totalIncome">₹ 0</p></div>
@@ -43,13 +47,15 @@
                 <select id="itemSelect"><option value="">Select Item</option></select>
                 <input type="number" id="amount" placeholder="Amount">
                 <textarea id="notes" placeholder="Notes"></textarea>
-                <button id="saveBtn" class="btn-primary">Save Transaction</button>
+                <button id="saveBtn" class="btn-primary" onclick="saveTransaction()">Save Transaction</button>
             </div>
         </section>
 
         <section id="history" class="card hidden">
             <h2>History</h2>
-            <button onclick="refreshDashboard()" class="btn-primary">Refresh Data</button>
+            <div class="filters">
+                <input type="text" id="searchHistory" placeholder="Search History..." onkeyup="filterHistory()">
+            </div>
             <table>
                 <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th><th>Action</th></tr></thead>
                 <tbody id="historyBody"></tbody>
@@ -58,7 +64,6 @@
 
         <section id="auditLogs" class="card hidden">
             <h2>Audit Logs</h2>
-            <button onclick="refreshDashboard()" class="btn-primary">Refresh Data</button>
             <table>
                 <thead><tr><th>Timestamp</th><th>Action</th><th>Details</th></tr></thead>
                 <tbody id="auditBody"></tbody>
@@ -78,11 +83,18 @@
         </div>
     </div>
 
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/export.js"></script>
+
     <script>
         function showSection(id) {
             document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
-            const target = document.getElementById(id);
-            if(target) target.classList.remove('hidden');
+            document.getElementById(id).classList.remove('hidden');
         }
         function showConfirm(message, onConfirm) {
             document.getElementById("confirmMessage").innerText = message;
@@ -91,8 +103,5 @@
         }
         function closeConfirm() { document.getElementById("confirmModal").style.display = "none"; }
     </script>
-    <script src="js/config.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/dashboard.js"></script>
 </body>
 </html>
