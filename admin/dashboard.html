@@ -14,7 +14,6 @@
         <div class="logo">Munambam Seafoods</div>
         <div class="user-info">
             <span id="loggedUser">Admin</span>
-            <!-- Custom Confirmation Modal trigger -->
             <button class="btn-logout" onclick="showConfirm('Are you sure you want to logout?', logout)">Logout</button>
         </div>
     </header>
@@ -28,6 +27,7 @@
     </nav>
 
     <main>
+        <!-- Dashboard Section -->
         <section id="dashboard" class="card">
             <div class="summary-cards">
                 <div class="card-item"><h3>Total Income</h3><p id="totalIncome">₹ 0</p></div>
@@ -36,6 +36,7 @@
             </div>
         </section>
 
+        <!-- Add Transaction Section -->
         <section id="addTransaction" class="card hidden">
             <h2>Add New Entry</h2>
             <div class="input-group">
@@ -49,9 +50,27 @@
             </div>
         </section>
 
-        <!-- History & Other sections remain same -->
-        <section id="history" class="card hidden">...</section>
-        <section id="auditLogs" class="card hidden">...</section>
+        <!-- History Section -->
+        <section id="history" class="card hidden">
+            <h2>History</h2>
+            <div class="filters">
+                <input type="text" id="searchInput" placeholder="Search...">
+                <button onclick="refreshDashboard()">Refresh</button>
+            </div>
+            <table>
+                <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th></tr></thead>
+                <tbody id="historyBody"></tbody>
+            </table>
+        </section>
+
+        <!-- Audit Logs Section -->
+        <section id="auditLogs" class="card hidden">
+            <h2>Audit Logs</h2>
+            <table>
+                <thead><tr><th>Timestamp</th><th>Action</th><th>Details</th></tr></thead>
+                <tbody id="auditBody"></tbody>
+            </table>
+        </section>
     </main>
 
     <!-- Custom Premium Confirmation Modal -->
@@ -69,6 +88,22 @@
     <div id="loader" class="hidden">Processing...</div>
     <div id="toast" class="hidden"></div>
 
+    <!-- Scripts -->
+    <script>
+        function showSection(id) {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+            const section = document.getElementById(id);
+            if(section) section.classList.remove('hidden');
+        }
+
+        function showConfirm(message, onConfirm) {
+            document.getElementById("confirmMessage").innerText = message;
+            document.getElementById("confirmModal").style.display = "block";
+            document.getElementById("confirmActionBtn").onclick = () => { onConfirm(); closeConfirm(); };
+        }
+
+        function closeConfirm() { document.getElementById("confirmModal").style.display = "none"; }
+    </script>
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/dashboard.js"></script>
