@@ -1,20 +1,39 @@
 // ==========================================
-// Munambam Seafoods Dashboard - Fully Updated
-// dashboard.js
+// dashboard.js - Premium Controller
 // ==========================================
 
 let settingsData = [];
 let transactionData = [];
 let currentEditIndex = null;
+let confirmCallback = null; // കസ്റ്റം കൺഫർമേഷൻ സ്റ്റോർ ചെയ്യാൻ
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (typeof protectPage === "function") protectPage();
     initDashboard();
     
-    // Category മാറുമ്പോൾ അതിനനുസരിച്ചുള്ള Items ലോഡ് ചെയ്യാൻ
     const catSelect = document.getElementById("categorySelect");
     if (catSelect) {
         catSelect.addEventListener("change", loadItems);
+    }
+
+    // കസ്റ്റം കൺഫർമേഷൻ ബട്ടൺ ഇവന്റുകൾ ലിങ്ക് ചെയ്യുന്നു
+    const confirmCancelBtn = document.getElementById("confirmCancelBtn");
+    const confirmYesBtn = document.getElementById("confirmYesBtn");
+
+    if (confirmCancelBtn) {
+        confirmCancelBtn.addEventListener("click", () => {
+            document.getElementById("confirmModal").style.display = "none";
+            confirmCallback = null;
+        });
+    }
+
+    if (confirmYesBtn) {
+        confirmYesBtn.addEventListener("click", async () => {
+            document.getElementById("confirmModal").style.display = "none";
+            if (confirmCallback) {
+                await confirmCallback();
+            }
+            confirmCallback = null;
+        });
     }
 });
 
@@ -37,43 +56,55 @@ async function loadDashboard() {
         loadCategories(); 
     } catch (e) {
         console.error(e);
-        showToast("Unable to load dashboard", "error");
+        showToast("Unable to load dashboard data", "error");
     }
     showLoader(false);
 }
 
-// 1. DELETE TRANSACTION WITH CUSTOM CONFIRMATION
+// കസ്റ്റം കൺഫർമേഷൻ വിൻഡോ ട്രിഗർ ചെയ്യാനുള്ള ഫങ്ഷൻ
+function showConfirm(message, callback) {
+    const confirmModal = document.getElementById("confirmModal");
+    const confirmMessage = document.getElementById("confirmMessage");
+    if (!confirmModal || !confirmMessage) return;
+
+    confirmMessage.innerText = message;
+    confirmCallback = callback;
+    confirmModal.style.display = "block";
+}
+
+// 1. DELETE ACTION (With Custom Confirm Modal)
 async function deleteTransaction(rowIndex) {
-    showConfirm("Are you sure you want to delete this entry?", async () => {
+    showConfirm("Are you sure you want to delete this transaction permanently?", async () => {
         showLoader(true);
         try {
-            await api({
+            const result = await api({
                 action: "Delete",
-                sheetName: "Sheet1",
                 index: rowIndex
             });
-            showToast("Transaction Deleted Successfully");
-            loadDashboard(); 
-            if (typeof auditDelete === "function") auditDelete("Row " + rowIndex);
+            if (result.success) {
+                showToast("Transaction Deleted Successfully");
+                await loadDashboard(); 
+            } else {
+                showToast(result.message || "Failed to delete entry", "error");
+            }
         } catch (e) {
             console.error(e);
-            showToast("Failed to delete entry", "error");
+            showToast("Failed to delete entry. Check connection.", "error");
         }
         showLoader(false);
     });
 }
 
-// 2. EDIT TRANSACTION (Opens Custom Edit Modal)
+// 2. OPEN EDIT WINDOW
 function editTransaction(rowIndex) {
     currentEditIndex = rowIndex;
     let row = transactionData[rowIndex];
     
     const inputField = document.getElementById("editAmountInput");
     if (inputField) {
-        inputField.value = row[4]; // നിലവിലുള്ള എമൗണ്ട് ഇൻപുട്ടിൽ കാണിക്കുന്നു
+        inputField.value = row[4]; 
     }
     
-    // Edit Modal കാണിക്കുക
     const editModal = document.getElementById("editModal");
     if (editModal) {
         editModal.style.display = "block";
@@ -88,34 +119,45 @@ function closeEditModal() {
     currentEditIndex = null;
 }
 
-// 3. SAVE EDIT WITH SAME CUSTOM CONFIRMATION
+// 3. SAVE EDIT (With Same Custom Confirm Modal)
 async function saveEditAmount() {
     const inputField = document.getElementById("editAmountInput");
     if (!inputField || currentEditIndex === null) return;
 
     const newAmount = inputField.value;
-    if (newAmount === "" || newAmount === null) {
-        showToast("Please enter a valid amount", "error");
+    if (newAmount === "" || isNaN(newAmount) || Number(newAmount) <= 0) {
+        showToast("Please enter a valid positive amount", "error");
         return;
     }
 
-    closeEditModal(); // ആദ്യം ഇൻപുട്ട് വിൻഡോ ക്ലോസ് ചെയ്യുക
+    closeEditModal(); // കൺഫർമേഷൻ കാണിക്കുന്നതിന് മുൻപ് മെയിൻ ഇൻപുട്ട് ക്ലോസ് ചെയ്യുക
 
-    // ഡിലീറ്റ് ചെയ്യുന്നതുപോലെയുള്ള കസ്റ്റം പോപ്പ്-അപ്പ് ഇവിടെയും കാണിക്കുന്നു
-    showConfirm("Are you sure you want to save these changes?", async () => {
+    showConfirm("Are you sure you want to save the modified amount?", async () => {
         showLoader(true);
         try {
             let row = [...transactionData[currentEditIndex]];
+            
+            // ഗൂഗിൾ ഷീറ്റിലെ തീയതി ഫോർമാറ്റ് തിരുത്താൻ
+            if (row[0] && row[0].toString().includes("T")) {
+                row[0] = row[0].split("T")[0];
+            } else if (row[0] instanceof Date || !isNaN(Date.parse(row[0]))) {
+                row[0] = new Date(row[0]).toISOString().split('T')[0];
+            }
+
             row[4] = Number(newAmount);
 
-            await api({
+            const result = await api({
                 action: "Edit",
-                sheetName: "Sheet1",
                 index: currentEditIndex,
                 values: row
             });
-            showToast("Transaction Updated Successfully");
-            loadDashboard();
+
+            if (result.success) {
+                showToast("Transaction Updated Successfully");
+                await loadDashboard();
+            } else {
+                showToast(result.message || "Failed to update transaction", "error");
+            }
         } catch (e) {
             console.error(e);
             showToast("Failed to update transaction", "error");
@@ -124,7 +166,7 @@ async function saveEditAmount() {
     });
 }
 
-// 4. SAVE NEW TRANSACTION WITH SAME CUSTOM CONFIRMATION
+// 4. ADD TRANSACTION (With Same Custom Confirm Modal)
 async function saveTransaction() {
     const date = document.getElementById("date").value;
     const type = document.getElementById("type").value;
@@ -133,48 +175,48 @@ async function saveTransaction() {
     const amount = document.getElementById("amount").value;
     const notes = document.getElementById("notes").value;
 
-    if (!date || !amount) {
-        showToast("Please fill in Date and Amount", "error");
+    if (!date || !amount || isNaN(amount) || Number(amount) <= 0) {
+        showToast("Please fill in Date and a valid Amount", "error");
         return;
     }
 
     const values = [date, type, category, item, Number(amount), notes];
 
-    // കസ്റ്റം കൺഫർമേഷൻ പോപ്പ്-അപ്പ്
-    showConfirm("Are you sure you want to save this transaction?", async () => {
+    showConfirm("Are you sure you want to save this new transaction?", async () => {
         showLoader(true);
         try {
-            await api({
+            const result = await api({
                 action: "addTransaction",
                 values: values
             });
-            showToast("Transaction Saved Successfully");
-            
-            // ഫോം റീസെറ്റ് ചെയ്യുക
-            document.getElementById("amount").value = "";
-            document.getElementById("notes").value = "";
-            
-            loadDashboard();
-            if (typeof showSection === "function") showSection("dashboard");
+            if (result.success) {
+                showToast("Transaction Saved Successfully");
+                document.getElementById("amount").value = "";
+                document.getElementById("notes").value = "";
+                await loadDashboard();
+                if (typeof showSection === "function") showSection("dashboard");
+            } else {
+                showToast(result.message || "Failed to save transaction", "error");
+            }
         } catch (e) {
             console.error(e);
-            showToast("Failed to save transaction", "error");
+            showToast("Failed to save transaction. Try again.", "error");
         }
         showLoader(false);
     });
 }
 
-// CORS ISSUE പരിഹരിക്കാൻ നവീകരിച്ച API CALL ഫങ്ഷൻ
+// CORS ISSUE പൂർണ്ണമായി ഒഴിവാക്കാനുള്ള അപ്ഡേറ്റഡ് API CALL
 async function api(data) {
     const response = await fetch(CONFIG.SCRIPT_URL, {
         method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" }, // Bypasses CORS Preflight
+        headers: { "Content-Type": "text/plain;charset=utf-8" }, 
         body: JSON.stringify(data)
     });
     return await response.json();
 }
 
-// HISTORY TABLE RENDER (With Dynamic Colors)
+// HISTORY TABLE (Income and Expense color tags perfectly integrated)
 function renderHistory() {
     const tbody = document.getElementById("historyBody");
     if (!tbody) return;
@@ -184,14 +226,14 @@ function renderHistory() {
         if (index === 0) return; // Skip headers
         
         const tr = document.createElement("tr");
-        const typeColor = row[1] === "Income" ? "var(--green)" : "var(--red)";
+        const typeBadgeClass = row[1] === "Income" ? "badge-income" : "badge-expense";
         
         tr.innerHTML = `
             <td>${formatDate(row[0])}</td>
-            <td style="color: ${typeColor}; font-weight: bold;">${row[1]}</td>
+            <td><span class="${typeBadgeClass}">${row[1]}</span></td>
             <td>${row[2] || ""}</td>
             <td>${row[3] || ""}</td>
-            <td style="font-weight: bold;">₹ ${row[4]}</td>
+            <td style="font-weight: bold;">₹ ${Number(row[4]).toFixed(2)}</td>
             <td>
                 <button onclick="editTransaction(${index})" class="btn-edit">Edit</button>
                 <button onclick="deleteTransaction(${index})" class="btn-delete">Delete</button>
@@ -228,25 +270,41 @@ function showLoader(show) {
     if (loader) loader.style.display = show ? "flex" : "none";
 }
 
+// TOAST NOTIFICATION (Yellow background and Red text for Errors)
 function showToast(message, type = "success") {
     const toast = document.getElementById("toast");
     if (!toast) return;
+    
     toast.innerText = message;
+    
+    // Clear old styles and apply new classes
     toast.className = "toast " + type;
     toast.style.display = "block";
-    setTimeout(() => toast.style.display = "none", 3000);
+    
+    setTimeout(() => {
+        toast.style.display = "none";
+    }, 4000);
 }
 
-function formatDate(date) {
-    if (!date) return "";
-    return new Date(date).toLocaleDateString("en-GB");
+function formatDate(dateVal) {
+    if (!dateVal) return "";
+    
+    let d = new Date(dateVal);
+    // If invalid date representation, strip time strings
+    if (isNaN(d.getTime())) {
+        if (typeof dateVal === 'string' && dateVal.includes('T')) {
+            d = new Date(dateVal.split('T')[0]);
+        }
+    }
+    
+    if (isNaN(d.getTime())) return dateVal;
+    return d.toLocaleDateString("en-GB");
 }
 
 function refreshDashboard() {
     loadDashboard();
 }
 
-// Settings ഷീറ്റിൽ നിന്നുള്ള കാറ്റഗറികൾ ഡ്രോപ്പ്ഡൗണിലേക്ക് ലോഡ് ചെയ്യാൻ
 function loadCategories() {
     const categorySelect = document.getElementById("categorySelect");
     if (!categorySelect) return;
@@ -271,7 +329,6 @@ function loadCategories() {
     });
 }
 
-// കാറ്റഗറിക്ക് അനുസരിച്ച് ഐറ്റംസ് ലോഡ് ചെയ്യാൻ
 function loadItems() {
     const itemSelect = document.getElementById("itemSelect");
     if (!itemSelect) return;
