@@ -1,6 +1,13 @@
-/* --- Premium Dashboard Styles --- */
+/* --- Root Variables (Dashboard Specific) --- */
+:root {
+    --navy-blue: #0B243B;
+    --gold: #C5A059;
+    --white: #FFFFFF;
+    --shadow: 0 10px 30px rgba(0,0,0,0.08);
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
 
-/* Summary Cards Alignment */
+/* --- Summary Cards --- */
 .summary-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -17,7 +24,10 @@
     transition: var(--transition);
 }
 
-.card-item:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+.card-item:hover { 
+    transform: translateY(-8px); 
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15); 
+}
 
 .card-item h3 { 
     margin: 0; 
@@ -34,10 +44,10 @@
     color: var(--navy-blue); 
 }
 
-/* Add Transaction Form Styling */
-.card h2 { color: var(--navy-blue); margin-top: 0; }
+/* --- Transaction Form --- */
+.card h2 { color: var(--navy-blue); margin-top: 0; font-size: 1.5rem; }
 
-/* Filter Section in History */
+/* --- History Section Filters --- */
 .filters {
     display: flex;
     gap: 12px;
@@ -54,17 +64,21 @@
     padding: 10px;
     border: 1px solid #cbd5e1;
     border-radius: 6px;
+    outline: none;
 }
 
-/* Transaction Table */
+/* --- Table Styles --- */
 #historyBody tr:hover { background-color: #f8fafc; }
+
 #historyBody td button {
-    padding: 6px 12px;
-    border-radius: 4px;
+    padding: 8px 15px;
+    margin-right: 5px;
+    border-radius: 6px;
     border: 1px solid var(--gold);
     background: transparent;
     color: var(--navy-blue);
     cursor: pointer;
+    font-weight: 600;
     transition: var(--transition);
 }
 
@@ -73,10 +87,10 @@
     color: var(--white);
 }
 
-/* Audit Log Table */
+/* --- Audit Log --- */
 #auditBody { font-size: 0.9rem; color: #475569; }
 
-/* Responsive adjustments */
+/* --- Responsive --- */
 @media (max-width: 768px) {
     .summary-cards { grid-template-columns: 1fr; }
     .filters { flex-direction: column; }
