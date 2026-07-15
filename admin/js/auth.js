@@ -1,64 +1,83 @@
 // ===========================================
 // Munambam Seafoods Admin Authentication
-// auth.js
 // ===========================================
 
 const SESSION_NAME = CONFIG.SESSION_KEY || "munambam_admin";
 
-// -----------------------------
+// ===========================================
 // Save Session
-// -----------------------------
-function saveSession(user) {
+// ===========================================
+
+function saveSession(username) {
 
     const session = {
+
         loggedIn: true,
-        username: user,
-        loginTime: new Date().getTime()
+
+        username: username,
+
+        loginTime: Date.now()
+
     };
 
-    localStorage.setItem(SESSION_NAME, JSON.stringify(session));
+    localStorage.setItem(
+
+        SESSION_NAME,
+
+        JSON.stringify(session)
+
+    );
 
 }
 
-
-// -----------------------------
+// ===========================================
 // Get Session
-// -----------------------------
+// ===========================================
+
 function getSession() {
 
-    const data = localStorage.getItem(SESSION_NAME);
+    const session = localStorage.getItem(SESSION_NAME);
 
-    if (!data) return null;
+    if (!session) return null;
 
     try {
-        return JSON.parse(data);
-    } catch (e) {
+
+        return JSON.parse(session);
+
+    } catch {
+
         return null;
+
     }
 
 }
 
-
-// -----------------------------
+// ===========================================
 // Check Login
-// -----------------------------
+// ===========================================
+
 function isLoggedIn() {
 
     const session = getSession();
 
-    if (!session) return false;
-
-    return session.loggedIn === true;
+    return session && session.loggedIn === true;
 
 }
 
-
-// -----------------------------
+// ===========================================
 // Logout
-// -----------------------------
+// ===========================================
+
 function logout() {
 
-    if (!confirm("Logout now?")) return;
+    if (!confirm("Are you sure you want to logout?"))
+        return;
+
+    if (typeof auditLogout === "function") {
+
+        auditLogout();
+
+    }
 
     localStorage.removeItem(SESSION_NAME);
 
@@ -66,10 +85,10 @@ function logout() {
 
 }
 
+// ===========================================
+// Redirect if Logged
+// ===========================================
 
-// -----------------------------
-// Redirect if already logged
-// -----------------------------
 function redirectIfLoggedIn() {
 
     if (isLoggedIn()) {
@@ -80,10 +99,10 @@ function redirectIfLoggedIn() {
 
 }
 
-
-// -----------------------------
+// ===========================================
 // Protect Dashboard
-// -----------------------------
+// ===========================================
+
 function protectPage() {
 
     if (!isLoggedIn()) {
@@ -94,10 +113,10 @@ function protectPage() {
 
 }
 
-
-// -----------------------------
+// ===========================================
 // Login
-// -----------------------------
+// ===========================================
+
 async function login(password) {
 
     showLoading(true);
@@ -126,11 +145,25 @@ async function login(password) {
 
             saveSession(result.username);
 
+            if (typeof auditLogin === "function") {
+
+                auditLogin();
+
+            }
+
             window.location.href = "dashboard.html";
 
-        } else {
+        }
 
-            alert(result.message || "Invalid Password");
+        else {
+
+            showMessage(
+
+                result.message || "Invalid Password",
+
+                false
+
+            );
 
         }
 
@@ -138,21 +171,65 @@ async function login(password) {
 
     catch (err) {
 
+        console.error(err);
+
         showLoading(false);
 
-        alert("Unable to connect.");
+        showMessage(
 
-        console.error(err);
+            "Unable to connect to server.",
+
+            false
+
+        );
 
     }
 
 }
 
+// ===========================================
+// Login Form
+// ===========================================
 
+document.addEventListener("DOMContentLoaded", () => {
 
-// -----------------------------
-// Loading
-// -----------------------------
+    checkSessionTimeout();
+
+    const form = document.getElementById("loginForm");
+
+    if (form) {
+
+        redirectIfLoggedIn();
+
+        form.addEventListener("submit", function (e) {
+
+            e.preventDefault();
+
+            const password = document
+                .getElementById("password")
+                .value
+                .trim();
+
+            if (password === "") {
+
+                showMessage("Enter Password", false);
+
+                return;
+
+            }
+
+            login(password);
+
+        });
+
+    }
+
+});
+
+// ===========================================
+// Loading Button
+// ===========================================
+
 function showLoading(status) {
 
     const btn = document.getElementById("loginBtn");
@@ -163,9 +240,13 @@ function showLoading(status) {
 
         btn.disabled = true;
 
-        btn.innerHTML = "Logging in...";
+        btn.innerHTML =
 
-    } else {
+            '<span class="spinner"></span> Logging in...';
+
+    }
+
+    else {
 
         btn.disabled = false;
 
@@ -175,26 +256,49 @@ function showLoading(status) {
 
 }
 
+// ===========================================
+// Messages
+// ===========================================
 
+function showMessage(text, success = false) {
 
-// -----------------------------
-// Auto Logout after 30 min
-// -----------------------------
+    const box = document.getElementById("loginMessage");
+
+    if (!box) {
+
+        alert(text);
+
+        return;
+
+    }
+
+    box.innerHTML = text;
+
+    box.style.color = success ? "green" : "red";
+
+}
+
+// ===========================================
+// Session Timeout
+// ===========================================
+
 function checkSessionTimeout() {
 
     const session = getSession();
 
     if (!session) return;
 
-    const now = new Date().getTime();
-
-    const diff = now - session.loginTime;
-
     const LIMIT = 30 * 60 * 1000;
 
-    if (diff > LIMIT) {
+    if (
 
-        alert("Session expired.");
+        Date.now() - session.loginTime >
+
+        LIMIT
+
+    ) {
+
+        alert("Session Expired");
 
         logout();
 
@@ -202,30 +306,38 @@ function checkSessionTimeout() {
 
 }
 
+// ===========================================
+// Refresh Session
+// ===========================================
 
-
-// -----------------------------
-// Update Login Time
-// -----------------------------
 function refreshSession() {
 
     const session = getSession();
 
     if (!session) return;
 
-    session.loginTime = new Date().getTime();
+    session.loginTime = Date.now();
 
-    localStorage.setItem(SESSION_NAME, JSON.stringify(session));
+    localStorage.setItem(
+
+        SESSION_NAME,
+
+        JSON.stringify(session)
+
+    );
 
 }
 
+// ===========================================
+// Auto Refresh Session
+// ===========================================
 
+setInterval(() => {
 
-// -----------------------------
-// Page Init
-// -----------------------------
-document.addEventListener("DOMContentLoaded", () => {
+    if (isLoggedIn()) {
 
-    checkSessionTimeout();
+        refreshSession();
 
-});
+    }
+
+}, 60000);
