@@ -27,8 +27,6 @@ async function loadDashboard() {
         renderHistory();
         updateSummaryCards();
         updateRecordCount();
-        
-        // ഡ്രോപ്പ്‌ഡൗൺ ലോഡ് ചെയ്യുന്നു (ഹെഡർ ഒഴിവാക്കി)
         loadCategories(); 
     } catch (e) {
         console.error(e);
@@ -37,41 +35,50 @@ async function loadDashboard() {
     showLoader(false);
 }
 
-// ഡ്രോപ്പ്‌ഡൗൺ ലോജിക് - ഹെഡർ ഒഴിവാക്കി
-function loadCategories() {
-    const categorySelect = document.getElementById("categorySelect");
-    const itemSelect = document.getElementById("itemSelect");
-    
-    if (!categorySelect || !itemSelect) return;
-
-    // settingsData-യിൽ നിന്ന് ഒന്നാമത്തെ റോ (Header) ഒഴിവാക്കുന്നു
-    const dataRows = settingsData.slice(1);
-    
-    // Unique കാറ്റഗറികൾ മാത്രം എടുക്കുന്നു
-    const categories = [...new Set(dataRows.map(r => r[0]))];
-    
-    categorySelect.innerHTML = '<option value="">Select Category</option>';
-    categories.forEach(cat => {
-        if (cat) { // ശൂന്യമായ കാറ്റഗറികൾ ഒഴിവാക്കാൻ
-            categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+// DELETE TRANSACTION (Updated with Custom Modal)
+async function deleteTransaction(rowIndex) {
+    showConfirm("Are you sure you want to delete this entry?", async () => {
+        showLoader(true);
+        try {
+            const result = await api({
+                action: "Delete",
+                sheetName: "Sheet1",
+                index: rowIndex
+            });
+            showToast("Transaction Deleted Successfully");
+            loadDashboard(); // Refresh UI
+            if (typeof auditDelete === "function") auditDelete("Row " + rowIndex);
+        } catch (e) {
+            showToast("Failed to delete", "error");
         }
-    });
-
-    categorySelect.addEventListener("change", function() {
-        const selectedCat = this.value;
-        itemSelect.innerHTML = '<option value="">Select Item</option>';
-        
-        // സെലക്ട് ചെയ്ത കാറ്റഗറിക്ക് അനുസരിച്ചുള്ള ഐറ്റം ഫിൽട്ടർ ചെയ്യുന്നു
-        dataRows.filter(r => r[0] === selectedCat).forEach(r => {
-            if (r[1]) {
-                itemSelect.innerHTML += `<option value="${r[1]}">${r[1]}</option>`;
-            }
-        });
-        itemSelect.classList.add('fade-in');
+        showLoader(false);
     });
 }
 
-// ... ബാക്കി ഫങ്ഷനുകൾ അതേപടി നിലനിർത്തുക ...
+// EDIT TRANSACTION (Updated with Custom logic)
+async function editTransaction(rowIndex) {
+    let row = transactionData[rowIndex];
+    let newAmount = prompt("Enter New Amount:", row[4]); 
+    
+    if (newAmount == null || newAmount === "") return;
+
+    row[4] = newAmount;
+
+    showLoader(true);
+    await api({
+        action: "Edit",
+        sheetName: "Sheet1",
+        index: rowIndex,
+        values: row
+    });
+    showToast("Transaction Updated");
+    loadDashboard();
+    if (typeof auditEdit === "function") auditEdit("Row " + rowIndex);
+    showLoader(false);
+}
+
+// ... ബാക്കി ഫങ്ഷനുകൾ (loadCategories, api, renderHistory, updateSummaryCards, etc.) ...
+// (ഇവ നേരത്തെ നൽകിയതുപോലെ തന്നെ ഉപയോഗിക്കുക)
 
 async function api(data) {
     const response = await fetch(CONFIG.SCRIPT_URL, {
