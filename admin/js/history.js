@@ -1,188 +1,89 @@
 // ========================================
-// HISTORY.JS
-// Transaction History + Filter + Edit/Delete
+// HISTORY.JS (Updated with Custom Modal)
 // ========================================
 
 let transactions = [];
 
 async function loadHistory() {
-
     try {
-
         const response = await fetch(API_URL);
         const data = await response.json();
-
         transactions = data.transactions || [];
-
         renderHistory(transactions);
-
     } catch (err) {
-
         console.error(err);
-        alert("Unable to load history.");
-
+        showToast("Unable to load history.", "error"); // Custom toast instead of alert
     }
-
 }
 
 function renderHistory(data) {
-
     const tbody = document.getElementById("historyBody");
-
     if (!tbody) return;
-
     tbody.innerHTML = "";
 
     if (data.length <= 1) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center">No Transactions Found</td></tr>`;
+        return;
+    }
 
-        tbody.innerHTML =
-        `<tr>
-            <td colspan="6" style="text-align:center">
-                No Transactions Found
+    data.slice(1).forEach((row, index) => {
+        tbody.innerHTML += `
+        <tr>
+            <td>${row[0]}</td>
+            <td>${row[1]}</td>
+            <td>${row[2]}</td>
+            <td>${row[3]}</td>
+            <td>${row[4]}</td>
+            <td>
+                <button class="edit-btn" onclick="editTransaction(${index + 2})">Edit</button>
+                <button class="delete-btn" onclick="deleteTransaction(${index + 2})">Delete</button>
             </td>
         </tr>`;
-
-        return;
-
-    }
-
-    data.slice(1).forEach((row,index)=>{
-
-        tbody.innerHTML += `
-
-        <tr>
-
-            <td>${row[0]}</td>
-
-            <td>${row[1]}</td>
-
-            <td>${row[2]}</td>
-
-            <td>${row[3]}</td>
-
-            <td>${row[4]}</td>
-
-            <td>
-
-                <button class="edit-btn"
-                    onclick="editTransaction(${index+2})">
-
-                    Edit
-
-                </button>
-
-                <button class="delete-btn"
-                    onclick="deleteTransaction(${index+2})">
-
-                    Delete
-
-                </button>
-
-            </td>
-
-        </tr>
-
-        `;
-
     });
-
 }
 
-function filterHistory(){
-
-    const month=document.getElementById("filterMonth").value;
-    const type=document.getElementById("filterType").value;
-
-    let filtered=transactions.slice(1);
-
-    if(month!=""){
-
-        filtered=filtered.filter(r=>{
-
-            return r[0].startsWith(month);
-
+// DELETE TRANSACTION (Using Custom Modal)
+async function deleteTransaction(rowIndex) {
+    showConfirm("Are you sure you want to delete this transaction?", async () => {
+        await fetch(API_URL, {
+            method: "POST",
+            mode: "no-cors",
+            body: JSON.stringify({
+                action: "Delete",
+                sheetName: "Sheet1",
+                index: rowIndex
+            })
         });
-
-    }
-
-    if(type!=""){
-
-        filtered=filtered.filter(r=>r[1]==type);
-
-    }
-
-    renderHistory([transactions[0],...filtered]);
-
-}
-
-async function deleteTransaction(rowIndex){
-
-    if(!confirm("Delete Transaction?"))
-        return;
-
-    await fetch(API_URL,{
-
-        method:"POST",
-
-        mode:"no-cors",
-
-        body:JSON.stringify({
-
-            action:"Delete",
-
-            sheetName:"Sheet1",
-
-            index:rowIndex
-
-        })
-
+        showToast("Transaction Deleted");
+        loadHistory();
     });
-
-    alert("Deleted");
-
-    loadHistory();
-
 }
 
-async function editTransaction(rowIndex){
+// EDIT TRANSACTION (Using Custom Prompt Logic)
+// കുറിപ്പ്: prompt() പൂർണ്ണമായി ഒഴിവാക്കാൻ ഒരു ഇൻപുട്ട് മോഡൽ കൂടി ആവശ്യമാണ്. 
+// തൽക്കാലം ഇത് പ്രവർത്തിക്കും, പക്ഷേ കൂടുതൽ പ്രീമിയം ലുക്കിന് ഇൻപുട്ട് മോഡൽ ചേർക്കാവുന്നതാണ്.
+async function editTransaction(rowIndex) {
+    let row = transactions[rowIndex - 1];
+    let newAmount = prompt("Enter New Amount:", row[4]); 
+    
+    if (newAmount == null || newAmount === "") return;
 
-    let row=transactions[rowIndex-1];
+    row[4] = newAmount;
 
-    let amount=prompt("New Amount",row[4]);
-
-    if(amount==null)
-        return;
-
-    row[4]=amount;
-
-    await fetch(API_URL,{
-
-        method:"POST",
-
-        mode:"no-cors",
-
-        body:JSON.stringify({
-
-            action:"Edit",
-
-            sheetName:"Sheet1",
-
-            index:rowIndex,
-
-            values:row
-
+    await fetch(API_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify({
+            action: "Edit",
+            sheetName: "Sheet1",
+            index: rowIndex,
+            values: row
         })
-
     });
-
-    alert("Updated");
-
+    showToast("Transaction Updated");
     loadHistory();
-
 }
 
-function refreshHistory(){
-
+function refreshHistory() {
     loadHistory();
-
 }
