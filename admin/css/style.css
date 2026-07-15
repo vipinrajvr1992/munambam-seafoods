@@ -5,6 +5,7 @@
     --white: #FFFFFF;
 }
 
+/* Base Styles */
 body {
     font-family: 'Montserrat', sans-serif;
     background-color: var(--cream);
@@ -12,7 +13,34 @@ body {
     padding: 0;
 }
 
-/* Navigation */
+/* --- Login Page Styles --- */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-card {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.logo { width: 120px; margin-bottom: 20px; }
+.subtitle { color: #888; margin-bottom: 25px; font-size: 0.9em; }
+
+/* --- Dashboard Navigation --- */
 .nav {
     display: flex;
     gap: 15px;
@@ -35,7 +63,7 @@ body {
     color: var(--white);
 }
 
-/* Cards & Sections */
+/* --- Cards & Sections --- */
 .card {
     background: var(--white);
     padding: 25px;
@@ -47,7 +75,20 @@ body {
 
 .hidden { display: none; }
 
-/* Table Styling */
+/* --- Forms & Inputs --- */
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: 0.3s;
+}
+
+input:focus, select:focus { border-color: var(--navy-blue); outline: none; }
+
+/* --- Table Styling --- */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -62,7 +103,7 @@ th, td {
 
 th { color: var(--navy-blue); }
 
-/* Modals */
+/* --- Modals & Toast --- */
 .modal {
     display: none;
     position: fixed;
@@ -83,7 +124,6 @@ th { color: var(--navy-blue); }
     border-radius: 5px;
 }
 
-/* Toast Notification */
 #toast {
     position: fixed;
     bottom: 20px;
