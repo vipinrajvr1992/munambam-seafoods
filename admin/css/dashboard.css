@@ -101,7 +101,7 @@ async function saveEditAmount() {
 
     closeEditModal(); // ആദ്യം ഇൻപുട്ട് വിൻഡോ ക്ലോസ് ചെയ്യുക
 
-    // ഡിലീറ്റ് ചെയ്യുന്നതുപോലെയുള്ള കസ്റ്റം പോപ്പ്-അപ്പ് ഇവിടെയും കാണിക്കുന്നു
+    // ഡിലീറ്റ് ചെയ്യുന്നതുപോലെയുള്ള കസ്റ്റം പോപ്പ്-അപ്പ് ഇവിടെ കാണിക്കുന്നു
     showConfirm("Are you sure you want to save these changes?", async () => {
         showLoader(true);
         try {
@@ -174,7 +174,7 @@ async function api(data) {
     return await response.json();
 }
 
-// HISTORY TABLE RENDER (With Dynamic Colors)
+// HISTORY TABLE RENDER (With Dynamic Badges)
 function renderHistory() {
     const tbody = document.getElementById("historyBody");
     if (!tbody) return;
@@ -184,11 +184,13 @@ function renderHistory() {
         if (index === 0) return; // Skip headers
         
         const tr = document.createElement("tr");
-        const typeColor = row[1] === "Income" ? "var(--green)" : "var(--red)";
+        
+        // HTML-ൽ നമ്മൾ എഴുതിയ പുതിയ പ്രീമിയം ബാഡ്ജ് സ്റ്റൈലുകൾ ഇവിടെ അപ്ലൈ ചെയ്യുന്നു
+        const badgeClass = row[1] === "Income" ? "badge-income" : "badge-expense";
         
         tr.innerHTML = `
             <td>${formatDate(row[0])}</td>
-            <td style="color: ${typeColor}; font-weight: bold;">${row[1]}</td>
+            <td><span class="${badgeClass}">${row[1]}</span></td>
             <td>${row[2] || ""}</td>
             <td>${row[3] || ""}</td>
             <td style="font-weight: bold;">₹ ${row[4]}</td>
