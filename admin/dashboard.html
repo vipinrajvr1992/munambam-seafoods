@@ -7,28 +7,20 @@
         :root { --navy-blue: #0B243B; --gold: #C5A059; --cream: #FDFBF7; }
         body { font-family: 'Montserrat', sans-serif; background-color: var(--cream); margin: 0; padding: 20px; }
         .nav { display: flex; gap: 10px; margin-bottom: 20px; }
-        
-        /* Button Animation */
         button { background: var(--navy-blue); color: white; border: none; padding: 10px 15px; cursor: pointer; transition: transform 0.2s, background 0.3s; }
         button:hover { transform: scale(1.05); background: var(--gold); }
-        
         .card { background: white; padding: 20px; border: 1px solid var(--gold); border-radius: 5px; margin-top: 10px; }
         .hidden { display: none; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        
-        /* Row Colors */
         .income-row { background-color: #d4edda; }
         .expense-row { background-color: #f8d7da; }
-        
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 20px; border-radius: 5px; text-align: center; border: 1px solid var(--gold); }
     </style>
 </head>
 <body>
-
     <h1>Core Team - Munambam Seafoods</h1>
-    
     <div class="nav">
         <button onclick="showSection('transactions')">Add Transaction</button>
         <button onclick="showSection('history')">History & Filter</button>
@@ -54,21 +46,14 @@
     </div>
 
     <div id="history" class="card hidden">
-        <h2>Transaction History <button onclick="loadData()">Refresh</button></h2>
+        <h2>Transaction History <button onclick="init()">Refresh</button></h2>
         <table id="historyTable">
             <tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th><th>Actions</th></tr>
         </table>
     </div>
 
-    <div id="logs" class="card hidden">
-        <h2>Activity Logs</h2>
-        <table id="logTable">
-            <tr><th>Timestamp</th><th>Action</th><th>Details</th><th>Device</th></tr>
-        </table>
-    </div>
-
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbwfzRxGkq2pDcgCAp6EKTJx7n_Y2g-vtWgEpJ00p2WlD_NCCJPj3vDY4U3K8q01rdrN/exec";
+        const scriptURL = "https://script.google.com/macros/s/AKfycbzz-UT6Jb0VtUg5LfBwcCsolaFZlL9USXPvJXoSaGYWDugHe2087IpbuJBbtOnZuC0S/exec";
         let rawData = [];
         let pendingAction = null;
 
@@ -78,6 +63,7 @@
             rawData = data.transactions.slice(1);
             let cat = document.getElementById("categorySelect");
             let item = document.getElementById("itemSelect");
+            cat.innerHTML = ""; item.innerHTML = "";
             data.settings.forEach(row => {
                 if(row[0]) cat.innerHTML += `<option>${row[0]}</option>`;
                 if(row[1]) item.innerHTML += `<option>${row[1]}</option>`;
@@ -100,23 +86,27 @@
             });
         }
 
-        function confirmSave() {
-            customConfirm("Are you sure you want to save this transaction?", () => {
-                logAction("Save", "New entry added");
-                alert("Done!");
-            });
-        }
-
         function deleteEntry(index) {
             customConfirm("Are you sure you want to delete this entry?", () => {
-                logAction("Delete", "Row index: " + index);
+                fetch(scriptURL, { method: "POST", body: JSON.stringify({ action: 'Delete', sheetName: 'Sheet1', index: index + 1 }) })
+                .then(() => { logAction("Delete", "Index: " + index); init(); });
             });
         }
 
         function editEntry(index) {
-            customConfirm("Are you sure you want to edit this entry?", () => {
-                logAction("Edit", "Row index: " + index);
-            });
+            let newAmount = prompt("Enter new amount:");
+            if(newAmount) {
+                customConfirm("Confirm Edit?", () => {
+                    let row = rawData[index];
+                    row[4] = newAmount;
+                    fetch(scriptURL, { method: "POST", body: JSON.stringify({ action: 'Edit', sheetName: 'Sheet1', index: index + 1, values: row }) })
+                    .then(() => { logAction("Edit", "Index: " + index); init(); });
+                });
+            }
+        }
+
+        function logAction(action, details) {
+            fetch(scriptURL, { method: "POST", body: JSON.stringify({ action: 'add', sheetName: 'Logs', values: [new Date().toLocaleString(), action, details, navigator.userAgent] }) });
         }
 
         function customConfirm(msg, callback) {
@@ -127,11 +117,6 @@
 
         function closeModal() { document.getElementById('confirmModal').style.display = 'none'; }
         function executeAction() { if(pendingAction) pendingAction(); closeModal(); }
-
-        function logAction(action, details) {
-            let log = { action: 'add', sheetName: 'Logs', values: [new Date().toLocaleString(), action, details, navigator.userAgent] };
-            fetch(scriptURL, { method: "POST", mode: "no-cors", body: JSON.stringify(log) });
-        }
 
         function showSection(id) {
             document.querySelectorAll('.card').forEach(s => s.classList.add('hidden'));
