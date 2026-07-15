@@ -2,29 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Core Team - Munambam Seafoods</title>
-    <style>
-        :root { --navy-blue: #0B243B; --gold: #C5A059; --cream: #FDFBF7; }
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--cream); margin: 0; padding: 20px; }
-        .nav { display: flex; gap: 10px; margin-bottom: 20px; }
-        button { background: var(--navy-blue); color: white; border: none; padding: 10px 15px; cursor: pointer; transition: 0.3s; }
-        button:hover { background: var(--gold); }
-        .card { background: white; padding: 20px; border: 1px solid var(--gold); border-radius: 5px; margin-top: 10px; }
-        .hidden { display: none; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
-        .modal-content { background: white; margin: 15% auto; padding: 20px; width: 300px; text-align: center; border-radius: 5px; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Munambam Seafoods</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <h1>Core Team - Munambam Seafoods</h1>
+    <!-- Navigation -->
     <div class="nav">
         <button onclick="showSection('transactions')">Add Transaction</button>
         <button onclick="showSection('history')">History & Filter</button>
+        <button onclick="showSection('auditLogs')">Audit Logs</button>
+        <button onclick="exportToExcel()">Export Excel</button>
     </div>
 
+    <!-- Confirm Modal -->
     <div id="confirmModal" class="modal">
         <div class="modal-content">
             <p id="modalMsg">Are you sure?</p>
@@ -33,6 +25,7 @@
         </div>
     </div>
 
+    <!-- Add Entry Section -->
     <div id="transactions" class="card">
         <h2>Add New Entry</h2>
         <input type="date" id="date">
@@ -40,90 +33,47 @@
         <select id="categorySelect"></select>
         <select id="itemSelect"></select>
         <input type="number" id="amount" placeholder="Amount">
-        <button onclick="prepareSave()">Save Transaction</button>
+        <button id="saveBtn" onclick="prepareSave()">Save Transaction</button>
     </div>
 
+    <!-- History Section -->
     <div id="history" class="card hidden">
         <h2>Transaction History <button onclick="init()">Refresh</button></h2>
         <table id="historyTable">
-            <tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th><th>Actions</th></tr>
+            <thead>
+                <tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
         </table>
     </div>
 
+    <!-- Audit Logs Section -->
+    <div id="auditLogs" class="card hidden">
+        <h2>Audit Logs</h2>
+        <table id="auditTable">
+            <thead>
+                <tr><th>Timestamp</th><th>Action</th><th>Details</th><th>Browser</th></tr>
+            </thead>
+            <tbody id="auditBody"></tbody>
+        </table>
+    </div>
+
+    <!-- Loader & Toast -->
+    <div id="loader" class="hidden">Saving...</div>
+    <div id="toast" class="hidden"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/history.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/audit.js"></script>
+    
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbwfzRxGkq2pDcgCAp6EKTJx7n_Y2g-vtWgEpJ00p2WlD_NCCJPj3vDY4U3K8q01rdrN/exec";
-        let pendingAction = null;
-        let actionData = null;
-        let currentData = []; // ഡാറ്റ സൂക്ഷിക്കാൻ
-
-        async function init() {
-            let res = await fetch(scriptURL);
-            let data = await res.json();
-            currentData = data.transactions;
-            
-            let cat = document.getElementById("categorySelect");
-            let item = document.getElementById("itemSelect");
-            cat.innerHTML = ""; item.innerHTML = "";
-            data.settings.forEach(row => {
-                if(row[0]) cat.innerHTML += `<option>${row[0]}</option>`;
-                if(row[1]) item.innerHTML += `<option>${row[1]}</option>`;
-            });
-
-            let table = document.getElementById("historyTable");
-            table.innerHTML = "<tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th><th>Actions</th></tr>";
-            data.transactions.slice(1).forEach((row, index) => {
-                table.innerHTML += `<tr>
-                    <td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td>${row[4]}</td>
-                    <td>
-                        <button onclick="prepareEdit(${index + 2})">Edit</button> 
-                        <button onclick="prepareDelete(${index + 2})">Delete</button>
-                    </td>
-                </tr>`;
-            });
-        }
-
         function showSection(id) {
             document.querySelectorAll('.card').forEach(s => s.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
         }
-
-        function showModal(msg, callback, data) {
-            document.getElementById('modalMsg').innerText = msg;
-            document.getElementById('confirmModal').style.display = 'block';
-            pendingAction = callback;
-            actionData = data;
-        }
-        function closeModal() { document.getElementById('confirmModal').style.display = 'none'; }
-        function executeAction() { pendingAction(actionData); closeModal(); }
-
-        function prepareSave() {
-            let data = { action: 'add', sheetName: 'Sheet1', values: [document.getElementById('date').value, document.getElementById('type').value, document.getElementById('categorySelect').value, document.getElementById('itemSelect').value, document.getElementById('amount').value] };
-            showModal("Save this transaction?", sendData, data);
-        }
-
-        function prepareDelete(index) {
-            showModal("Delete this entry?", sendData, { action: 'Delete', sheetName: 'Sheet1', index: index });
-        }
-
-        function prepareEdit(index) {
-            // currentData[index - 1] ആണ് സെലക്ട് ചെയ്ത റോ
-            let row = currentData[index - 1]; 
-            let newAmount = prompt("Enter new amount:", row[4]);
-            if(newAmount) {
-                // പഴയ എല്ലാ ഡാറ്റയും നിലനിർത്തി എമൗണ്ട് മാത്രം മാറ്റുന്നു
-                let updatedValues = [row[0], row[1], row[2], row[3], newAmount];
-                showModal("Confirm edit?", sendData, { action: 'Edit', sheetName: 'Sheet1', index: index, values: updatedValues });
-            }
-        }
-
-        function sendData(data) {
-            fetch(scriptURL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) }).then(() => {
-                alert("Updated!");
-                init();
-            });
-        }
-
-        init();
     </script>
 </body>
 </html>
