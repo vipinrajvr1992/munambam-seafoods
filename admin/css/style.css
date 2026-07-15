@@ -3,10 +3,10 @@
     --gold: #C5A059;
     --cream: #FDFBF7;
     --white: #FFFFFF;
-    --red: #d9534f;
-    --green: #27ae60;
+    --red: #e74c3c;
+    --green: #2ecc71;
     --shadow: 0 10px 30px rgba(0,0,0,0.08);
-    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 /* Base Reset & Typography */
@@ -44,7 +44,11 @@ body {
 .nav button:hover {
     background: var(--gold);
     color: var(--navy-blue);
-    transform: translateY(-2px);
+    transform: scale(1.05); /* Zoom In */
+}
+
+.nav button:active {
+    transform: scale(0.95); /* Zoom Out on Click */
 }
 
 /* --- Premium Content Cards --- */
@@ -59,7 +63,10 @@ body {
     transition: var(--transition);
 }
 
-.card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+.card:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+}
 
 /* --- Inputs & Selects --- */
 input, select, textarea {
@@ -80,7 +87,7 @@ input:focus, select:focus {
     outline: none;
 }
 
-/* --- Buttons --- */
+/* --- Premium Buttons (Zoom In/Out + Navy to Black Animation) --- */
 button {
     padding: 12px 25px;
     border-radius: 8px;
@@ -90,15 +97,61 @@ button {
     transition: var(--transition);
 }
 
-.btn-primary { background: var(--navy-blue); color: var(--gold); }
-.btn-primary:hover { background: #081a2b; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+/* Primary and Confirm Actions */
+.btn-primary, .btn-confirm { 
+    background: var(--navy-blue); 
+    color: var(--gold); 
+}
 
-/* Edit & Delete Buttons */
-.btn-edit { background: #f0f0f0; color: #333; padding: 8px 15px; font-size: 12px; }
-.btn-edit:hover { background: var(--gold); color: white; transform: scale(1.05); }
+.btn-primary:hover, .btn-confirm:hover { 
+    background: #000000; /* Navy Blue to Black */
+    color: #FFFFFF; /* Text becomes White */
+    transform: scale(1.05); /* Zoom In */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
 
-.btn-delete { background: #ffebee; color: var(--red); padding: 8px 15px; font-size: 12px; }
-.btn-delete:hover { background: var(--red); color: white; transform: scale(1.05); }
+.btn-primary:active, .btn-confirm:active {
+    transform: scale(0.95); /* Zoom Out on Click */
+}
+
+/* Edit & Delete Actions inside Table */
+.btn-edit { 
+    background: #f0f0f0; 
+    color: #333; 
+    padding: 8px 15px; 
+    font-size: 12px; 
+}
+.btn-edit:hover { 
+    background: var(--navy-blue); 
+    color: var(--gold); 
+    transform: scale(1.1); 
+}
+.btn-edit:active { transform: scale(0.9); }
+
+.btn-delete { 
+    background: #ffebee; 
+    color: var(--red); 
+    padding: 8px 15px; 
+    font-size: 12px; 
+}
+.btn-delete:hover { 
+    background: var(--red); 
+    color: white; 
+    transform: scale(1.1); 
+}
+.btn-delete:active { transform: scale(0.9); }
+
+.btn-cancel { 
+    background: #f0f0f0; 
+    color: #555; 
+    width: 100px; 
+    margin-right: 10px; 
+}
+.btn-cancel:hover { 
+    background: #e0e0e0; 
+    transform: scale(1.05); 
+}
+.btn-cancel:active { transform: scale(0.95); }
 
 /* --- Table Styling --- */
 table {
@@ -115,14 +168,14 @@ th { background-color: var(--navy-blue); color: var(--gold); padding: 18px; text
 td { padding: 16px; border-bottom: 1px solid #f4f4f4; }
 tbody tr:hover { background-color: #f9f9f9; }
 
-/* --- Custom Glass Modal --- */
+/* --- Custom Glass Modal (Confirm & Edit) --- */
 .modal {
     display: none;
     position: fixed;
     z-index: 2000;
     left: 0; top: 0;
     width: 100%; height: 100%;
-    background: rgba(11, 36, 59, 0.3);
+    background: rgba(11, 36, 59, 0.4);
     backdrop-filter: blur(8px);
 }
 
@@ -135,14 +188,11 @@ tbody tr:hover { background-color: #f9f9f9; }
     text-align: center;
     border-top: 5px solid var(--gold);
     box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-    animation: zoomIn 0.3s ease;
+    animation: zoomIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.btn-confirm { background: var(--navy-blue); color: var(--gold); width: 100px; }
-.btn-cancel { background: #f0f0f0; color: #555; width: 100px; margin-right: 10px; }
-
 @keyframes zoomIn {
-    from { transform: scale(0.9); opacity: 0; }
+    from { transform: scale(0.8); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
 }
 
@@ -158,7 +208,7 @@ tbody tr:hover { background-color: #f9f9f9; }
     border-left: 4px solid var(--gold);
     font-weight: bold;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    display: none;
+    z-index: 9999;
 }
 
 /* --- Utility Classes --- */
