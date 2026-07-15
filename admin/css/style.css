@@ -1,0 +1,95 @@
+:root {
+    --navy-blue: #0B243B;
+    --gold: #C5A059;
+    --cream: #FDFBF7;
+    --white: #FFFFFF;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--cream);
+    margin: 0;
+    padding: 0;
+}
+
+/* Navigation */
+.nav {
+    display: flex;
+    gap: 15px;
+    padding: 20px;
+    background-color: var(--navy-blue);
+    color: var(--white);
+}
+
+.nav button {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.nav button:hover {
+    background: var(--gold);
+    color: var(--white);
+}
+
+/* Cards & Sections */
+.card {
+    background: var(--white);
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin: 20px;
+    border-top: 4px solid var(--gold);
+}
+
+.hidden { display: none; }
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border-bottom: 1px solid #eee;
+    padding: 12px;
+    text-align: left;
+}
+
+th { color: var(--navy-blue); }
+
+/* Modals */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(11, 36, 59, 0.8);
+}
+
+.modal-content {
+    background: var(--white);
+    margin: 15% auto;
+    padding: 30px;
+    width: 300px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+/* Toast Notification */
+#toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    background: var(--navy-blue);
+    color: var(--white);
+    border-radius: 4px;
+}
