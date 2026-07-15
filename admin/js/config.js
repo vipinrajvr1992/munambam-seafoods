@@ -1,8 +1,8 @@
 // ==========================================
-// CONFIG.JS
+// CONFIG.JS - Fully Updated
 // ==========================================
 
 const CONFIG = {
-    SCRIPT_URL: "https://script.google.com/macros/s/AKfycbykL_Vp67Zft8VuWB4rpxdAgopWGPx0gkAic49lYayzP3kv707TcM1M1N3aPmymhTo1/exec",
+    SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwsKv6hfcETfOyVNilbeVn7yoJd01lEd9RLYQS630k48r_qL-L2IgEqBEe6RzKNQ03I/exec",
     SESSION_KEY: "munambam_admin"
 };
