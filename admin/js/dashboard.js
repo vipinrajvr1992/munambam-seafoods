@@ -35,18 +35,18 @@ async function loadDashboard() {
     showLoader(false);
 }
 
-// DELETE TRANSACTION (Updated with Custom Modal)
+// DELETE TRANSACTION (Updated)
 async function deleteTransaction(rowIndex) {
     showConfirm("Are you sure you want to delete this entry?", async () => {
         showLoader(true);
         try {
-            const result = await api({
+            await api({
                 action: "Delete",
                 sheetName: "Sheet1",
                 index: rowIndex
             });
             showToast("Transaction Deleted Successfully");
-            loadDashboard(); // Refresh UI
+            loadDashboard(); 
             if (typeof auditDelete === "function") auditDelete("Row " + rowIndex);
         } catch (e) {
             showToast("Failed to delete", "error");
@@ -55,9 +55,12 @@ async function deleteTransaction(rowIndex) {
     });
 }
 
-// EDIT TRANSACTION (Updated with Custom logic)
+// EDIT TRANSACTION (Updated with Custom Prompt Logic)
 async function editTransaction(rowIndex) {
     let row = transactionData[rowIndex];
+    
+    // Prompt-ന് പകരം പുതിയൊരു ഇൻപുട്ട് മോഡൽ വേണമെങ്കിൽ html-ൽ മാറ്റങ്ങൾ വരുത്തണം
+    // നിലവിൽ ലളിതമാക്കാൻ prompt ഉപയോഗിക്കാം അല്ലെങ്കിൽ custom modal ലോജിക് ചേർക്കാം
     let newAmount = prompt("Enter New Amount:", row[4]); 
     
     if (newAmount == null || newAmount === "") return;
@@ -65,20 +68,21 @@ async function editTransaction(rowIndex) {
     row[4] = newAmount;
 
     showLoader(true);
-    await api({
-        action: "Edit",
-        sheetName: "Sheet1",
-        index: rowIndex,
-        values: row
-    });
-    showToast("Transaction Updated");
-    loadDashboard();
-    if (typeof auditEdit === "function") auditEdit("Row " + rowIndex);
+    try {
+        await api({
+            action: "Edit",
+            sheetName: "Sheet1",
+            index: rowIndex,
+            values: row
+        });
+        showToast("Transaction Updated");
+        loadDashboard();
+        if (typeof auditEdit === "function") auditEdit("Row " + rowIndex);
+    } catch (e) {
+        showToast("Update failed", "error");
+    }
     showLoader(false);
 }
-
-// ... ബാക്കി ഫങ്ഷനുകൾ (loadCategories, api, renderHistory, updateSummaryCards, etc.) ...
-// (ഇവ നേരത്തെ നൽകിയതുപോലെ തന്നെ ഉപയോഗിക്കുക)
 
 async function api(data) {
     const response = await fetch(CONFIG.SCRIPT_URL, {
@@ -89,22 +93,26 @@ async function api(data) {
     return await response.json();
 }
 
+// RENDER HISTORY WITH COLORS (Income Green, Expense Red)
 function renderHistory() {
     const tbody = document.getElementById("historyBody");
     if (!tbody) return;
     tbody.innerHTML = "";
     transactionData.forEach((row, index) => {
         if (index === 0) return;
+        
         const tr = document.createElement("tr");
+        const typeColor = row[1] === "Income" ? "green" : "red";
+        
         tr.innerHTML = `
             <td>${formatDate(row[0])}</td>
-            <td>${row[1]}</td>
+            <td style="color: ${typeColor}; font-weight: bold;">${row[1]}</td>
             <td>${row[2]}</td>
             <td>${row[3]}</td>
-            <td>${row[4]}</td>
+            <td style="font-weight: bold;">₹ ${row[4]}</td>
             <td>
-                <button onclick="editTransaction(${index})">Edit</button>
-                <button onclick="deleteTransaction(${index})">Delete</button>
+                <button onclick="editTransaction(${index})" class="btn-edit">Edit</button>
+                <button onclick="deleteTransaction(${index})" class="btn-delete">Delete</button>
             </td>
         `;
         tbody.appendChild(tr);
@@ -119,13 +127,9 @@ function updateSummaryCards() {
         else expense += Number(r[4]) || 0;
     });
 
-    const elInc = document.getElementById("totalIncome");
-    const elExp = document.getElementById("totalExpense");
-    const elNet = document.getElementById("netProfit");
-
-    if (elInc) elInc.innerText = "₹ " + income.toFixed(2);
-    if (elExp) elExp.innerText = "₹ " + expense.toFixed(2);
-    if (elNet) elNet.innerText = "₹ " + (income - expense).toFixed(2);
+    document.getElementById("totalIncome").innerText = "₹ " + income.toFixed(2);
+    document.getElementById("totalExpense").innerText = "₹ " + expense.toFixed(2);
+    document.getElementById("netProfit").innerText = "₹ " + (income - expense).toFixed(2);
 }
 
 function updateRecordCount() {
@@ -154,4 +158,9 @@ function formatDate(date) {
 
 function refreshDashboard() {
     loadDashboard();
+}
+
+// category & item dropdown logic (Empty shells to prevent errors)
+function loadCategories() {
+    // നിങ്ങളുടെ API ഉപയോഗിച്ച് ഡ്രോപ്പ്‌ഡൗൺ ഫിൽ ചെയ്യാൻ ഇവിടെ കോഡ് നൽകുക
 }
