@@ -13,7 +13,6 @@
         .hidden { display: none; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        /* Modal Style */
         .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
         .modal-content { background: white; margin: 15% auto; padding: 20px; width: 300px; text-align: center; border-radius: 5px; }
     </style>
@@ -26,7 +25,6 @@
         <button onclick="showSection('history')">History & Filter</button>
     </div>
 
-    <!-- Confirmation Modal -->
     <div id="confirmModal" class="modal">
         <div class="modal-content">
             <p id="modalMsg">Are you sure?</p>
@@ -56,12 +54,13 @@
         const scriptURL = "https://script.google.com/macros/s/AKfycbwfzRxGkq2pDcgCAp6EKTJx7n_Y2g-vtWgEpJ00p2WlD_NCCJPj3vDY4U3K8q01rdrN/exec";
         let pendingAction = null;
         let actionData = null;
+        let currentData = []; // ഡാറ്റ സൂക്ഷിക്കാൻ
 
         async function init() {
             let res = await fetch(scriptURL);
             let data = await res.json();
+            currentData = data.transactions;
             
-            // Dropdowns
             let cat = document.getElementById("categorySelect");
             let item = document.getElementById("itemSelect");
             cat.innerHTML = ""; item.innerHTML = "";
@@ -70,7 +69,6 @@
                 if(row[1]) item.innerHTML += `<option>${row[1]}</option>`;
             });
 
-            // History Table
             let table = document.getElementById("historyTable");
             table.innerHTML = "<tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th><th>Actions</th></tr>";
             data.transactions.slice(1).forEach((row, index) => {
@@ -89,7 +87,6 @@
             document.getElementById(id).classList.remove('hidden');
         }
 
-        // Modal Helpers
         function showModal(msg, callback, data) {
             document.getElementById('modalMsg').innerText = msg;
             document.getElementById('confirmModal').style.display = 'block';
@@ -99,7 +96,6 @@
         function closeModal() { document.getElementById('confirmModal').style.display = 'none'; }
         function executeAction() { pendingAction(actionData); closeModal(); }
 
-        // Actions
         function prepareSave() {
             let data = { action: 'add', sheetName: 'Sheet1', values: [document.getElementById('date').value, document.getElementById('type').value, document.getElementById('categorySelect').value, document.getElementById('itemSelect').value, document.getElementById('amount').value] };
             showModal("Save this transaction?", sendData, data);
@@ -110,14 +106,21 @@
         }
 
         function prepareEdit(index) {
-            let newAmount = prompt("Enter new amount:");
+            // currentData[index - 1] ആണ് സെലക്ട് ചെയ്ത റോ
+            let row = currentData[index - 1]; 
+            let newAmount = prompt("Enter new amount:", row[4]);
             if(newAmount) {
-                showModal("Confirm edit?", sendData, { action: 'Edit', sheetName: 'Sheet1', index: index, values: [/* Add date/type/etc here if needed */ "","", "", "", newAmount] });
+                // പഴയ എല്ലാ ഡാറ്റയും നിലനിർത്തി എമൗണ്ട് മാത്രം മാറ്റുന്നു
+                let updatedValues = [row[0], row[1], row[2], row[3], newAmount];
+                showModal("Confirm edit?", sendData, { action: 'Edit', sheetName: 'Sheet1', index: index, values: updatedValues });
             }
         }
 
         function sendData(data) {
-            fetch(scriptURL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) }).then(() => init());
+            fetch(scriptURL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) }).then(() => {
+                alert("Updated!");
+                init();
+            });
         }
 
         init();
