@@ -2,14 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Munambam Seafoods</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-
     <header class="navbar">
         <div class="logo">Munambam Seafoods</div>
         <div class="user-info">
@@ -18,25 +16,24 @@
         </div>
     </header>
 
-    <nav class="sub-nav">
+    <nav class="nav">
         <button onclick="showSection('dashboard')">Dashboard</button>
         <button onclick="showSection('addTransaction')">Add Transaction</button>
         <button onclick="showSection('history')">History</button>
         <button onclick="showSection('auditLogs')">Audit Logs</button>
-        <button onclick="exportExcel()">Export Excel</button>
+        <button onclick="exportToExcel()">Export Excel</button>
     </nav>
 
     <main>
-        <!-- Dashboard Section -->
         <section id="dashboard" class="card">
             <div class="summary-cards">
                 <div class="card-item"><h3>Total Income</h3><p id="totalIncome">₹ 0</p></div>
                 <div class="card-item"><h3>Total Expense</h3><p id="totalExpense">₹ 0</p></div>
                 <div class="card-item"><h3>Net Profit</h3><p id="netProfit">₹ 0</p></div>
             </div>
+            <button onclick="refreshDashboard()" class="btn-primary">Refresh Data</button>
         </section>
 
-        <!-- Add Transaction Section -->
         <section id="addTransaction" class="card hidden">
             <h2>Add New Entry</h2>
             <div class="input-group">
@@ -50,22 +47,18 @@
             </div>
         </section>
 
-        <!-- History Section -->
         <section id="history" class="card hidden">
             <h2>History</h2>
-            <div class="filters">
-                <input type="text" id="searchInput" placeholder="Search...">
-                <button onclick="refreshDashboard()">Refresh</button>
-            </div>
+            <button onclick="refreshDashboard()" class="btn-primary">Refresh Data</button>
             <table>
-                <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th></tr></thead>
+                <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th><th>Action</th></tr></thead>
                 <tbody id="historyBody"></tbody>
             </table>
         </section>
 
-        <!-- Audit Logs Section -->
         <section id="auditLogs" class="card hidden">
             <h2>Audit Logs</h2>
+            <button onclick="refreshDashboard()" class="btn-primary">Refresh Data</button>
             <table>
                 <thead><tr><th>Timestamp</th><th>Action</th><th>Details</th></tr></thead>
                 <tbody id="auditBody"></tbody>
@@ -73,7 +66,7 @@
         </section>
     </main>
 
-    <!-- Custom Premium Confirmation Modal -->
+    <!-- Custom Modal for Confirmation -->
     <div id="confirmModal" class="modal">
         <div class="modal-content-confirm">
             <h3>Confirm Action</h3>
@@ -85,23 +78,17 @@
         </div>
     </div>
 
-    <div id="loader" class="hidden">Processing...</div>
-    <div id="toast" class="hidden"></div>
-
-    <!-- Scripts -->
     <script>
         function showSection(id) {
             document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
-            const section = document.getElementById(id);
-            if(section) section.classList.remove('hidden');
+            const target = document.getElementById(id);
+            if(target) target.classList.remove('hidden');
         }
-
         function showConfirm(message, onConfirm) {
             document.getElementById("confirmMessage").innerText = message;
             document.getElementById("confirmModal").style.display = "block";
             document.getElementById("confirmActionBtn").onclick = () => { onConfirm(); closeConfirm(); };
         }
-
         function closeConfirm() { document.getElementById("confirmModal").style.display = "none"; }
     </script>
     <script src="js/config.js"></script>
