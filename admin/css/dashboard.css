@@ -1,5 +1,25 @@
-/* Premium Layout for Munambam Seafoods */
+:root {
+    --navy-blue: #0f172a;
+    --gold: #d4af37;
+    --white: #ffffff;
+    --bg: #f1f5f9;
+}
 
+body { font-family: 'Segoe UI', system-ui; background: var(--bg); color: var(--navy-blue); margin: 0; }
+
+/* Cards & Glassmorphism */
+.card {
+    background: var(--white);
+    padding: 24px;
+    border-radius: 12px;
+    margin: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+
+/* Summary Cards (Your provided CSS) */
 .summary-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -15,48 +35,40 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-.card-summary h3 {
-    margin: 0;
-    font-size: 0.9rem;
-    color: var(--navy-blue);
-    text-transform: uppercase;
+.card-summary h3 { margin: 0; font-size: 0.9rem; color: var(--navy-blue); text-transform: uppercase; }
+.card-summary p { margin: 10px 0 0; font-size: 1.5rem; font-weight: bold; color: var(--navy-blue); }
+
+/* Interactive Elements */
+input, select, textarea {
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    transition: all 0.3s ease;
 }
 
-.card-summary p {
-    margin: 10px 0 0;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--navy-blue);
+input:focus, select:focus {
+    border-color: var(--gold);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
 }
 
-/* Toolbar in History Section */
-.toolbar {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-}
-
-.toolbar input, .toolbar select {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-/* Audit Log Table Styling */
-#auditTable {
-    font-size: 0.85rem;
-    background: #f9f9f9;
-}
-
-#auditTable th {
+button {
+    cursor: pointer;
     background: var(--navy-blue);
     color: var(--white);
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    transition: transform 0.1s, background 0.3s;
 }
 
-/* Responsive Handling */
-@media (max-width: 768px) {
-    .toolbar {
-        flex-direction: column;
-    }
-}
+button:hover { background: #1e293b; transform: scale(1.02); }
+
+/* Toolbar & Table */
+.toolbar { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th, td { padding: 12px; border: 1px solid #e2e8f0; text-align: left; }
+#auditTable th { background: var(--navy-blue); color: var(--white); }
+
+@media (max-width: 768px) { .toolbar { flex-direction: column; } }
