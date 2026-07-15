@@ -1,5 +1,5 @@
 // ==========================================
-// Munambam Seafoods Dashboard
+// Munambam Seafoods Dashboard - Fully Updated
 // dashboard.js
 // ==========================================
 
@@ -18,21 +18,51 @@ async function initDashboard() {
 async function loadDashboard() {
     showLoader(true);
     try {
-        // GET request for loading dashboard
         const response = await fetch(CONFIG.SCRIPT_URL + "?action=getDashboard");
         const data = await response.json();
         
         settingsData = data.settings || [];
         transactionData = data.transactions || [];
         
+        // UI അപ്‌ഡേറ്റുകൾ
         renderHistory();
         updateSummaryCards();
         updateRecordCount();
+        
+        // ഡ്രോപ്പ്‌ഡൗൺ ലോഡ് ചെയ്യുന്നു
+        loadCategories(); 
     } catch (e) {
         console.error(e);
         showToast("Unable to load dashboard", "error");
     }
     showLoader(false);
+}
+
+// ഡ്രോപ്പ്‌ഡൗൺ ലോജിക്
+function loadCategories() {
+    const categorySelect = document.getElementById("categorySelect");
+    const itemSelect = document.getElementById("itemSelect");
+    
+    if (!categorySelect || !itemSelect) return;
+
+    // കാറ്റഗറി ലിസ്റ്റ് സെറ്റ് ചെയ്യുന്നു
+    const categories = [...new Set(settingsData.map(r => r[0]))];
+    
+    categorySelect.innerHTML = '<option value="">Select Category</option>';
+    categories.forEach(cat => {
+        categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+    });
+
+    // കാറ്റഗറി മാറുമ്പോൾ ഐറ്റം മാറുന്നു
+    categorySelect.addEventListener("change", function() {
+        const selectedCat = this.value;
+        itemSelect.innerHTML = '<option value="">Select Item</option>';
+        
+        settingsData.filter(r => r[0] === selectedCat).forEach(r => {
+            itemSelect.innerHTML += `<option value="${r[1]}">${r[1]}</option>`;
+        });
+        itemSelect.classList.add('fade-in');
+    });
 }
 
 async function api(data) {
@@ -49,7 +79,7 @@ function renderHistory() {
     if (!tbody) return;
     tbody.innerHTML = "";
     transactionData.forEach((row, index) => {
-        if (index === 0) return; // Skip header
+        if (index === 0) return;
         const tr = document.createElement("tr");
         tr.innerHTML = `
             <td>${formatDate(row[0])}</td>
