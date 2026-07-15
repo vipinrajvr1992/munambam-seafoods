@@ -33,6 +33,74 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* ==========================================
+           CUSTOM THEMING & ANIMATIONS (VIPIN'S SPEC)
+           ========================================== */
+
+        /* --- Income & Expense Badge Styles --- */
+        .badge-income {
+            background-color: #2ecc71 !important; /* Green Fill */
+            color: #000000 !important;            /* Black Font */
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .badge-expense {
+            background-color: #e74c3c !important; /* Red Fill */
+            color: #000000 !important;            /* Black Font */
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        /* --- Custom Error Toast (Yellow Fill, Red Text) --- */
+        .toast.error, #toast.error {
+            background-color: #ffeb3b !important; /* Yellow Fill */
+            color: #c0392b !important;            /* Red Text */
+            border-left: 6px solid #d32f2f !important;
+            border-top: 1px solid #f1c40f !important;
+            border-bottom: 1px solid #f1c40f !important;
+            border-right: 1px solid #f1c40f !important;
+            box-shadow: 0 8px 24px rgba(241, 196, 15, 0.3) !important;
+        }
+
+        /* --- Premium Button Animations (Navy to Black / Zoom In & Out) --- */
+        .btn-primary, .btn-confirm, .btn-logout, .nav button {
+            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        }
+
+        /* Hover: Changes from Navy Blue to Black with White Text + Zoom In */
+        .btn-primary:hover, .btn-confirm:hover, .btn-logout:hover, .nav button:hover {
+            background-color: #000000 !important; 
+            color: #FFFFFF !important;
+            border-color: #000000 !important;
+            transform: scale(1.05) !important; /* Zoom In */
+            cursor: pointer;
+        }
+
+        /* Active: Zoom Out on Click */
+        .btn-primary:active, .btn-confirm:active, .btn-logout:active, .nav button:active {
+            transform: scale(0.95) !important; /* Zoom Out */
+        }
+
+        /* Table Action Buttons Zoom */
+        .btn-edit, .btn-delete {
+            transition: all 0.2s ease-in-out !important;
+        }
+        .btn-edit:hover, .btn-delete:hover {
+            transform: scale(1.1) !important;
+        }
+        .btn-edit:active, .btn-delete:active {
+            transform: scale(0.9) !important;
+        }
     </style>
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -119,8 +187,8 @@
     <div id="editModal" class="modal" style="display: none;">
         <div class="modal-content-confirm">
             <h3>Edit Amount</h3>
-            <p style="font-size: 14px; margin-bottom: 15px;">Enter the updated amount below:</p>
-            <input type="number" id="editAmountInput" placeholder="New Amount" style="width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #EEE; border-radius: 8px; text-align: center; font-size: 18px; font-weight: bold;">
+            <p style="font-size: 14px; margin-bottom: 15px; color: #555;">Enter the updated amount below:</p>
+            <input type="number" id="editAmountInput" placeholder="New Amount" style="width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #EEE; border-radius: 8px; text-align: center; font-size: 18px; font-weight: bold; outline: none;">
             <div class="modal-actions">
                 <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
                 <button class="btn-confirm" id="confirmEditBtn" onclick="saveEditAmount()">Save Changes</button>
@@ -137,16 +205,26 @@
     <script src="js/export.js"></script>
 
     <script>
+        // Section Switching
         function showSection(id) {
             document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
         }
+
+        // Custom Confirmation Modal Controller
         function showConfirm(message, onConfirm) {
             document.getElementById("confirmMessage").innerText = message;
             document.getElementById("confirmModal").style.display = "block";
             document.getElementById("confirmActionBtn").onclick = () => { onConfirm(); closeConfirm(); };
         }
-        function closeConfirm() { document.getElementById("confirmModal").style.display = "none"; }
+        function closeConfirm() { 
+            document.getElementById("confirmModal").style.display = "none"; 
+        }
+
+        // Custom Edit Modal Controller
+        function closeEditModal() {
+            document.getElementById("editModal").style.display = "none";
+        }
     </script>
 </body>
 </html>
