@@ -7,67 +7,74 @@
         :root { --navy-blue: #0B243B; --gold: #C5A059; --cream: #FDFBF7; }
         body { font-family: 'Montserrat', sans-serif; background-color: var(--cream); margin: 0; padding: 20px; }
         .nav { display: flex; gap: 10px; margin-bottom: 20px; }
-        button { background: var(--navy-blue); color: white; border: none; padding: 10px 15px; cursor: pointer; }
-        button:hover { background: var(--gold); }
+        button { background: var(--navy-blue); color: white; border: none; padding: 10px 15px; cursor: pointer; transition: transform 0.2s; }
+        button:hover { transform: scale(1.05); background: var(--gold); }
         .card { background: white; padding: 20px; border: 1px solid var(--gold); border-radius: 5px; margin-top: 10px; }
         .hidden { display: none; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .input-group { margin-bottom: 15px; }
     </style>
 </head>
 <body>
+
     <h1>Core Team - Munambam Seafoods</h1>
+    
     <div class="nav">
         <button onclick="showSection('transactions')">Add Transaction</button>
         <button onclick="showSection('history')">History & Filter</button>
     </div>
 
+    <!-- Transaction Form -->
     <div id="transactions" class="card">
         <h2>Add New Entry</h2>
-        <select id="categorySelect"><option value="">Select Category</option></select>
-        <select id="itemSelect"><option value="">Select Item</option></select>
-        <button onclick="alert('Save functionality pending implementation')">Save</button>
+        <div class="input-group">
+            <input type="date" id="date">
+            <select id="type"><option value="Income">Income</option><option value="Expense">Expense</option></select>
+            <select id="categorySelect"><option value="">Select Category</option></select>
+            <select id="itemSelect"><option value="">Select Item</option></select>
+            <input type="number" id="amount" placeholder="Amount">
+            <button onclick="confirmSave()">Save Transaction</button>
+        </div>
     </div>
 
+    <!-- History -->
     <div id="history" class="card hidden">
-        <h2>Transaction History <button onclick="fetchData()">Refresh</button></h2>
+        <h2>Transaction History <button onclick="init()">Refresh</button></h2>
         <table id="historyTable">
-            <tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th></tr>
+            <tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th><th>Actions</th></tr>
         </table>
     </div>
 
     <script>
-        // പുതിയ Script URL
-        const scriptURL = "https://script.google.com/macros/s/AKfycbzz-UT6Jb0VtUg5LfBwcCsolaFZlL9USXPvJXoSaGYWDugHe2087IpbuJBbtOnZuC0S/exec";
+        const scriptURL = "https://script.google.com/macros/s/AKfycbwfzRxGkq2pDcgCAp6EKTJx7n_Y2g-vtWgEpJ00p2WlD_NCCJPj3vDY4U3K8q01rdrN/exec";
 
-        async function fetchData() {
-            try {
-                let res = await fetch(scriptURL);
-                let data = await res.json();
-                
-                // ഡ്രോപ്പ്‌ഡൗൺ അപ്‌ഡേറ്റ് ചെയ്യുന്നു
-                let catSelect = document.getElementById("categorySelect");
-                let itemSelect = document.getElementById("itemSelect");
-                
-                // ഡാറ്റ ലഭിച്ചാൽ മാത്രം ലൂപ്പ് ചെയ്യുക
-                if (data.settings) {
-                    data.settings.forEach(row => {
-                        if(row[0]) catSelect.innerHTML += `<option>${row[0]}</option>`;
-                        if(row[1]) itemSelect.innerHTML += `<option>${row[1]}</option>`;
-                    });
-                }
+        async function init() {
+            let res = await fetch(scriptURL);
+            let data = await res.json();
+            
+            // Populate Dropdowns
+            let cat = document.getElementById("categorySelect");
+            let item = document.getElementById("itemSelect");
+            cat.innerHTML = '<option value="">Select Category</option>';
+            item.innerHTML = '<option value="">Select Item</option>';
+            
+            data.settings.forEach(row => {
+                if(row[0]) cat.innerHTML += `<option>${row[0]}</option>`;
+                if(row[1]) item.innerHTML += `<option>${row[1]}</option>`;
+            });
 
-                // ഹിസ്റ്ററി ടേബിൾ അപ്‌ഡേറ്റ് ചെയ്യുന്നു
-                if (data.transactions) {
-                    let table = document.getElementById("historyTable");
-                    table.innerHTML = "<tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th></tr>";
-                    data.transactions.forEach(row => {
-                        table.innerHTML += `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td>${row[4]}</td></tr>`;
-                    });
-                }
-            } catch (err) {
-                console.error("Error loading data:", err);
-            }
+            // Populate Table
+            let table = document.getElementById("historyTable");
+            table.innerHTML = "<tr><th>Date</th><th>Type</th><th>Category</th><th>Item</th><th>Amount</th><th>Actions</th></tr>";
+            
+            data.transactions.forEach((row, index) => {
+                if(index === 0) return; // Skip header
+                table.innerHTML += `<tr>
+                    <td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td>${row[4]}</td>
+                    <td><button>Edit</button> <button>Delete</button></td>
+                </tr>`;
+            });
         }
 
         function showSection(id) {
@@ -75,7 +82,9 @@
             document.getElementById(id).classList.remove('hidden');
         }
 
-        fetchData();
+        function confirmSave() { alert("Saved!"); }
+
+        init();
     </script>
 </body>
 </html>
