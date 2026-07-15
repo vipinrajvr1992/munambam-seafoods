@@ -1,75 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Admin Login | Munambam Seafoods</title>
-
     <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <!-- Main CSS -->
     <link rel="stylesheet" href="css/style.css">
-
 </head>
-
 <body>
 
 <div class="login-container">
-
     <div class="login-card">
-
         <img src="../assets/logo.png"
              class="logo"
              alt="Munambam Seafoods"
              onerror="this.style.display='none'">
 
         <h2>Admin Login</h2>
-
-        <p class="subtitle">
-            Core Team Dashboard
-        </p>
+        <p class="subtitle">Core Team Dashboard</p>
 
         <form id="loginForm">
-
-            <input
-                type="password"
-                id="password"
-                placeholder="Enter Admin Password"
-                autocomplete="current-password"
-                required>
-
-            <button
-                type="submit"
-                id="loginBtn">
-
-                Login
-
-            </button>
-
+            <input type="password" 
+                   id="password" 
+                   placeholder="Enter Admin Password" 
+                   autocomplete="current-password" 
+                   required>
+            <button type="submit" id="loginBtn">Login</button>
         </form>
 
-        <div id="loginMessage"></div>
-
+        <!-- മെസ്സേജുകൾ കാണിക്കാനുള്ള ബോക്സ് -->
+        <div id="loginMessage" style="margin-top: 15px; font-size: 0.9rem; font-weight: 500;"></div>
     </div>
-
 </div>
 
-<!-- CONFIG -->
+<!-- SCRIPTS -->
 <script src="js/config.js"></script>
-
-<!-- AUDIT -->
 <script src="js/audit.js"></script>
-
-<!-- AUTH -->
 <script src="js/auth.js"></script>
 
 </body>
-
 </html>
