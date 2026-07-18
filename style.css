@@ -13,7 +13,6 @@ body {
     font-family: 'Lora', serif;
     margin: 0;
     padding: 0;
-    cursor: none !important; 
     line-height: 1.8;
     font-size: 1.1rem;
 }
@@ -152,7 +151,21 @@ header h1 {
     font-family: 'Montserrat', sans-serif;
 }
 
-/* Cursor handling */
-a, button, .cta-button {
-    cursor: none !important;
+/* --- 🖥️ Desktop Only Cursor Handling --- */
+@media (min-width: 1025px) {
+    body, a, button, .cta-button, .footer-icons a {
+        cursor: none !important;
+    }
+}
+
+/* --- 📱 Mobile & Tablet Reset --- */
+@media (max-width: 1024px) {
+    body, a, button, .cta-button, .footer-icons a {
+        cursor: auto !important; /* മൊബൈലിൽ ഡിഫോൾട്ട് ടച്ച് സിസ്റ്റം തിരികെ നൽകുന്നു */
+    }
+    
+    /* സ്ക്രീനിൽ കാണിക്കുന്ന ആ കസ്റ്റം കർസർ ഡോട്ട് (Div) മൊബൈലിൽ ഹൈഡ് ചെയ്യാൻ */
+    .custom-cursor, #custom-cursor, .cursor-dot {
+        display: none !important;
+    }
 }
