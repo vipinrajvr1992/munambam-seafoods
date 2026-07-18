@@ -164,8 +164,19 @@ header h1 {
         cursor: auto !important; /* മൊബൈലിൽ ഡിഫോൾട്ട് ടച്ച് സിസ്റ്റം തിരികെ നൽകുന്നു */
     }
     
-    /* സ്ക്രീനിൽ കാണിക്കുന്ന ആ കസ്റ്റം കർസർ ഡോട്ട് (Div) മൊബൈലിൽ ഹൈഡ് ചെയ്യാൻ */
-    .custom-cursor, #custom-cursor, .cursor-dot {
+    /* പേരിൽ cursor അല്ലെങ്കിൽ fish എന്ന് വരുന്ന എല്ലാ കസ്റ്റം എലമെന്റുകളെയും മൊബൈലിൽ ഒളിപ്പിക്കുന്നു */
+    .custom-cursor, 
+    #custom-cursor, 
+    .cursor-dot, 
+    .fish, 
+    .fish-cursor,
+    [id*="cursor"], 
+    [class*="cursor"], 
+    [id*="fish"], 
+    [class*="fish"] {
         display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
     }
 }
