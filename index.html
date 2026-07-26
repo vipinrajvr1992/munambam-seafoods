@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- ===================================================
-         MUNAMBAM SEAFOODS - HIGH-RANKING SEO, AEO & GEO INTEGRATED HEAD
+         MUNAMBAM SEAFOODS - HIGH-RANKING SEO, AEO, GEO & VEO INTEGRATED HEAD
     ==================================================== -->
 
-    <!-- Primary SEO Meta Tags -->
+    <!-- Primary SEO & Voice Assistant Meta Tags -->
     <title>Munambam Seafoods | Coastal Provisions & Heritage | Buy Fresh & Premium Dried Fish Online</title>
     <meta name="title" content="Munambam Seafoods | Coastal Provisions & Heritage | Buy Fresh & Premium Dried Fish Online">
     <meta name="description" content="Order 100% authentic Munambam fresh fish, premium dried fish, and dried prawns online. Sourced directly from Munambam Harbour, chemical-free & preserved through traditional expertise.">
@@ -49,7 +49,7 @@
     <link rel="stylesheet" href="style.css">
 
     <!-- ===================================================
-         AEO & GEO SCHEMA (JSON-LD for Google, Gemini & ChatGPT)
+         AEO, GEO & VEO SCHEMA (JSON-LD for Siri, Google Assistant & AI)
     ==================================================== -->
     <script type="application/ld+json">
     {
@@ -95,6 +95,19 @@
           }
         },
         {
+          "@type": "WebPage",
+          "@id": "https://www.munambamseafoods.online/#webpage",
+          "url": "https://www.munambamseafoods.online/",
+          "name": "Munambam Seafoods | Coastal Provisions & Heritage",
+          "isPartOf": {
+            "@id": "https://www.munambamseafoods.online/#website"
+          },
+          "speakable": {
+            "@type": "SpeakableSpecification",
+            "cssSelector": [".voice-speak-title", ".voice-speak-desc", ".voice-speak-heritage"]
+          }
+        },
+        {
           "@type": "ItemList",
           "name": "Featured Munambam Seafood Products",
           "itemListElement": [
@@ -123,7 +136,7 @@
               "name": "Where can I buy authentic Munambam dry fish and fresh fish online?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "You can order 100% authentic Munambam dry fish, dried prawns, and fresh fish directly from https://www.munambamseafoods.online/. All products are sourced directly from Munambam Fishing Harbour in Kerala."
+                "text": "You can order 100% authentic Munambam dry fish, dried prawns, and fresh fish directly from Munambam Seafoods online. All products are sourced directly from Munambam Fishing Harbour in Kerala."
               }
             },
             {
@@ -158,14 +171,14 @@
     </header>
 
     <section class="hero">
-        <h2>The Authentic Taste of Kerala, Preserved.</h2>
-        <p>Rooted in the coastal legacy of Munambam Harbour, we bring you the finest ocean treasures preserved through generations of traditional expertise.</p>
-        <a href="https://wa.me/917907804747" class="cta-button">Order via WhatsApp</a>
+        <h2 class="voice-speak-title">The Authentic Taste of Kerala, Preserved.</h2>
+        <p class="voice-speak-desc">Rooted in the coastal legacy of Munambam Harbour, we bring you the finest ocean treasures preserved through generations of traditional expertise.</p>
+        <a href="https://wa.me/917907804747" class="cta-button" aria-label="Order fresh and dry fish via WhatsApp">Order via WhatsApp</a>
     </section>
 
     <section class="section">
         <h3>Our Heritage: From Muziris to Munambam</h3>
-        <p>Munambam Seafoods is not just a brand; it is a continuation of the maritime glory that defined this coast for millennia. Located near the ancient port of <strong>Muziris</strong>—the legendary gateway that connected Kerala to the Roman Empire and the world—we operate on the same shores where spice and seafood trade shaped civilizations.</p>
+        <p class="voice-speak-heritage">Munambam Seafoods is not just a brand; it is a continuation of the maritime glory that defined this coast for millennia. Located near the ancient port of <strong>Muziris</strong>—the legendary gateway that connected Kerala to the Roman Empire and the world—we operate on the same shores where spice and seafood trade shaped civilizations.</p>
         <p>Today, Munambam Harbour stands as the heartbeat of Kerala’s fishing industry. We draw our inspiration from this rich history, blending the ancient wisdom of coastal preservation with modern craftsmanship to deliver products that honor our ancestors.</p>
 
         <h3>Our Commitment & Quality</h3>
@@ -178,14 +191,12 @@
 
     <footer class="contact">
         <h3>Connect With The Coast</h3>
-       <div class="footer-icons">
-    <a href="https://wa.me/7907804747" target="_blank"><i class="fab fa-whatsapp"></i></a>
-    <a href="mailto:connect.munambamseafoods@email.com" target="_blank"><i class="fas fa-envelope"></i></a>
-    <a href="https://www.instagram.com/munambamseafoods" target="_blank"><i class="fab fa-instagram"></i></a>
-    <!-- Facebook Icon Added -->
-    <a href="https://www.facebook.com/officialmunambamseafoods" target="_blank"><i class="fab fa-facebook-f"></i></a>
-</div>
-        <!-- കോപ്പിറൈറ്റ് ലൈൻ ഇവിടെ ചേർത്തു -->
+        <div class="footer-icons">
+            <a href="https://wa.me/917907804747" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <a href="mailto:connect.munambamseafoods@email.com" target="_blank" rel="noopener noreferrer" aria-label="Email"><i class="fas fa-envelope"></i></a>
+            <a href="https://www.instagram.com/munambamseafoods" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/officialmunambamseafoods" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        </div>
         <p class="copyright">&copy; 2026 Munambam Seafoods. All Rights Reserved.</p>
     </footer>
 
