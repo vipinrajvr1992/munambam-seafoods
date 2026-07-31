@@ -153,19 +153,28 @@ header h1 {
 
 /* --- Water Ripple / Trail Effect Styling --- */
 .cursor-bubble {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 14px;
-  height: 14px;
-  background: rgba(197, 160, 89, 0.25); /* Site-inte Gold shade-nod aniyichu set cheythathu */
-  border: 1px solid rgba(197, 160, 89, 0.6);
-  border-radius: 50%;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  transition: transform 0.1s ease-out;
-  z-index: 9999;
-  box-shadow: 0 0 10px rgba(11, 36, 59, 0.15);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 14px;
+    height: 14px;
+    background: rgba(197, 160, 89, 0.25);
+    border: 1px solid rgba(197, 160, 89, 0.6);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease-out;
+    z-index: 9998;
+    box-shadow: 0 0 10px rgba(11, 36, 59, 0.15);
+}
+
+/* --- Fish Cursor Styling --- */
+#fish-cursor {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-5px, -15px);
+    transition: transform 0.05s linear;
 }
 
 /* --- 🖥️ Desktop Only Cursor Handling --- */
@@ -187,6 +196,7 @@ header h1 {
     .cursor-dot, 
     .fish, 
     .fish-cursor,
+    #fish-cursor,
     .cursor-bubble,
     [id*="cursor"], 
     [class*="cursor"], 
