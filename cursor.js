@@ -14,7 +14,7 @@ fish.innerHTML = `<svg width="50" height="30" viewBox="0 0 50 30" style="fill:no
 document.body.appendChild(fish);
 
 // --- 2. Create Water Bubbles for Trail Animation ---
-const bubbleCount = 5;
+const bubbleCount = 6;
 const circles = [];
 
 for (let i = 0; i < bubbleCount; i++) {
@@ -24,11 +24,11 @@ for (let i = 0; i < bubbleCount; i++) {
   circles.push(bubble);
 }
 
-const coords = { x: 0, y: 0 };
+const coords = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
 circles.forEach(function (circle) {
-  circle.x = 0;
-  circle.y = 0;
+  circle.x = window.innerWidth / 2;
+  circle.y = window.innerHeight / 2;
 });
 
 // --- 3. Mouse Move Event Listener ---
@@ -36,7 +36,7 @@ window.addEventListener('mousemove', (e) => {
   coords.x = e.clientX;
   coords.y = e.clientY;
 
-  // Fish position update
+  // Fish position update (മൂക്ക് കൃത്യം മൗസ് പോയിന്ററിൽ വരാൻ)
   fish.style.left = e.clientX + 'px';
   fish.style.top = e.clientY + 'px';
 });
@@ -50,7 +50,9 @@ function animateCircles() {
     circle.style.left = x + 'px';
     circle.style.top = y + 'px';
 
-    circle.style.transform = `translate(-50%, -50%) scale(${(circles.length - index) / circles.length})`;
+    // പിന്നിലേക്ക് പോകുംതോറും സൈസ് ചെറുതാകുന്ന രീതിയിൽ
+    const scale = (circles.length - index) / circles.length;
+    circle.style.transform = `translate(-50%, -50%) scale(${scale})`;
 
     circle.x = x;
     circle.y = y;
