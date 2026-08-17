@@ -48,13 +48,6 @@
             scroll-behavior: smooth;
         }
 
-        /* Desktop Cursor Reset */
-        @media (min-width: 1025px) {
-            body, a, button, input {
-                cursor: none !important;
-            }
-        }
-
         body {
             font-family: var(--font-body);
             background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 50%, #e0f2fe 100%);
@@ -79,15 +72,8 @@
 
         .ocean-creature {
             position: absolute;
-            opacity: 0.35;
+            opacity: 0.28;
             will-change: transform;
-        }
-
-        .ocean-creature img {
-            width: 100%;
-            height: auto;
-            display: block;
-            filter: drop-shadow(0 4px 8px rgba(2, 132, 199, 0.15));
         }
 
         .seaweed {
@@ -532,7 +518,7 @@
 
         <div class="main-showcase">
             <div class="product-3d-box">
-                <span class="pack-tag">PREMIUM PACK</span>
+                <span class="pack-tag">BEST SELLER</span>
                 <img src="assets/products/highlights/PRODUCT_PACK_FRONT.webp" alt="Munambam Dried Prawns Highlight Pack">
             </div>
             <div class="taste-bubble">✨ 100% HYGIENICALLY DRIED</div>
@@ -604,70 +590,55 @@
         </footer>
     </div>
 
-    <!-- Responsive Fish Cursor Script & Procedural Moving Creatures Script using uploaded assets/icon/ svgs -->
+    <!-- Procedural Moving Creatures Script (Background Only) -->
     <script>
-        // Custom Fish Cursor using icon-fish.svg
-        if (window.innerWidth > 1024) {
-            const fish = document.createElement('div');
-            fish.id = 'fish-cursor';
-            fish.innerHTML = `<img src="assets/icon/icon-fish.svg" style="width: 45px; height: auto; filter: drop-shadow(0px 2px 4px rgba(2, 132, 199, 0.4));" alt="Cursor">`;
-
-            document.body.appendChild(fish);
-
-            const style = document.createElement('style');
-            style.innerHTML = `
-                #fish-cursor {
-                    position: fixed;
-                    pointer-events: none;
-                    z-index: 9999;
-                    transform: translate(-10px, -15px);
-                    transition: transform 0.05s linear;
-                }
-            `;
-            document.head.appendChild(style);
-
-            document.addEventListener('mousemove', (e) => {
-                fish.style.left = e.clientX + 'px';
-                fish.style.top = e.clientY + 'px';
-            });
-        }
-
-        // Animated Sea Creatures Generator using uploaded asset SVGs
+        // Animated Sea Creatures Generator (Fishes, Sharks, Octopuses, Prawns)
         const container = document.getElementById('oceanElements');
 
-        const creatureFiles = [
-            'assets/icon/icon-fish.svg',
-            'assets/icon/icon-shark.svg',
-            'assets/icon/icon-octopus.svg',
-            'assets/icon/icon-prawn.svg'
-        ];
+        const svgPaths = {
+            fish: {
+                viewBox: "0 0 50 30",
+                svg: '<path d="M 5,15 Q 25,-5 45,25 M 5,15 Q 25,35 45,5" /><path d="M 15,8.5 Q 18,15 15,21.5" /><circle cx="10" cy="14.5" r="1.5" fill="#0284c7" stroke="none"/>'
+            },
+            shark: {
+                viewBox: "0 0 100 60",
+                svg: '<path d="M 10,30 Q 20,22 30,22 L 40,15 L 43,22 L 75,22 Q 90,10 95,12 Q 88,28 95,45 Q 85,38 75,38 L 55,38 Q 45,45 38,38 L 15,42 Q 10,38 10,30 Z" /><circle cx="20" cy="28" r="2" fill="#0284c7" stroke="none"/><path d="M 25,28 Q 28,33 32,32" /><path d="M 32,24 L 35,32 M 36,25 L 39,33 M 40,26 L 43,34" />'
+            },
+            octopus: {
+                viewBox: "0 0 100 100",
+                svg: '<path d="M 30,50 Q 30,20 50,20 Q 70,20 70,50 Q 70,60 65,65 L 65,85 Q 65,95 55,90 M 70,50 Q 80,45 85,55 Q 90,65 80,75 M 30,50 Q 20,45 15,55 Q 10,65 20,75 M 40,65 L 40,90 M 50,60 L 50,95" /><circle cx="42" cy="40" r="4"/><circle cx="58" cy="40" r="4"/><circle cx="42" cy="40" r="1.5" fill="#0284c7" stroke="none"/><circle cx="58" cy="40" r="1.5" fill="#0284c7" stroke="none"/><path d="M 38,25 Q 45,22 52,25" />'
+            },
+            prawn: {
+                viewBox: "0 0 100 100",
+                svg: '<path d="M 20,30 Q 10,20 25,15 Q 40,10 55,20 L 75,35 Q 95,50 90,75 Q 85,95 70,85 Q 60,75 55,65 Q 40,55 30,60 Q 15,70 20,85" /><path d="M 15,25 Q 5,20 12,12 M 18,22 Q 10,12 22,8" /><path d="M 45,45 Q 55,50 50,60 M 52,50 Q 62,55 57,65 M 58,55 Q 68,60 63,70" /><circle cx="28" cy="27" r="2" fill="#0284c7" stroke="none"/><path d="M 32,27 Q 42,28 50,35" />'
+            }
+        };
 
+        const creatureTypes = ['fish', 'shark', 'octopus', 'prawn'];
         const totalItems = 16;
         const occupiedZones = [];
 
         for (let i = 0; i < totalItems; i++) {
-            const iconSrc = creatureFiles[Math.floor(Math.random() * creatureFiles.length)];
+            const typeKey = creatureTypes[Math.floor(Math.random() * creatureTypes.length)];
+            const creatureData = svgPaths[typeKey];
 
             const el = document.createElement('div');
             el.className = 'ocean-creature';
 
-            // Distinct balanced scaling based on type/file
-            let baseScale = 0.6 + Math.random() * 0.7;
-            if (iconSrc.includes('shark')) baseScale = 1.1 + Math.random() * 0.5;
-            if (iconSrc.includes('octopus')) baseScale = 0.7 + Math.random() * 0.4;
+            let baseScale = 0.6 + Math.random() * 0.8;
+            if (typeKey === 'shark') baseScale = 1.2 + Math.random() * 0.6;
+            if (typeKey === 'octopus') baseScale = 0.8 + Math.random() * 0.5;
 
-            const width = Math.round(55 * baseScale);
-
-            // Direction: Left to Right or Right to Left
+            const width = Math.round(50 * baseScale);
+            const height = Math.round(30 * baseScale);
             const movingRight = Math.random() > 0.5;
             
-            // Non-overlapping placement logic using collision check
             let posX, posY, overlapping;
             let safetyCounter = 0;
             do {
                 overlapping = false;
-                posX = Math.random() * 85; 
-                posY = 10 + Math.random() * 75; 
+                posX = Math.random() * 85;
+                posY = 10 + Math.random() * 75;
 
                 for (let zone of occupiedZones) {
                     const dist = Math.hypot(posX - zone.x, posY - zone.y);
@@ -684,9 +655,10 @@
             el.style.left = posX + 'vw';
             el.style.top = posY + 'vh';
 
-            el.innerHTML = `<img src="${iconSrc}" width="${width}" style="transform: scaleX(${movingRight ? 1 : -1});" alt="Sea Creature">`;
+            el.innerHTML = `<svg width="${width}" height="${height}" viewBox="${creatureData.viewBox}" style="fill:none; stroke:#0284c7; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; transform: scaleX(${movingRight ? 1 : -1});">
+                ${creatureData.svg}
+            </svg>`;
 
-            // Movement animation variables
             const duration = 18 + Math.random() * 22;
             const verticalTravel = (Math.random() - 0.5) * 60;
             const horizontalTravel = movingRight ? (100 + Math.random() * 40) : -(100 + Math.random() * 40);
