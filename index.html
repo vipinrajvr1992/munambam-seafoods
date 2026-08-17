@@ -77,37 +77,53 @@
             overflow: hidden;
         }
 
-        /* Floating Background Fish */
-        .bg-fish {
+        /* Sea Creatures PNG Classes */
+        .bg-creature {
             position: absolute;
-            opacity: 0.25;
-            animation: floatFish 25s linear infinite;
+            opacity: 0.65; /* Adjust visibility of PNGs */
+            animation: floatCreature linear infinite;
         }
 
-        .bg-fish-1 { top: 20%; left: -100px; animation-duration: 22s; transform: scale(0.8); }
-        .bg-fish-2 { top: 55%; left: -100px; animation-duration: 28s; animation-delay: 5s; transform: scale(1.2); }
-        .bg-fish-3 { top: 80%; left: -100px; animation-duration: 18s; animation-delay: 2s; transform: scale(0.6); }
+        /* Sizes */
+        .size-s { width: 40px; }
+        .size-m { width: 90px; }
+        .size-l { width: 180px; }
+        .size-xl { width: 350px; }
 
-        @keyframes floatFish {
-            0% { left: -10px; transform: translateX(-100%) translateY(0px); }
-            50% { transform: translateX(50vw) translateY(-25px); }
-            100% { left: 100%; transform: translateX(100px) translateY(0px); }
+        /* Different Elements positioning & timing */
+        .ent-1 { top: 15%; left: -200px; animation-duration: 35s; }
+        .ent-2 { top: 40%; left: -200px; animation-duration: 25s; animation-delay: 5s; }
+        .ent-3 { top: 65%; left: -200px; animation-duration: 40s; animation-delay: 12s; }
+        .ent-4 { top: 80%; left: -200px; animation-duration: 28s; animation-delay: 2s; }
+        .ent-5 { top: 25%; left: -200px; animation-duration: 45s; animation-delay: 18s; }
+        .ent-6 { top: 55%; left: -200px; animation-duration: 32s; animation-delay: 8s; }
+        .ent-7 { top: 10%; left: -200px; animation-duration: 50s; animation-delay: 25s; }
+        .ent-8 { top: 75%; left: -200px; animation-duration: 22s; animation-delay: 15s; }
+
+        @keyframes floatCreature {
+            0% { left: -300px; transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(3deg); }
+            100% { left: 110vw; transform: translateY(0px) rotate(-2deg); }
         }
 
-        /* Seaweed / Plants at bottom corners */
+        /* Seaweed / Plants at bottom */
         .seaweed {
             position: absolute;
             bottom: 0;
-            opacity: 0.15;
+            opacity: 0.25;
             transform-origin: bottom center;
-            animation: sway 4s ease-in-out infinite alternate;
+            animation: sway ease-in-out infinite alternate;
         }
-        .seaweed-left { left: 2%; }
-        .seaweed-right { right: 2%; animation-delay: -2s; }
+        .seaweed-1 { left: 2%; animation-duration: 4s; transform: scale(1); }
+        .seaweed-2 { left: 15%; animation-duration: 5s; transform: scale(0.8); animation-delay: -1s; }
+        .seaweed-3 { left: 30%; animation-duration: 4.5s; transform: scale(1.2); animation-delay: -3s; }
+        .seaweed-4 { right: 25%; animation-duration: 5.5s; transform: scale(0.9); animation-delay: -2s; }
+        .seaweed-5 { right: 10%; animation-duration: 3.8s; transform: scale(1.1); animation-delay: -4s; }
+        .seaweed-6 { right: 2%; animation-duration: 4.2s; transform: scale(1); animation-delay: -1.5s; }
 
         @keyframes sway {
-            0% { transform: rotate(-5deg); }
-            100% { transform: rotate(5deg); }
+            0% { transform: rotate(-6deg) scale(inherit); }
+            100% { transform: rotate(6deg) scale(inherit); }
         }
 
         /* --------------------------------------------------
@@ -502,38 +518,49 @@
 </head>
 <body>
 
-    <!-- Dynamic Ocean Background Elements (Animated Fish & Seaweed) -->
+    <!-- Dynamic Ocean Background Elements (Animated Fishes, Sharks, Octopus & Seaweed) -->
     <div class="ocean-bg-elements">
-        <!-- Swimming Fish 1 -->
-        <svg class="bg-fish bg-fish-1" width="60" height="35" viewBox="0 0 50 30" style="fill:none; stroke:#0284c7; stroke-width:2; stroke-linecap:round;">
-            <path d="M 5,15 Q 25,-5 45,25 M 5,15 Q 25,35 45,5" />
-            <path d="M 15,8.5 Q 18,15 15,21.5" />
-            <circle cx="10" cy="14.5" r="1.5" fill="#0284c7"/>
-        </svg>
+        
+        <!-- Moving Sea Creatures (PNGs) -->
+        <img src="assets/fish.png" class="bg-creature size-m ent-1" alt="Fish">
+        <img src="assets/shark.png" class="bg-creature size-xl ent-2" alt="Large Shark">
+        <img src="assets/octopus.png" class="bg-creature size-s ent-3" alt="Small Octopus">
+        <img src="assets/fish.png" class="bg-creature size-s ent-4" alt="Small Fish">
+        <img src="assets/octopus.png" class="bg-creature size-l ent-5" alt="Large Octopus">
+        <img src="assets/fish.png" class="bg-creature size-l ent-6" alt="Large Fish">
+        <img src="assets/shark.png" class="bg-creature size-l ent-7" alt="Medium Shark">
+        <img src="assets/fish.png" class="bg-creature size-m ent-8" alt="Medium Fish">
 
-        <!-- Swimming Fish 2 -->
-        <svg class="bg-fish bg-fish-2" width="60" height="35" viewBox="0 0 50 30" style="fill:none; stroke:#0284c7; stroke-width:2; stroke-linecap:round;">
-            <path d="M 5,15 Q 25,-5 45,25 M 5,15 Q 25,35 45,5" />
-            <path d="M 15,8.5 Q 18,15 15,21.5" />
-            <circle cx="10" cy="14.5" r="1.5" fill="#0284c7"/>
-        </svg>
-
-        <!-- Swimming Fish 3 -->
-        <svg class="bg-fish bg-fish-3" width="60" height="35" viewBox="0 0 50 30" style="fill:none; stroke:#0284c7; stroke-width:2; stroke-linecap:round;">
-            <path d="M 5,15 Q 25,-5 45,25 M 5,15 Q 25,35 45,5" />
-            <path d="M 15,8.5 Q 18,15 15,21.5" />
-            <circle cx="10" cy="14.5" r="1.5" fill="#0284c7"/>
-        </svg>
-
-        <!-- Seaweed Left -->
-        <svg class="seaweed seaweed-left" width="80" height="180" viewBox="0 0 100 200" fill="none" stroke="#0284c7" stroke-width="3" stroke-linecap="round">
+        <!-- Seaweed Plants (Added more for density) -->
+        <svg class="seaweed seaweed-1" width="80" height="180" viewBox="0 0 100 200" fill="none" stroke="#0284c7" stroke-width="3" stroke-linecap="round">
             <path d="M 20,200 Q 40,150 10,100 T 30,0" />
             <path d="M 50,200 Q 70,140 40,80 T 60,10" />
             <path d="M 80,200 Q 90,160 70,120 T 85,30" />
         </svg>
 
-        <!-- Seaweed Right -->
-        <svg class="seaweed seaweed-right" width="80" height="180" viewBox="0 0 100 200" fill="none" stroke="#0284c7" stroke-width="3" stroke-linecap="round">
+        <svg class="seaweed seaweed-2" width="60" height="140" viewBox="0 0 100 200" fill="none" stroke="#0284c7" stroke-width="4" stroke-linecap="round">
+            <path d="M 50,200 Q 20,150 40,100 T 20,0" />
+            <path d="M 80,200 Q 90,140 60,80 T 80,10" />
+        </svg>
+
+        <svg class="seaweed seaweed-3" width="90" height="160" viewBox="0 0 100 200" fill="none" stroke="#0284c7" stroke-width="2" stroke-linecap="round">
+            <path d="M 30,200 Q 50,150 20,100 T 40,0" />
+            <path d="M 60,200 Q 80,140 50,80 T 70,10" />
+            <path d="M 90,200 Q 100,160 80,120 T 95,30" />
+        </svg>
+
+        <svg class="seaweed seaweed-4" width="75" height="190" viewBox="0 0 100 200" fill="none" stroke="#0284c7" stroke-width="3" stroke-linecap="round">
+            <path d="M 20,200 Q 40,150 10,100 T 30,0" />
+            <path d="M 50,200 Q 70,140 40,80 T 60,10" />
+        </svg>
+
+        <svg class="seaweed seaweed-5" width="85" height="150" viewBox="0 0 100 200" fill="none" stroke="#0284c7" stroke-width="3.5" stroke-linecap="round">
+            <path d="M 40,200 Q 20,150 50,100 T 30,0" />
+            <path d="M 70,200 Q 90,140 60,80 T 80,10" />
+            <path d="M 90,200 Q 80,160 100,120 T 85,30" />
+        </svg>
+
+        <svg class="seaweed seaweed-6" width="80" height="180" viewBox="0 0 100 200" fill="none" stroke="#0284c7" stroke-width="3" stroke-linecap="round">
             <path d="M 20,200 Q 40,150 10,100 T 30,0" />
             <path d="M 50,200 Q 70,140 40,80 T 60,10" />
         </svg>
@@ -639,11 +666,8 @@
             const fish = document.createElement('div');
             fish.id = 'fish-cursor';
 
-            fish.innerHTML = `<svg width="50" height="30" viewBox="0 0 50 30" style="fill:none; stroke:#d4af37; stroke-width:2.5; stroke-linecap:round; filter: drop-shadow(0px 2px 4px rgba(212, 175, 55, 0.4));">
-                <path d="M 5,15 Q 25,-5 45,25 M 5,15 Q 25,35 45,5" />
-                <path d="M 15,8.5 Q 18,15 15,21.5" />
-                <circle cx="10" cy="14.5" r="1.8" fill="#d4af37" stroke="none"/>
-            </svg>`;
+            // Custom PNG Cursor Image injected here 
+            fish.innerHTML = `<img src="assets/fish.png" alt="Cursor Fish" style="width: 45px; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.3)); pointer-events: none;">`;
 
             document.body.appendChild(fish);
 
