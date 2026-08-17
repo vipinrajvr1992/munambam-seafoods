@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Primary SEO & Meta Tags -->
-    <title>Munambam Seafoods | Premium Sun-Dried & Fresh Seafood Online</title>
+    <title>Munambam Seafoods | Premium Hygienically Dried & Fresh Seafood Online</title>
     <meta name="title" content="Munambam Seafoods | Buy Fresh & Premium Dried Fish Online">
-    <meta name="description" content="100% Authentic Munambam seafoods, sun-dried prawns, and fresh fish online. Sourced directly from Munambam Harbour, chemical & salt-free.">
+    <meta name="description" content="100% Authentic Munambam seafoods, hygienically dried prawns, and fresh fish online. Sourced directly from Munambam Harbour, chemical & salt-free.">
     <link rel="canonical" href="https://www.munambamseafoods.online/">
 
     <!-- Google Fonts -->
@@ -84,7 +84,7 @@
             color: var(--primary-blue);
         }
 
-        /* Waves & Ocean Hero Section */
+        /* Hero Section */
         .hero-container {
             position: relative;
             padding: 50px 8% 80px 8%;
@@ -296,7 +296,6 @@
             color: var(--ocean-blue);
         }
 
-        /* Mobile Responsive */
         @media (max-width: 768px) {
             .hero-title { font-size: 2.2rem; }
             .hero-subtitle { font-size: 1.2rem; }
@@ -320,9 +319,9 @@
         </div>
     </nav>
 
-    <!-- Waves & 3D Pouch Hero Section -->
+    <!-- Waves & Hero Section -->
     <section class="hero-container">
-        <span class="badge">100% Traditional Sun-Dried & Chemical Free</span>
+        <span class="badge">100% Hygienically Dried & Chemical Free</span>
         <h1 class="hero-title">PREMIUM SEA FOOD</h1>
         <div class="hero-subtitle">Authentic Taste Direct From Harbour</div>
 
@@ -330,7 +329,6 @@
         <div class="main-showcase">
             <div class="product-3d-box">
                 <span class="pack-tag">PREMIUM PACK</span>
-                <!-- Updated with your 3D Pouch Image -->
                 <img src="assets/PRODUCT_PACK_FRONT.png" alt="Munambam Dried Prawns 3D Pack">
             </div>
             <div class="taste-bubble">✨ 100% HYGIENICALLY DRIED</div>
@@ -353,7 +351,7 @@
             <div class="card">
                 <img src="assets/PRODUCT_PACK_FRONT.png" alt="Uncleaned Dried Prawns">
                 <h3>Uncleaned Dried Prawns</h3>
-                <p>Traditional Sun-Dried Direct From Harbour</p>
+                <p>Hygienically Dried Direct From Harbour</p>
                 <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Uncleaned%20Dried%20Prawns" class="btn-order">Order Now</a>
             </div>
 
@@ -378,5 +376,35 @@
         <p style="opacity: 0.7; font-size: 0.85rem; margin-top: 15px;">&copy; 2026 Munambam Seafoods. All Rights Reserved.</p>
     </footer>
 
+    <!-- Fish Cursor Script -->
+    <script>
+        const fish = document.createElement('div');
+        fish.id = 'fish-cursor';
+
+        fish.innerHTML = `<svg width="50" height="30" viewBox="0 0 50 30" style="fill:none; stroke:#C5A059; stroke-width:2; stroke-linecap:round;">
+            <path d="M 5,15 Q 25,-5 45,25 M 5,15 Q 25,35 45,5" />
+            <path d="M 15,8.5 Q 18,15 15,21.5" />
+            <circle cx="10" cy="14.5" r="1.5" fill="#C5A059" stroke="none"/>
+        </svg>`;
+
+        document.body.appendChild(fish);
+
+        const style = document.createElement('style');
+        style.innerHTML = `
+            #fish-cursor {
+                position: fixed;
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-5px, -15px);
+                transition: transform 0.05s linear;
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.addEventListener('mousemove', (e) => {
+            fish.style.left = e.clientX + 'px';
+            fish.style.top = e.clientY + 'px';
+        });
+    </script>
 </body>
 </html>
