@@ -8,13 +8,13 @@
     <meta name="title" content="All Products | Munambam Seafoods | Buy Fresh & Premium Dried Fish Online">
     <meta name="description" content="Explore our wide range of 100% authentic Munambam protein-rich, hygienic dried fish, prawns, shark, tuna, mackerel, and homemade podi. Direct from Munambam Harbour.">
     <meta name="robots" content="index, follow, max-image-preview:large">
-    <link rel="canonical" href="https://www.munambamseafoods.online/products.html">
+    <link rel="canonical" href="https://www.munambamseafoods.online/products/">
 
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/icon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/icon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/icon/favicon-16x16.png">
-    <link rel="manifest" href="assets/icon/site.webmanifest">
-    <link rel="icon" type="image/x-icon" href="assets/icon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="../assets/icon/site.webmanifest">
+    <link rel="icon" type="image/x-icon" href="../assets/icon/favicon.ico">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,7 +40,6 @@
             padding: 0;
             box-sizing: border-box;
             scroll-behavior: smooth;
-            cursor: none;
         }
 
         body {
@@ -129,18 +128,24 @@
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            text-decoration: none;
         }
 
         .logo-container img {
-            height: 38px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
+            height: 44px;
+            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.1));
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container:hover img {
+            transform: scale(1.05);
         }
 
         .brand-name {
             font-family: var(--font-heading);
-            font-size: 1.15rem;
-            font-weight: 700;
+            font-size: 1.25rem;
+            font-weight: 800;
             color: var(--dark-ocean);
             letter-spacing: -0.5px;
         }
@@ -192,6 +197,7 @@
             font-weight: 600;
             font-size: 0.85rem;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .filter-btn:hover, .filter-btn.active {
@@ -212,6 +218,7 @@
             color: var(--dark-ocean);
             outline: none;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .sort-dropdown:focus {
@@ -243,7 +250,7 @@
             font-weight: 600;
         }
 
-        /* Grid Layout: Desktop 3 columns, Mobile 2 columns */
+        /* Grid Layout */
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -445,16 +452,16 @@
     </div>
 
     <nav>
-        <div class="logo-container">
-            <img src="assets/MUNAMBAM_Seafood_Logo_HQ.png" alt="Munambam Seafoods Logo">
+        <a href="../" class="logo-container">
+            <img src="../assets/MUNAMBAM_Seafood_Logo_HQ.png" alt="Munambam Seafoods Logo">
             <span class="brand-name">MUNAMBAM SEAFOODS</span>
-        </div>
+        </a>
         <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="products.html" class="active">Products</a>
-            <a href="about.html">About Us</a>
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="terms.html">Terms</a>
+            <a href="../">Home</a>
+            <a href="../products/" class="active">Products</a>
+            <a href="../about/">About Us</a>
+            <a href="../privacy/">Privacy Policy</a>
+            <a href="../terms/">Terms</a>
         </div>
     </nav>
 
@@ -481,57 +488,57 @@
         <div class="grid" id="productGrid">
             
             <div class="card" data-category="prawns" data-name="Cleaned Dried Prawns">
-                <img src="assets/products/PRODUCT_1.webp" alt="Cleaned Dried Prawns">
+                <img src="../assets/products/PRODUCT_1.webp" alt="Cleaned Dried Prawns">
                 <div>
                     <h3>Cleaned Dried Prawns</h3>
                     <p>100% Meat Weight, Zero Salt & Chemical Free (250g)</p>
                 </div>
-                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Cleaned%20Dried%20Prawns" class="btn-order"><i class="fab fa-whatsapp"></i> Order Now</a>
+                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Cleaned%20Dried%20Prawns" class="btn-order" target="_blank"><i class="fab fa-whatsapp"></i> Order Now</a>
             </div>
 
             <div class="card" data-category="prawns" data-name="Uncleaned Dried Prawns">
-                <img src="assets/products/PRODUCT_2.webp" alt="Uncleaned Dried Prawns">
+                <img src="../assets/products/PRODUCT_2.webp" alt="Uncleaned Dried Prawns">
                 <div>
                     <h3>Uncleaned Dried Prawns</h3>
                     <p>Hygienically Dried Direct From Harbour</p>
                 </div>
-                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Uncleaned%20Dried%20Prawns" class="btn-order"><i class="fab fa-whatsapp"></i> Order Now</a>
+                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Uncleaned%20Dried%20Prawns" class="btn-order" target="_blank"><i class="fab fa-whatsapp"></i> Order Now</a>
             </div>
 
             <div class="card" data-category="podi" data-name="Prawn Chammanthi Podi">
-                <img src="assets/products/PRODUCT_3.webp" alt="Prawn Chammanthi Podi">
+                <img src="../assets/products/PRODUCT_3.webp" alt="Prawn Chammanthi Podi">
                 <div>
                     <h3>Prawn Chammanthi Podi</h3>
                     <p>Authentic Kerala Homemade Blend</p>
                 </div>
-                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Prawn%20Chammanthi%20Podi" class="btn-order"><i class="fab fa-whatsapp"></i> Order Now</a>
+                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Prawn%20Chammanthi%20Podi" class="btn-order" target="_blank"><i class="fab fa-whatsapp"></i> Order Now</a>
             </div>
 
             <div class="card" data-category="fish" data-name="Premium Dried Shark">
-                <img src="assets/products/PRODUCT_4.webp" alt="Dried Shark">
+                <img src="../assets/products/PRODUCT_4.webp" alt="Dried Shark">
                 <div>
                     <h3>Premium Dried Shark</h3>
                     <p>Traditional sundried quality (250g)</p>
                 </div>
-                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Dried%20Shark" class="btn-order"><i class="fab fa-whatsapp"></i> Order Now</a>
+                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Dried%20Shark" class="btn-order" target="_blank"><i class="fab fa-whatsapp"></i> Order Now</a>
             </div>
 
             <div class="card" data-category="fish" data-name="Premium Dried Tuna">
-                <img src="assets/products/PRODUCT_5.webp" alt="Dried Tuna">
+                <img src="../assets/products/PRODUCT_5.webp" alt="Dried Tuna">
                 <div>
                     <h3>Premium Dried Tuna</h3>
                     <p>Rich in flavor, clean & hygienic</p>
                 </div>
-                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Dried%20Tuna" class="btn-order"><i class="fab fa-whatsapp"></i> Order Now</a>
+                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Dried%20Tuna" class="btn-order" target="_blank"><i class="fab fa-whatsapp"></i> Order Now</a>
             </div>
 
             <div class="card" data-category="fish" data-name="Premium Dried Mackerel">
-                <img src="assets/products/PRODUCT_6.webp" alt="Dried Mackerel">
+                <img src="../assets/products/PRODUCT_6.webp" alt="Dried Mackerel">
                 <div>
                     <h3>Premium Dried Mackerel</h3>
                     <p>Authentic harbour taste</p>
                 </div>
-                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Dried%20Mackerel" class="btn-order"><i class="fab fa-whatsapp"></i> Order Now</a>
+                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Dried%20Mackerel" class="btn-order" target="_blank"><i class="fab fa-whatsapp"></i> Order Now</a>
             </div>
 
         </div>
@@ -545,13 +552,13 @@
         </div>
         <footer>
             <h3>Munambam Seafoods</h3>
-            <p>Direct Sourcing From Munambam Harbour | Fast Delivery Across India</p>
+            <p>Direct Sourcing From Munambam Harbour, Pallipuram, Ernakulam, Kerala | Fast Delivery Across India</p>
             
             <div class="footer-links">
-                <a href="about.html">About Us</a>
-                <a href="privacy.html">Privacy Policy</a>
-                <a href="terms.html">Terms of Service</a>
-                <a href="products.html">Products</a>
+                <a href="../about/">About Us</a>
+                <a href="../privacy/">Privacy Policy</a>
+                <a href="../terms/">Terms of Service</a>
+                <a href="../products/">Products</a>
             </div>
 
             <div class="social-icons">
@@ -611,13 +618,13 @@
             filteredCards.forEach(card => productGrid.appendChild(card));
         }
 
-        /* Background Sea Creatures Animation */
+        /* Background Sea Creatures Animation (Relative Path Updated) */
         const container = document.getElementById('oceanElements');
         const creatureFiles = {
-            fish: 'assets/icon/icon-fish.svg',
-            shark: 'assets/icon/icon-shark.svg',
-            octopus: 'assets/icon/icon-octopus.svg',
-            prawn: 'assets/icon/icon-prawn.svg'
+            fish: '../assets/icon/icon-fish.svg',
+            shark: '../assets/icon/icon-shark.svg',
+            octopus: '../assets/icon/icon-octopus.svg',
+            prawn: '../assets/icon/icon-prawn.svg'
         };
 
         const spawnList = [
