@@ -19,7 +19,7 @@
 
     <meta
         name="keywords"
-        content="Munambam Seafoods, dried seafood, dried prawns, coastal provisions, Munambam, Kerala seafood"
+        content="Munambam Seafoods, seafood, coastal provisions, dried seafood, dried prawns, Munambam Harbour, Kerala seafood"
     >
 
     <meta
@@ -32,7 +32,7 @@
         href="https://www.munambamseafoods.online/"
     >
 
-    <!-- Open Graph -->
+    <!-- OPEN GRAPH -->
     <meta
         property="og:type"
         content="website"
@@ -58,7 +58,7 @@
         content="https://www.munambamseafoods.online/assets/MUNAMBAM_Seafood_Logo_HQ.png"
     >
 
-    <!-- Favicons -->
+    <!-- FAVICON -->
     <link
         rel="apple-touch-icon"
         sizes="180x180"
@@ -89,79 +89,46 @@
         href="/assets/icon/favicon.ico"
     >
 
-
     <style>
 
         /* =========================================================
            MUNAMBAM SEAFOODS
-           PREMIUM COASTAL PROVISIONS
-           HOME PAGE
+           MASTER HOME THEME
         ========================================================= */
 
         :root {
+            --navy: #061b3a;
+            --navy-2: #09274d;
+            --navy-3: #0d315c;
 
-            --navy:
-                #061b3a;
+            --light-blue: #8ed8f5;
+            --light-blue-2: #bdeafa;
+            --blue: #168dcc;
 
-            --navy-2:
-                #09274d;
+            --gold: #c69a3a;
+            --gold-light: #e0bc68;
 
-            --navy-3:
-                #0d315c;
+            --cream: #fffaf0;
+            --cream-2: #f7f0df;
 
-            --blue:
-                #168dcc;
+            --white: #ffffff;
+            --black: #101820;
 
-            --light-blue:
-                #dff4ff;
+            --text-dark: #142943;
+            --text-light: #d9e8f4;
+            --muted: #8ea5bd;
 
-            --sky:
-                #bfe8fb;
-
-            --gold:
-                #c69a3a;
-
-            --gold-light:
-                #e0bc68;
-
-            --cream:
-                #fffaf0;
-
-            --cream-2:
-                #f7f0df;
-
-            --white:
-                #ffffff;
-
-            --black:
-                #101820;
-
-            --text:
-                #24364d;
-
-            --muted:
-                #62738a;
-
-            --border:
-                rgba(198,154,58,0.28);
+            --border-gold:
+                rgba(198,154,58,.28);
 
             --shadow:
-                0 20px 55px rgba(6,27,58,0.12);
+                0 24px 60px rgba(0,0,0,.22);
 
-            --shadow-dark:
-                0 24px 60px rgba(0,0,0,0.20);
-
-            --radius:
-                24px;
+            --shadow-soft:
+                0 18px 45px rgba(0,0,0,.16);
 
             --max:
                 1180px;
-
-            --heading:
-                "Segoe UI", Arial, sans-serif;
-
-            --body:
-                "Segoe UI", Arial, sans-serif;
         }
 
 
@@ -183,22 +150,26 @@
             margin: 0;
             min-height: 100vh;
 
-            font-family: var(--body);
-
-            color: var(--text);
-
             background:
-                linear-gradient(
-                    180deg,
-                    #dff4ff 0%,
-                    #c7ebfa 34%,
-                    #eef9ff 68%,
-                    #fffaf0 100%
-                );
+                var(--navy);
+
+            color:
+                var(--cream);
+
+            font-family:
+                "Segoe UI",
+                Arial,
+                Helvetica,
+                sans-serif;
 
             overflow-x: hidden;
 
             cursor: none;
+        }
+
+        body::selection {
+            background: var(--gold);
+            color: var(--navy);
         }
 
         a,
@@ -219,7 +190,7 @@
 
 
         /* =========================================================
-           CUSTOM CURSOR
+           CUSTOM FISH CURSOR
         ========================================================= */
 
         #fish-cursor {
@@ -228,15 +199,15 @@
             left: 0;
             top: 0;
 
-            width: 42px;
-            height: 25px;
+            width: 44px;
+            height: 27px;
 
             pointer-events: none;
 
             z-index: 99999;
 
             transform:
-                translate3d(-5px,-14px,0);
+                translate3d(-6px,-14px,0);
 
             will-change:
                 transform;
@@ -245,33 +216,22 @@
         #fish-cursor svg {
             display: block;
 
-            width: 42px;
-            height: 25px;
-        }
+            width: 44px;
+            height: 27px;
 
-        @media
-        (hover:none)
-        and
-        (pointer:coarse) {
-
-            body,
-            a,
-            button {
-                cursor: auto !important;
-            }
-
-            #fish-cursor {
-                display: none;
-            }
+            filter:
+                drop-shadow(
+                    0 2px 4px
+                    rgba(0,0,0,.35)
+                );
         }
 
 
         /* =========================================================
-           MOVING OCEAN LAYER
+           MOVING OCEAN OBJECTS
         ========================================================= */
 
         .ocean-layer {
-
             position: fixed;
 
             inset: 0;
@@ -283,27 +243,35 @@
 
             pointer-events: none;
 
-            z-index: 0;
+            z-index: 1;
         }
 
         .creature {
-
             position: absolute;
 
             display: block;
 
             pointer-events: none;
 
-            opacity: 0.20;
+            opacity: .24;
 
             will-change:
                 transform;
 
             user-select: none;
+
+            filter:
+                brightness(0)
+                saturate(100%)
+                invert(82%)
+                sepia(10%)
+                saturate(750%)
+                hue-rotate(158deg)
+                brightness(105%)
+                contrast(96%);
         }
 
         .creature img {
-
             display: block;
 
             width: 100%;
@@ -311,30 +279,30 @@
 
             object-fit: contain;
 
+            pointer-events: none;
+
             user-select: none;
 
             -webkit-user-drag: none;
         }
 
-
-        /* =========================================================
-           DECORATIVE WAVES
-        ========================================================= */
-
-        .wave-top {
-
+        .wave-decoration {
             position: absolute;
 
-            top: 0;
             left: 0;
+            top: 0;
 
             width: 100%;
             height: 180px;
 
-            opacity: 0.38;
+            opacity: .13;
+
+            pointer-events: none;
         }
 
-        .wave-top svg {
+        .wave-decoration svg {
+            display: block;
+
             width: 100%;
             height: 100%;
         }
@@ -345,17 +313,17 @@
         ========================================================= */
 
         .site-nav {
-
             position: sticky;
 
             top: 16px;
 
             z-index: 5000;
 
-            width: min(
-                calc(100% - 32px),
-                1240px
-            );
+            width:
+                min(
+                    calc(100% - 32px),
+                    1240px
+                );
 
             margin:
                 16px auto 0;
@@ -374,28 +342,27 @@
             gap: 25px;
 
             background:
-                rgba(255,255,255,0.94);
+                rgba(255,250,240,.97);
 
             border:
                 1px solid
-                rgba(255,255,255,0.85);
+                rgba(255,255,255,.85);
 
             border-radius:
                 50px;
 
             box-shadow:
-                0 12px 35px
-                rgba(6,27,58,0.12);
+                0 15px 40px
+                rgba(0,0,0,.20);
 
             backdrop-filter:
-                blur(12px);
+                blur(14px);
 
             -webkit-backdrop-filter:
-                blur(12px);
+                blur(14px);
         }
 
         .brand {
-
             display: flex;
 
             align-items: center;
@@ -408,7 +375,6 @@
         }
 
         .brand img {
-
             width: 48px;
             height: 48px;
 
@@ -417,7 +383,7 @@
             filter:
                 drop-shadow(
                     0 5px 8px
-                    rgba(0,0,0,0.12)
+                    rgba(0,0,0,.16)
                 );
 
             transition:
@@ -426,13 +392,13 @@
 
         .brand:hover img {
             transform:
-                scale(1.06);
+                scale(1.06)
+                rotate(-2deg);
         }
 
         .brand-text {
-
-            font-family:
-                var(--heading);
+            color:
+                var(--navy);
 
             font-size:
                 1.12rem;
@@ -441,17 +407,13 @@
                 800;
 
             letter-spacing:
-                -0.5px;
-
-            color:
-                var(--navy);
+                -.5px;
 
             white-space:
                 nowrap;
         }
 
         .nav-links {
-
             display: flex;
 
             align-items: center;
@@ -460,10 +422,13 @@
         }
 
         .nav-links a {
-
             position: relative;
 
-            text-decoration: none;
+            padding:
+                10px 0;
+
+            text-decoration:
+                none;
 
             color:
                 var(--navy);
@@ -472,17 +437,13 @@
                 .93rem;
 
             font-weight:
-                650;
-
-            padding:
-                10px 0;
+                700;
 
             transition:
                 color .2s ease;
         }
 
         .nav-links a::after {
-
             content: "";
 
             position: absolute;
@@ -497,7 +458,7 @@
                 var(--gold);
 
             transition:
-                width .2s ease;
+                width .22s ease;
         }
 
         .nav-links a:hover,
@@ -517,28 +478,26 @@
         ========================================================= */
 
         .hero {
-
             position: relative;
 
             z-index: 2;
 
-            min-height:
-                570px;
+            width:
+                min(
+                    calc(100% - 32px),
+                    1240px
+                );
 
-            width: min(
-                calc(100% - 32px),
-                1240px
-            );
+            min-height:
+                640px;
 
             margin:
                 22px auto 0;
 
             padding:
-                65px 30px 75px;
+                70px 30px 110px;
 
             display: flex;
-
-            flex-direction: column;
 
             align-items: center;
 
@@ -549,27 +508,26 @@
             overflow: hidden;
 
             border-radius:
-                36px;
+                38px;
 
             background:
-
-                radial-gradient(
-                    circle at 50% 25%,
-                    rgba(255,255,255,0.98) 0%,
-                    rgba(239,250,255,0.94) 34%,
-                    rgba(185,228,248,0.90) 100%
+                linear-gradient(
+                    145deg,
+                    var(--navy-2),
+                    var(--navy),
+                    #04152f
                 );
 
             border:
                 1px solid
-                rgba(255,255,255,0.95);
+                rgba(142,216,245,.13);
 
             box-shadow:
-                var(--shadow);
+                0 25px 70px
+                rgba(0,0,0,.26);
         }
 
         .hero::before {
-
             content: "";
 
             position: absolute;
@@ -578,14 +536,19 @@
 
             background:
                 radial-gradient(
-                    circle at 12% 20%,
-                    rgba(198,154,58,.15),
-                    transparent 18%
+                    circle at 50% 28%,
+                    rgba(142,216,245,.13),
+                    transparent 30%
                 ),
                 radial-gradient(
-                    circle at 88% 70%,
-                    rgba(22,141,204,.13),
-                    transparent 22%
+                    circle at 10% 80%,
+                    rgba(198,154,58,.10),
+                    transparent 25%
+                ),
+                radial-gradient(
+                    circle at 90% 65%,
+                    rgba(22,141,204,.10),
+                    transparent 25%
                 );
 
             pointer-events:
@@ -593,19 +556,19 @@
         }
 
         .hero::after {
-
             content: "";
 
             position: absolute;
 
             left: -5%;
             right: -5%;
-            bottom: -85px;
 
-            height: 150px;
+            bottom: -95px;
+
+            height: 170px;
 
             background:
-                var(--navy);
+                var(--cream);
 
             border-radius:
                 50% 50% 0 0 /
@@ -616,7 +579,6 @@
         }
 
         .hero-content {
-
             position: relative;
 
             z-index: 5;
@@ -629,12 +591,19 @@
         }
 
         .hero-logo {
-
             width:
-                clamp(145px, 19vw, 220px);
+                clamp(
+                    150px,
+                    18vw,
+                    220px
+                );
 
             height:
-                clamp(145px, 19vw, 220px);
+                clamp(
+                    150px,
+                    18vw,
+                    220px
+                );
 
             object-fit:
                 contain;
@@ -643,12 +612,12 @@
                 block;
 
             margin-bottom:
-                25px;
+                24px;
 
             filter:
                 drop-shadow(
-                    0 16px 25px
-                    rgba(6,27,58,.20)
+                    0 18px 30px
+                    rgba(0,0,0,.35)
                 );
 
             animation:
@@ -663,7 +632,6 @@
         }
 
         @keyframes logoFloat {
-
             from {
                 transform:
                     translate3d(0,0,0);
@@ -676,42 +644,37 @@
         }
 
         .hero-kicker {
-
             margin:
-                0 0 10px;
+                0 0 11px;
 
             color:
-                var(--gold);
+                var(--gold-light);
 
             font-size:
-                .78rem;
+                .76rem;
 
             font-weight:
                 800;
 
             letter-spacing:
-                3px;
+                3.2px;
 
             text-transform:
                 uppercase;
         }
 
         .hero-title {
-
             margin:
                 0;
 
-            font-family:
-                var(--heading);
-
             color:
-                var(--navy);
+                var(--cream);
 
             font-size:
                 clamp(
-                    2rem,
-                    4.5vw,
-                    3.5rem
+                    2.15rem,
+                    5vw,
+                    4rem
                 );
 
             line-height:
@@ -724,29 +687,32 @@
                 800;
         }
 
-        .hero-description {
+        .hero-title span {
+            color:
+                var(--light-blue);
+        }
 
+        .hero-description {
             max-width:
-                720px;
+                760px;
 
             margin:
-                17px auto 0;
+                20px auto 0;
 
             color:
-                #405a75;
+                #c8d9e8;
 
             font-size:
-                1.02rem;
+                1rem;
 
             line-height:
-                1.75;
+                1.8;
 
             font-weight:
                 500;
         }
 
         .hero-buttons {
-
             display:
                 flex;
 
@@ -760,11 +726,10 @@
                 12px;
 
             margin-top:
-                27px;
+                29px;
         }
 
         .btn {
-
             display:
                 inline-flex;
 
@@ -775,7 +740,7 @@
                 center;
 
             min-height:
-                48px;
+                49px;
 
             padding:
                 0 25px;
@@ -787,67 +752,67 @@
                 none;
 
             font-size:
-                .9rem;
+                .88rem;
 
             font-weight:
-                750;
+                800;
 
             transition:
                 transform .2s ease,
                 box-shadow .2s ease,
-                background .2s ease;
+                background .2s ease,
+                border-color .2s ease;
         }
 
         .btn-primary {
-
             background:
-                var(--navy);
+                var(--gold);
 
             color:
-                var(--white);
+                var(--navy);
 
             box-shadow:
-                0 12px 25px
-                rgba(6,27,58,.20);
+                0 12px 28px
+                rgba(198,154,58,.22);
         }
 
         .btn-primary:hover {
-
             transform:
                 translate3d(0,-3px,0);
 
             background:
-                var(--navy-3);
+                var(--gold-light);
 
             box-shadow:
-                0 17px 30px
-                rgba(6,27,58,.25);
+                0 17px 32px
+                rgba(198,154,58,.28);
         }
 
         .btn-secondary {
-
             background:
-                var(--white);
+                rgba(255,255,255,.06);
 
             color:
-                var(--navy);
+                var(--cream);
 
             border:
                 1px solid
-                rgba(6,27,58,.14);
+                rgba(142,216,245,.30);
         }
 
         .btn-secondary:hover {
-
             transform:
                 translate3d(0,-3px,0);
 
+            background:
+                rgba(142,216,245,.12);
+
             border-color:
-                var(--gold);
+                var(--light-blue);
 
             box-shadow:
                 0 12px 25px
-                rgba(6,27,58,.10);
+                rgba(0,0,0,.18);
         }
 
 
@@ -856,12 +821,11 @@
         ========================================================= */
 
         .quality-strip {
-
             position:
                 relative;
 
             z-index:
-                5;
+                8;
 
             width:
                 min(
@@ -870,7 +834,7 @@
                 );
 
             margin:
-                -32px auto 0;
+                -34px auto 0;
 
             display:
                 grid;
@@ -883,29 +847,28 @@
 
             border:
                 1px solid
-                rgba(198,154,58,.22);
+                var(--border-gold);
 
             border-radius:
                 22px;
 
             box-shadow:
-                var(--shadow-dark);
+                var(--shadow);
 
             overflow:
                 hidden;
         }
 
         .quality-item {
-
             padding:
-                22px 15px;
+                23px 15px;
 
             text-align:
                 center;
 
             border-right:
                 1px solid
-                rgba(198,154,58,.18);
+                rgba(198,154,58,.20);
         }
 
         .quality-item:last-child {
@@ -914,7 +877,6 @@
         }
 
         .quality-number {
-
             display:
                 block;
 
@@ -932,18 +894,17 @@
         }
 
         .quality-label {
-
             color:
                 var(--navy);
 
             font-size:
-                .76rem;
+                .74rem;
 
             font-weight:
-                750;
+                800;
 
             letter-spacing:
-                .7px;
+                .8px;
 
             text-transform:
                 uppercase;
@@ -951,11 +912,10 @@
 
 
         /* =========================================================
-           MAIN CONTENT
+           MAIN QUALITY SECTION
         ========================================================= */
 
         .section {
-
             position:
                 relative;
 
@@ -972,20 +932,18 @@
                 0 auto;
 
             padding:
-                95px 20px 20px;
+                100px 20px 35px;
         }
 
         .section-heading {
-
             text-align:
                 center;
 
             margin-bottom:
-                40px;
+                42px;
         }
 
         .eyebrow {
-
             display:
                 inline-block;
 
@@ -993,10 +951,10 @@
                 10px;
 
             color:
-                var(--gold);
+                var(--gold-light);
 
             font-size:
-                .75rem;
+                .72rem;
 
             font-weight:
                 850;
@@ -1009,21 +967,17 @@
         }
 
         .section-heading h2 {
-
             margin:
                 0;
 
             color:
-                var(--navy);
-
-            font-family:
-                var(--heading);
+                var(--cream);
 
             font-size:
                 clamp(
-                    1.8rem,
+                    1.85rem,
                     4vw,
-                    2.7rem
+                    2.75rem
                 );
 
             line-height:
@@ -1031,24 +985,26 @@
 
             letter-spacing:
                 -1px;
+
+            font-weight:
+                800;
         }
 
         .section-heading p {
-
             max-width:
-                680px;
+                700px;
 
             margin:
-                14px auto 0;
+                15px auto 0;
 
             color:
-                var(--muted);
+                #9fb5c9;
 
             line-height:
-                1.7;
+                1.75;
 
             font-size:
-                .97rem;
+                .96rem;
         }
 
 
@@ -1057,7 +1013,6 @@
         ========================================================= */
 
         .features {
-
             display:
                 grid;
 
@@ -1075,7 +1030,6 @@
         }
 
         .feature {
-
             position:
                 relative;
 
@@ -1083,18 +1037,17 @@
                 30px 32px 31px;
 
             background:
-                rgba(255,255,255,.92);
+                var(--cream);
 
             border:
                 1px solid
-                rgba(255,255,255,.9);
+                rgba(255,255,255,.75);
 
             border-radius:
                 25px;
 
             box-shadow:
-                0 15px 40px
-                rgba(6,27,58,.08);
+                var(--shadow-soft);
 
             overflow:
                 hidden;
@@ -1105,7 +1058,6 @@
         }
 
         .feature::before {
-
             content:
                 "";
 
@@ -1128,22 +1080,20 @@
                 linear-gradient(
                     180deg,
                     var(--gold),
-                    var(--blue)
+                    var(--light-blue)
                 );
         }
 
         .feature:hover {
-
             transform:
                 translate3d(0,-5px,0);
 
             box-shadow:
-                0 22px 50px
-                rgba(6,27,58,.13);
+                0 25px 55px
+                rgba(0,0,0,.22);
         }
 
         .feature-top {
-
             display:
                 flex;
 
@@ -1158,12 +1108,14 @@
         }
 
         .feature-icon {
-
             width:
                 43px;
 
             height:
                 43px;
+
+            flex:
+                0 0 43px;
 
             display:
                 grid;
@@ -1182,17 +1134,16 @@
 
             border:
                 1px solid
-                rgba(198,154,58,.24);
+                rgba(198,154,58,.28);
 
             font-size:
-                1.05rem;
+                .8rem;
 
             font-weight:
                 900;
         }
 
         .feature h3 {
-
             margin:
                 0;
 
@@ -1200,14 +1151,16 @@
                 var(--navy);
 
             font-size:
-                1.28rem;
+                1.25rem;
 
             line-height:
-                1.2;
+                1.25;
+
+            font-weight:
+                800;
         }
 
         .feature p {
-
             margin:
                 0;
 
@@ -1215,14 +1168,13 @@
                 #52677f;
 
             font-size:
-                .94rem;
+                .93rem;
 
             line-height:
                 1.75;
         }
 
         .feature-extra {
-
             display:
                 block;
 
@@ -1233,12 +1185,11 @@
                 var(--navy-3);
 
             font-size:
-                .88rem;
+                .86rem;
 
             font-weight:
-                600;
+                650;
         }
-
 
 
         /* =========================================================
@@ -1246,7 +1197,6 @@
         ========================================================= */
 
         .story {
-
             position:
                 relative;
 
@@ -1260,7 +1210,7 @@
                 );
 
             margin:
-                90px auto;
+                75px auto 100px;
 
             padding:
                 70px 30px;
@@ -1272,12 +1222,12 @@
                 linear-gradient(
                     135deg,
                     var(--cream),
-                    #ffffff
+                    var(--cream-2)
                 );
 
             border:
                 1px solid
-                rgba(198,154,58,.22);
+                rgba(198,154,58,.28);
 
             border-radius:
                 32px;
@@ -1287,7 +1237,6 @@
         }
 
         .story-logo {
-
             width:
                 82px;
 
@@ -1302,13 +1251,12 @@
 
             filter:
                 drop-shadow(
-                    0 8px 14px
-                    rgba(6,27,58,.15)
+                    0 9px 15px
+                    rgba(0,0,0,.18)
                 );
         }
 
         .story h2 {
-
             margin:
                 0;
 
@@ -1324,10 +1272,12 @@
 
             line-height:
                 1.15;
+
+            font-weight:
+                800;
         }
 
         .story p {
-
             max-width:
                 720px;
 
@@ -1335,10 +1285,10 @@
                 17px auto 28px;
 
             color:
-                var(--muted);
+                #52677f;
 
             font-size:
-                .98rem;
+                .97rem;
 
             line-height:
                 1.8;
@@ -1346,11 +1296,10 @@
 
 
         /* =========================================================
-           FOOTER
+           PREMIUM WAVY FOOTER
         ========================================================= */
 
         .footer {
-
             position:
                 relative;
 
@@ -1364,7 +1313,7 @@
                 var(--white);
 
             padding:
-                65px 20px 30px;
+                135px 20px 32px;
 
             text-align:
                 center;
@@ -1373,8 +1322,11 @@
                 hidden;
         }
 
-        .footer-wave {
+        /*
+           LAYER 1 — CREAM
+        */
 
+        .footer-wave-cream {
             position:
                 absolute;
 
@@ -1388,41 +1340,95 @@
                 100%;
 
             height:
-                70px;
+                115px;
+
+            pointer-events:
+                none;
+        }
+
+        /*
+           LAYER 2 — LIGHT BLUE
+        */
+
+        .footer-wave-blue {
+            position:
+                absolute;
+
+            top:
+                12px;
+
+            left:
+                0;
+
+            width:
+                100%;
+
+            height:
+                100px;
+
+            pointer-events:
+                none;
+        }
+
+        /*
+           LAYER 3 — GOLD
+        */
+
+        .footer-wave-gold {
+            position:
+                absolute;
+
+            top:
+                28px;
+
+            left:
+                0;
+
+            width:
+                100%;
+
+            height:
+                85px;
+
+            pointer-events:
+                none;
         }
 
         .footer-content {
-
             position:
                 relative;
 
             z-index:
-                2;
+                5;
 
             max-width:
                 850px;
 
             margin:
-                25px auto 0;
+                0 auto;
         }
 
         .footer-logo {
-
             width:
-                72px;
+                76px;
 
             height:
-                72px;
+                76px;
 
             object-fit:
                 contain;
 
             margin-bottom:
-                12px;
+                13px;
+
+            filter:
+                drop-shadow(
+                    0 8px 16px
+                    rgba(0,0,0,.25)
+                );
         }
 
         .footer h3 {
-
             margin:
                 0;
 
@@ -1431,15 +1437,17 @@
 
             font-size:
                 1.5rem;
+
+            font-weight:
+                800;
         }
 
         .footer p {
-
             margin:
-                9px auto 0;
+                10px auto 0;
 
             max-width:
-                650px;
+                700px;
 
             color:
                 #aebfd2;
@@ -1452,7 +1460,6 @@
         }
 
         .footer-links {
-
             display:
                 flex;
 
@@ -1463,16 +1470,15 @@
                 center;
 
             gap:
-                20px;
+                21px;
 
             margin:
-                24px 0;
+                25px 0;
         }
 
         .footer-links a {
-
             color:
-                #e1eaf3;
+                #e2edf6;
 
             text-decoration:
                 none;
@@ -1481,7 +1487,7 @@
                 .86rem;
 
             font-weight:
-                600;
+                650;
 
             transition:
                 color .2s ease;
@@ -1493,7 +1499,6 @@
         }
 
         .footer-contact {
-
             display:
                 flex;
 
@@ -1511,31 +1516,30 @@
         }
 
         .contact-link {
-
             display:
                 inline-flex;
 
             align-items:
                 center;
 
-            gap:
-                8px;
+            justify-content:
+                center;
 
             min-height:
                 40px;
 
             padding:
-                0 15px;
+                0 16px;
 
             border:
                 1px solid
-                rgba(255,255,255,.12);
+                rgba(142,216,245,.18);
 
             border-radius:
                 50px;
 
             color:
-                #e1eaf3;
+                #dbe8f2;
 
             text-decoration:
                 none;
@@ -1545,22 +1549,24 @@
 
             transition:
                 background .2s ease,
-                border-color .2s ease;
+                border-color .2s ease,
+                transform .2s ease;
         }
 
         .contact-link:hover {
-
             background:
-                rgba(255,255,255,.08);
+                rgba(142,216,245,.08);
 
             border-color:
                 var(--gold);
+
+            transform:
+                translate3d(0,-2px,0);
         }
 
         .copyright {
-
             margin-top:
-                28px !important;
+                30px !important;
 
             padding-top:
                 18px;
@@ -1573,16 +1579,15 @@
                 .76rem !important;
 
             color:
-                #8295aa !important;
+                #71869c !important;
         }
 
 
         /* =========================================================
-           ACCESSIBILITY
+           FOCUS
         ========================================================= */
 
         a:focus-visible {
-
             outline:
                 2px solid
                 var(--gold);
@@ -1602,7 +1607,6 @@
         @media (max-width: 850px) {
 
             .site-nav {
-
                 width:
                     calc(100% - 20px);
 
@@ -1624,36 +1628,33 @@
             .brand img {
                 width:
                     42px;
+
                 height:
                     42px;
             }
 
             .nav-links {
-
                 gap:
                     14px;
             }
 
             .nav-links a {
-
                 font-size:
-                    .78rem;
+                    .77rem;
             }
 
             .hero {
-
                 width:
                     calc(100% - 20px);
 
                 min-height:
-                    535px;
+                    580px;
 
                 padding:
-                    55px 20px 75px;
+                    55px 20px 95px;
             }
 
             .quality-strip {
-
                 grid-template-columns:
                     repeat(2,1fr);
 
@@ -1669,31 +1670,14 @@
             .quality-item:nth-child(-n+2) {
                 border-bottom:
                     1px solid
-                    rgba(198,154,58,.18);
-            }
-
-            .product-grid {
-                grid-template-columns:
-                    repeat(2,1fr);
+                    rgba(198,154,58,.20);
             }
         }
 
 
         @media (max-width: 620px) {
 
-            body {
-                background:
-                    linear-gradient(
-                        180deg,
-                        #dff4ff 0%,
-                        #c7ebfa 40%,
-                        #eef9ff 70%,
-                        #fffaf0 100%
-                    );
-            }
-
             .site-nav {
-
                 border-radius:
                     25px;
 
@@ -1709,12 +1693,12 @@
             .brand img {
                 width:
                     44px;
+
                 height:
                     44px;
             }
 
             .nav-links {
-
                 gap:
                     11px;
 
@@ -1731,28 +1715,25 @@
             }
 
             .nav-links a {
-
                 font-size:
-                    .73rem;
+                    .72rem;
 
                 white-space:
                     nowrap;
             }
 
             .hero {
-
                 margin-top:
                     12px;
 
                 border-radius:
-                    26px;
+                    27px;
 
                 min-height:
-                    560px;
+                    575px;
             }
 
             .hero-logo {
-
                 width:
                     155px;
 
@@ -1762,28 +1743,26 @@
 
             .hero-kicker {
                 font-size:
-                    .65rem;
+                    .62rem;
+
                 letter-spacing:
                     2px;
             }
 
             .hero-title {
-
                 font-size:
                     2rem;
             }
 
             .hero-description {
-
                 font-size:
-                    .88rem;
+                    .87rem;
 
                 line-height:
                     1.65;
             }
 
             .hero-buttons {
-
                 flex-direction:
                     column;
 
@@ -1797,7 +1776,6 @@
             }
 
             .quality-strip {
-
                 width:
                     calc(100% - 28px);
 
@@ -1806,32 +1784,29 @@
             }
 
             .quality-item {
-
                 padding:
                     18px 8px;
             }
 
             .quality-number {
                 font-size:
-                    .88rem;
+                    .86rem;
             }
 
             .quality-label {
                 font-size:
-                    .62rem;
+                    .60rem;
             }
 
             .section {
-
                 width:
                     calc(100% - 20px);
 
                 padding:
-                    70px 10px 10px;
+                    75px 10px 20px;
             }
 
             .feature {
-
                 padding:
                     25px 23px 27px;
             }
@@ -1846,65 +1821,12 @@
                     .87rem;
             }
 
-            .products-section {
-
-                margin-top:
-                    65px;
-
-                padding:
-                    80px 10px 75px;
-            }
-
-            .products-inner {
-                width:
-                    calc(100% - 10px);
-            }
-
-            .product-grid {
-
-                grid-template-columns:
-                    1fr 1fr;
-
-                gap:
-                    11px;
-            }
-
-            .product-card {
-
-                padding:
-                    8px;
-
-                border-radius:
-                    17px;
-            }
-
-            .product-image {
-                border-radius:
-                    12px;
-            }
-
-            .product-info {
-                padding:
-                    10px 3px 5px;
-            }
-
-            .product-label {
-                font-size:
-                    .55rem;
-            }
-
-            .product-name {
-                font-size:
-                    .78rem;
-            }
-
             .story {
-
                 width:
                     calc(100% - 20px);
 
                 margin:
-                    65px auto;
+                    55px auto 75px;
 
                 padding:
                     50px 20px;
@@ -1916,9 +1838,8 @@
             }
 
             .footer {
-
                 padding:
-                    55px 15px 25px;
+                    120px 15px 25px;
             }
 
             .footer-links {
@@ -1937,11 +1858,30 @@
 
 
         /* =========================================================
+           TOUCH DEVICES
+        ========================================================= */
+
+        @media (hover:none) and (pointer:coarse) {
+
+            body,
+            a,
+            button {
+                cursor:
+                    auto !important;
+            }
+
+            #fish-cursor {
+                display:
+                    none;
+            }
+        }
+
+
+        /* =========================================================
            REDUCED MOTION
         ========================================================= */
 
-        @media
-        (prefers-reduced-motion: reduce) {
+        @media (prefers-reduced-motion: reduce) {
 
             html {
                 scroll-behavior:
@@ -1951,7 +1891,6 @@
             *,
             *::before,
             *::after {
-
                 animation-duration:
                     .01ms !important;
 
@@ -1982,7 +1921,7 @@
         <svg
             viewBox="0 0 50 30"
             fill="none"
-            stroke="#c69a3a"
+            stroke="#e0bc68"
             stroke-width="2"
             stroke-linecap="round"
         >
@@ -2007,14 +1946,13 @@
                 cx="10"
                 cy="14.5"
                 r="1.5"
-                fill="#c69a3a"
+                fill="#e0bc68"
                 stroke="none"
             />
 
         </svg>
 
     </div>
-
 
 
     <!-- =========================================================
@@ -2027,7 +1965,7 @@
         aria-hidden="true"
     >
 
-        <div class="wave-top">
+        <div class="wave-decoration">
 
             <svg
                 viewBox="0 0 1440 180"
@@ -2036,14 +1974,15 @@
 
                 <path
                     d="
-                    M0 90
-                    C180 20 300 160 480 90
-                    S780 20 960 90
-                    S1260 160 1440 90
-                    V0 H0 Z
+                        M0 95
+                        C180 20 300 165 480 95
+                        S780 20 960 95
+                        S1260 165 1440 95
+                        V0
+                        H0
+                        Z
                     "
-                    fill="#ffffff"
-                    opacity=".22"
+                    fill="#8ed8f5"
                 />
 
             </svg>
@@ -2051,7 +1990,6 @@
         </div>
 
     </div>
-
 
 
     <!-- =========================================================
@@ -2116,12 +2054,16 @@
     </nav>
 
 
-
     <!-- =========================================================
-         HERO
+         MAIN
     ========================================================= -->
 
     <main>
+
+
+        <!-- =====================================================
+             HERO
+        ====================================================== -->
 
         <section
             class="hero"
@@ -2135,7 +2077,8 @@
                 </span>
 
 
-                <!-- ONLY OUR ACTUAL LOGO -->
+                <!-- OUR ACTUAL LOGO ONLY -->
+
                 <img
                     class="hero-logo"
                     src="/assets/MUNAMBAM_Seafood_Logo_HQ.png"
@@ -2153,15 +2096,17 @@
                 >
                     From Munambam Harbour
                     <br>
-                    to Your Table
+                    <span>to the World</span>
                 </h1>
 
 
                 <p class="hero-description">
-                    100% natural coastal provisions —
-                    protein-rich, low in sodium,
-                    hygienically prepared and carefully packed
-                    with the authentic character of Kerala's coast.
+                    Premium coastal provisions rooted in
+                    Munambam, Kerala — naturally protein-rich,
+                    low in sodium, hygienically prepared and
+                    made without unnecessary chemical additives.
+                    Crafted with purpose. Prepared with care.
+                    Built for a world that values quality.
                 </p>
 
 
@@ -2178,7 +2123,7 @@
                         href="/about/"
                         class="btn btn-secondary"
                     >
-                        Discover Munambam
+                        Discover Our Story
                     </a>
 
                 </div>
@@ -2188,14 +2133,13 @@
         </section>
 
 
-
         <!-- =====================================================
              QUALITY STRIP
         ====================================================== -->
 
         <section
             class="quality-strip"
-            aria-label="Product qualities"
+            aria-label="Munambam Seafoods product qualities"
         >
 
             <div class="quality-item">
@@ -2252,9 +2196,8 @@
         </section>
 
 
-
         <!-- =====================================================
-             FEATURES
+             MUNAMBAM STANDARD
         ====================================================== -->
 
         <section
@@ -2275,9 +2218,10 @@
                 </h2>
 
                 <p>
-                    Simple ingredients, careful handling and
-                    a strong connection to the coastal tradition
-                    of Munambam.
+                    From the waters and harbour of Munambam
+                    to carefully handled finished products,
+                    our focus stays on natural quality,
+                    hygiene and a premium coastal experience.
                 </p>
 
             </div>
@@ -2303,19 +2247,17 @@
                     </div>
 
                     <p>
-                        Authentic coastal seafood provisions
-                        made from naturally sourced seafood,
-                        keeping the natural character and
-                        traditional coastal taste close to your kitchen.
+                        We believe seafood should retain its
+                        authentic character. Our products are
+                        developed around naturally sourced
+                        seafood and clean preparation.
 
                         <span class="feature-extra">
-                            No unnecessary artificial additions —
-                            just honest coastal provisions prepared with care.
+                            Honest ingredients. Authentic coastal character.
                         </span>
                     </p>
 
                 </article>
-
 
 
                 <!-- FEATURE 2 -->
@@ -2335,19 +2277,17 @@
                     </div>
 
                     <p>
-                        Naturally protein-rich seafood provisions
-                        with a mindful approach to sodium,
-                        designed around the clean and simple
-                        character of traditional coastal food.
+                        Seafood naturally provides valuable
+                        protein. Our product philosophy focuses
+                        on protein-rich foods with a mindful
+                        approach to sodium.
 
                         <span class="feature-extra">
-                            Naturally occurring seafood protein
-                            with a simple coastal profile.
+                            Simple nutrition with a premium coastal identity.
                         </span>
                     </p>
 
                 </article>
-
 
 
                 <!-- FEATURE 3 -->
@@ -2361,25 +2301,23 @@
                         </div>
 
                         <h3>
-                            Hygienically Prepared
+                            Hygiene Comes First
                         </h3>
 
                     </div>
 
                     <p>
                         Careful handling, preparation, drying
-                        and packing help preserve the natural
-                        character of each product from preparation
-                        through delivery.
+                        and packing are treated as essential
+                        parts of product quality — not as
+                        afterthoughts.
 
                         <span class="feature-extra">
-                            Traditional coastal care combined
-                            with responsible preparation practices.
+                            Every stage matters from harbour to final pack.
                         </span>
                     </p>
 
                 </article>
-
 
 
                 <!-- FEATURE 4 -->
@@ -2399,13 +2337,13 @@
                     </div>
 
                     <p>
-                        Our products are prepared without unwanted
-                        chemical additives and carefully packed
-                        to protect their quality and natural character.
+                        Our product philosophy is centred on
+                        clean seafood preparations without
+                        unnecessary chemical additives, followed
+                        by careful packing and handling.
 
                         <span class="feature-extra">
-                            From Munambam Harbour to your home,
-                            every pack is handled with care.
+                            Quality is protected at every step.
                         </span>
                     </p>
 
@@ -2415,6 +2353,7 @@
             </div>
 
         </section>
+
 
         <!-- =====================================================
              BRAND STORY
@@ -2435,26 +2374,36 @@
                 decoding="async"
             >
 
+
             <span class="eyebrow">
                 FROM MUNAMBAM HARBOUR
             </span>
 
+
             <h2 id="story-heading">
-                Authentic Coastal Provisions
+                A Coastal Brand With a Global Ambition
             </h2>
 
+
             <p>
-                Rooted in the coastal character of Munambam,
-                Munambam Seafoods brings carefully prepared
-                seafood provisions from the Kerala coast
-                to homes across India.
+                Munambam Seafoods is built around a simple belief:
+                premium seafood should be trustworthy, carefully
+                prepared and true to its coastal origin.
+
+                Rooted near the historic Muziris region and
+                Munambam Harbour, we are building a brand that
+                connects local coastal knowledge with modern
+                standards of quality, hygiene and presentation —
+                with an ambition to take Kerala's coastal
+                provisions to markets beyond India.
             </p>
+
 
             <a
                 href="/about/"
                 class="btn btn-primary"
             >
-                About Munambam Seafoods
+                Read Our Full Story
             </a>
 
         </section>
@@ -2462,29 +2411,98 @@
     </main>
 
 
-
     <!-- =========================================================
-         FOOTER
+         PREMIUM WAVY FOOTER
     ========================================================= -->
 
     <footer class="footer">
 
-        <div class="footer-wave">
+
+        <!-- CREAM WAVE -->
+
+        <div
+            class="footer-wave-cream"
+            aria-hidden="true"
+        >
 
             <svg
-                viewBox="0 0 1440 80"
+                viewBox="0 0 1440 115"
                 preserveAspectRatio="none"
             >
 
                 <path
                     d="
-                    M0 40
-                    C180 5 300 75 480 40
-                    S780 5 960 40
-                    S1260 75 1440 40
-                    V80 H0 Z
+                        M0 48
+                        C170 105 310 8 490 48
+                        S800 105 980 48
+                        S1260 8 1440 48
+                        V0
+                        H0
+                        Z
                     "
-                    fill="#061b3a"
+                    fill="#fffaf0"
+                />
+
+            </svg>
+
+        </div>
+
+
+        <!-- LIGHT BLUE WAVE -->
+
+        <div
+            class="footer-wave-blue"
+            aria-hidden="true"
+        >
+
+            <svg
+                viewBox="0 0 1440 100"
+                preserveAspectRatio="none"
+            >
+
+                <path
+                    d="
+                        M0 48
+                        C170 8 310 92 490 48
+                        S800 8 980 48
+                        S1260 92 1440 48
+                        V0
+                        H0
+                        Z
+                    "
+                    fill="#8ed8f5"
+                    opacity=".85"
+                />
+
+            </svg>
+
+        </div>
+
+
+        <!-- GOLD WAVE -->
+
+        <div
+            class="footer-wave-gold"
+            aria-hidden="true"
+        >
+
+            <svg
+                viewBox="0 0 1440 85"
+                preserveAspectRatio="none"
+            >
+
+                <path
+                    d="
+                        M0 40
+                        C170 78 310 12 490 40
+                        S800 78 980 40
+                        S1260 12 1440 40
+                        V0
+                        H0
+                        Z
+                    "
+                    fill="#c69a3a"
+                    opacity=".95"
                 />
 
             </svg>
@@ -2494,23 +2512,28 @@
 
         <div class="footer-content">
 
+
             <img
                 class="footer-logo"
                 src="/assets/MUNAMBAM_Seafood_Logo_HQ.png"
                 alt="Munambam Seafoods"
-                width="72"
-                height="72"
+                width="76"
+                height="76"
                 loading="lazy"
                 decoding="async"
             >
+
 
             <h3>
                 MUNAMBAM SEAFOODS
             </h3>
 
+
             <p>
                 Premium coastal provisions from
-                Munambam Harbour, Pallipuram, Ernakulam, Kerala.
+                Munambam Harbour, Pallipuram, Ernakulam,
+                Kerala — built with purpose and prepared
+                for a wider world.
             </p>
 
 
@@ -2550,12 +2573,14 @@
                     WhatsApp
                 </a>
 
+
                 <a
                     class="contact-link"
                     href="mailto:connect.munambamseafoods@gmail.com"
                 >
                     Email
                 </a>
+
 
                 <a
                     class="contact-link"
@@ -2565,6 +2590,7 @@
                 >
                     Instagram
                 </a>
+
 
                 <a
                     class="contact-link"
@@ -2588,12 +2614,12 @@
     </footer>
 
 
-
     <!-- =========================================================
          FAST JAVASCRIPT
     ========================================================= -->
 
     <script>
+
         (() => {
 
             "use strict";
@@ -2604,7 +2630,9 @@
             ===================================================== */
 
             const cursor =
-                document.getElementById("fish-cursor");
+                document.getElementById(
+                    "fish-cursor"
+                );
 
             const mouseDevice =
                 window.matchMedia(
@@ -2612,20 +2640,28 @@
                 ).matches;
 
 
-            if (cursor && mouseDevice) {
+            if (
+                cursor &&
+                mouseDevice
+            ) {
 
                 let x = 0;
                 let y = 0;
 
-                let frame = false;
+                let frame =
+                    false;
 
 
                 document.addEventListener(
                     "mousemove",
+
                     (event) => {
 
-                        x = event.clientX;
-                        y = event.clientY;
+                        x =
+                            event.clientX;
+
+                        y =
+                            event.clientY;
 
 
                         if (frame) {
@@ -2633,23 +2669,27 @@
                         }
 
 
-                        frame = true;
+                        frame =
+                            true;
 
 
-                        requestAnimationFrame(() => {
+                        requestAnimationFrame(
+                            () => {
 
-                            cursor.style.transform =
-                                `translate3d(
-                                    ${x - 5}px,
-                                    ${y - 14}px,
-                                    0
-                                )`;
+                                cursor.style.transform =
+                                    `translate3d(
+                                        ${x - 6}px,
+                                        ${y - 14}px,
+                                        0
+                                    )`;
 
-                            frame = false;
-
-                        });
+                                frame =
+                                    false;
+                            }
+                        );
 
                     },
+
                     {
                         passive: true
                     }
@@ -2658,21 +2698,14 @@
             }
 
 
-
             /* =====================================================
                MOVING SEA CREATURES
-
-               1 BIG SHARK  → LEFT
-               1 OCTOPUS    → RIGHT
-               3 FISH       → RIGHT
-               2 FISH       → LEFT
-               2 PRAWNS     → LEFT
-               3 PRAWNS     → RIGHT
             ===================================================== */
 
-
             const layer =
-                document.getElementById("oceanLayer");
+                document.getElementById(
+                    "oceanLayer"
+                );
 
 
             if (!layer) {
@@ -2714,108 +2747,81 @@
                     type: "shark",
                     size: 110,
                     direction: "left",
-                    lane: 16,
-                    duration: 42000,
-                    delay: -7000
+                    lane: 17,
+                    duration: 46000,
+                    delay: -9000
                 },
 
                 {
                     type: "fish",
-                    size: 34,
+                    size: 38,
                     direction: "right",
-                    lane: 24,
+                    lane: 27,
                     duration: 33000,
                     delay: -15000
                 },
 
                 {
                     type: "prawn",
-                    size: 30,
+                    size: 32,
                     direction: "left",
-                    lane: 32,
-                    duration: 36000,
-                    delay: -5000
+                    lane: 36,
+                    duration: 37000,
+                    delay: -6000
                 },
 
                 {
                     type: "octopus",
-                    size: 55,
+                    size: 58,
                     direction: "right",
-                    lane: 40,
-                    duration: 39000,
+                    lane: 46,
+                    duration: 41000,
                     delay: -19000
                 },
 
                 {
                     type: "fish",
-                    size: 35,
+                    size: 36,
                     direction: "left",
-                    lane: 48,
+                    lane: 56,
                     duration: 35000,
-                    delay: -9000
+                    delay: -11000
                 },
 
                 {
                     type: "prawn",
-                    size: 31,
+                    size: 32,
                     direction: "right",
-                    lane: 55,
-                    duration: 37000,
+                    lane: 65,
+                    duration: 39000,
                     delay: -17000
                 },
 
                 {
                     type: "fish",
-                    size: 36,
+                    size: 37,
                     direction: "right",
-                    lane: 62,
-                    duration: 34000,
+                    lane: 74,
+                    duration: 35000,
                     delay: -3000
                 },
 
                 {
                     type: "prawn",
-                    size: 29,
+                    size: 31,
                     direction: "left",
-                    lane: 69,
-                    duration: 36000,
+                    lane: 82,
+                    duration: 38000,
                     delay: -13000
                 },
 
                 {
                     type: "fish",
-                    size: 33,
+                    size: 34,
                     direction: "left",
-                    lane: 76,
-                    duration: 35000,
-                    delay: -22000
-                },
-
-                {
-                    type: "prawn",
-                    size: 31,
-                    direction: "right",
-                    lane: 83,
-                    duration: 38000,
-                    delay: -8000
-                },
-
-                {
-                    type: "fish",
-                    size: 36,
-                    direction: "right",
                     lane: 89,
-                    duration: 34000,
-                    delay: -18000
-                },
-
-                {
-                    type: "prawn",
-                    size: 30,
-                    direction: "right",
-                    lane: 94,
-                    duration: 37000,
-                    delay: -6000
+                    duration: 36000,
+                    delay: -21000
                 }
 
             ];
@@ -2829,14 +2835,17 @@
 
 
             const distance =
-                viewport + 260;
+                viewport + 280;
 
 
             creatures.forEach(
                 (item, index) => {
 
                     const creature =
-                        document.createElement("div");
+                        document.createElement(
+                            "div"
+                        );
+
 
                     creature.className =
                         "creature";
@@ -2853,7 +2862,9 @@
 
 
                     const image =
-                        document.createElement("img");
+                        document.createElement(
+                            "img"
+                        );
 
 
                     image.src =
@@ -2881,11 +2892,9 @@
                             : "scaleX(1)";
 
 
-                    /*
-                        Shark asset orientation is opposite.
-                    */
-
-                    if (item.type === "shark") {
+                    if (
+                        item.type === "shark"
+                    ) {
 
                         flip =
                             item.direction === "left"
@@ -2898,16 +2907,23 @@
                         flip;
 
 
-                    creature.appendChild(image);
+                    creature.appendChild(
+                        image
+                    );
 
-                    layer.appendChild(creature);
+                    layer.appendChild(
+                        creature
+                    );
 
 
                     const stagger =
-                        5 + ((index * 17) % 90);
+                        5 +
+                        ((index * 19) % 88);
 
 
-                    if (item.direction === "right") {
+                    if (
+                        item.direction === "right"
+                    ) {
 
                         creature.style.left =
                             `${stagger}vw`;
@@ -2928,7 +2944,6 @@
                     creature.animate(
 
                         [
-
                             {
                                 transform:
                                     "translate3d(0,0,0)"
@@ -2942,11 +2957,9 @@
                                         0
                                     )`
                             }
-
                         ],
 
                         {
-
                             duration:
                                 item.duration,
 
@@ -2961,7 +2974,6 @@
 
                             fill:
                                 "both"
-
                         }
 
                     );
@@ -2969,7 +2981,9 @@
                 }
             );
 
+
         })();
+
     </script>
 
 </body>
