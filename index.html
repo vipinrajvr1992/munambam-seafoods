@@ -3,14 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Munambam Seafoods | Coastal Provisions & Heritage | Buy Fresh & Premium Dried Fish Online</title>
-    <meta name="title" content="Munambam Seafoods | Coastal Provisions & Heritage | Buy Fresh & Premium Dried Fish Online">
-    <meta name="description" content="Order 100% authentic Munambam protein-rich, fresh fish, premium hygienically dried fish, and dried prawns online. Sourced directly from Munambam Harbour, chemical-free & traditional.">
-    <meta name="keywords" content="Munambam Seafoods, Munambam Fish, Munambam Fresh Fish, Munambam Dry Fish, Munambam Dried Fishes, Munambam Dried Prawns, Munambam Seafoods Online">
-    <meta name="robots" content="index, follow, max-image-preview:large">
-    <meta name="author" content="Munambam Seafoods">
-    <link rel="canonical" href="https://www.munambamseafoods.online/">
+    <title>Munambam Seafoods | Buy Fresh & Premium Dried Fish Online</title>
+    <meta name="description" content="Explore our wide range of 100% authentic Munambam protein-rich, hygienic dried fish, prawns, and homemade podi. Direct from Munambam Harbour.">
+    <link rel="canonical" href="https://www.munambamseafoods.online/index.html">
 
     <link rel="apple-touch-icon" sizes="180x180" href="assets/icon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/icon/favicon-32x32.png">
@@ -21,7 +16,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -29,7 +23,6 @@
             --bg-light: #e0f2fe;
             --primary-blue: #0284c7;
             --dark-ocean: #071e3d;
-            --deep-navy: #0b2545;
             --accent-gold: #d4af37;
             --white: #ffffff;
             --card-shadow: 0 20px 40px rgba(2, 132, 199, 0.08);
@@ -158,198 +151,190 @@
             transition: color 0.3s ease;
         }
 
-        .nav-links a:hover {
+        .nav-links a:hover, .nav-links a.active {
             color: var(--primary-blue);
         }
 
-        .hero-container {
-            position: relative;
-            padding: 70px 8% 90px 8%;
+        header {
             text-align: center;
+            padding: 60px 8% 40px 8%;
+            position: relative;
             z-index: 2;
         }
 
         .badge {
-            display: inline-block;
-            background: rgba(2, 132, 199, 0.1);
+            background: rgba(2, 132, 199, 0.12);
             color: var(--primary-blue);
-            padding: 6px 18px;
-            border-radius: 50px;
-            font-size: 0.8rem;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 0.85rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            margin-bottom: 15px;
+            display: inline-block;
+            margin-bottom: 20px;
             border: 1px solid rgba(2, 132, 199, 0.2);
         }
 
-        .hero-title {
+        h1 {
             font-family: var(--font-heading);
-            font-size: 3.5rem;
-            font-weight: 700;
+            font-size: clamp(2.2rem, 4.5vw, 3.5rem);
             color: var(--dark-ocean);
-            line-height: 1.1;
             margin-bottom: 12px;
+            font-weight: 800;
             letter-spacing: -1px;
         }
 
-        .hero-subtitle {
-            font-size: 1.4rem;
-            color: var(--primary-blue);
-            font-weight: 600;
-            margin-bottom: 30px;
+        .subtitle {
+            font-size: 1.1rem;
+            color: #334155;
+            margin-bottom: 35px;
+            font-weight: 500;
         }
 
-        .main-showcase {
+        /* Hero Brand Showcase */
+        .hero-brand-box {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            max-width: 420px;
+            margin: 0 auto 30px auto;
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 45px rgba(2, 132, 199, 0.12);
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            position: relative;
-            margin: 20px 0 40px 0;
+            gap: 15px;
         }
 
-        .product-3d-box {
-            position: relative;
-            max-width: 360px;
-            width: 80%;
-            filter: drop-shadow(0 25px 35px rgba(7, 30, 61, 0.22));
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .hero-brand-box img {
+            height: 80px;
+            object-fit: contain;
         }
 
-        .product-3d-box:hover {
-            transform: translateY(-10px) scale(1.03);
+        .hero-brand-box h3 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            color: var(--dark-ocean);
         }
 
-        .product-3d-box img {
-            width: 100%;
-            height: auto;
-            display: block;
+        .hero-brand-box p {
+            color: #64748b;
+            font-size: 0.9rem;
+            text-align: center;
         }
 
-        .pack-tag {
-            position: absolute;
-            top: 15px;
-            right: 0px;
-            background: var(--accent-gold);
-            color: var(--white);
-            font-weight: 700;
-            padding: 6px 16px;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            box-shadow: 0 6px 15px rgba(212, 175, 55, 0.3);
-            z-index: 10;
-        }
-
-        .taste-bubble {
-            position: absolute;
-            left: -15px;
-            bottom: 30px;
-            background: var(--dark-ocean);
-            color: var(--white);
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            box-shadow: 0 10px 20px rgba(7, 30, 61, 0.3);
-            border: 1px solid var(--accent-gold);
-        }
-
-        .btn-order {
+        .btn-main {
             display: inline-flex;
             align-items: center;
             gap: 10px;
             background: var(--primary-blue);
             color: var(--white);
-            padding: 14px 35px;
+            padding: 14px 32px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 700;
             font-size: 0.95rem;
-            box-shadow: 0 10px 20px rgba(2, 132, 199, 0.3);
+            box-shadow: 0 12px 25px rgba(2, 132, 199, 0.3);
             transition: all 0.3s ease;
         }
 
-        .btn-whatsapp {
-            background: #10b981;
-            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        .btn-main:hover {
+            background: #0369a1;
+            transform: translateY(-2px);
         }
 
-        .btn-whatsapp:hover {
-            background: #059669;
-            transform: translateY(-3px);
-            box-shadow: 0 14px 25px rgba(16, 185, 129, 0.4);
-        }
-
-        .products-section {
-            padding: 70px 8%;
-            text-align: center;
+        /* Why Choose Us Section - Fixed Overlap */
+        .features-section {
+            padding: 50px 8% 80px 8%;
             position: relative;
             z-index: 2;
+            text-align: center;
         }
 
-        .section-title {
+        .features-section h2 {
             font-family: var(--font-heading);
             font-size: 2.3rem;
             color: var(--dark-ocean);
-            margin-bottom: 40px;
+            margin-bottom: 45px;
             font-weight: 700;
-            letter-spacing: -0.5px;
         }
 
-        .grid {
+        .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
         }
 
-        .card {
+        .feature-card {
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 25px 20px;
-            text-align: center;
+            padding: 35px 25px;
             box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.9);
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
 
-        .card:hover {
-            transform: translateY(-8px);
+        .feature-card:hover {
+            transform: translateY(-6px);
             box-shadow: 0 22px 40px rgba(2, 132, 199, 0.15);
         }
 
-        .card img {
-            width: 100%;
-            height: 190px;
-            object-fit: contain;
-            margin-bottom: 15px;
+        .feature-icon {
+            font-size: 2.2rem;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            background: rgba(2, 132, 199, 0.1);
+            width: 75px;
+            height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
         }
 
-        .card h3 {
+        .feature-card h3 {
             font-family: var(--font-heading);
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             color: var(--dark-ocean);
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             font-weight: 700;
         }
 
-        .card p {
+        .feature-card p {
             color: #64748b;
-            font-size: 0.88rem;
-            line-height: 1.5;
-            margin-bottom: 18px;
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
 
-        /* Why Choose Us Section Styles */
-        .why-us {
-            padding: 70px 8%;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(10px);
+        /* Heritage Section integrated on Home */
+        .heritage-section {
+            padding: 60px 8%;
+            max-width: 1000px;
+            margin: 0 auto;
             text-align: center;
             position: relative;
             z-index: 2;
-            border-top: 1px solid rgba(2, 132, 199, 0.1);
-            border-bottom: 1px solid rgba(2, 132, 199, 0.1);
+        }
+
+        .heritage-section h2 {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            color: var(--dark-ocean);
+            margin-bottom: 20px;
+        }
+
+        .heritage-section p {
+            color: #475569;
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
         }
 
         .footer-wrapper {
@@ -357,7 +342,7 @@
             background: var(--dark-ocean);
             color: var(--white);
             padding-top: 0;
-            margin-top: 0;
+            margin-top: 50px;
             z-index: 2;
         }
 
@@ -445,9 +430,6 @@
         @media (max-width: 768px) {
             nav { width: 94%; padding: 8px 4%; top: 10px; margin-top: 10px; }
             .nav-links { display: none; }
-            .hero-title { font-size: 2.3rem; }
-            .hero-subtitle { font-size: 1.1rem; }
-            .taste-bubble { position: relative; left: 0; bottom: 0; margin-top: 15px; display: inline-block; }
             .ocean-waves { top: -50px; height: 50px; }
             .ocean-waves svg { height: 50px; }
         }
@@ -480,99 +462,52 @@
             <span class="brand-name">MUNAMBAM SEAFOODS</span>
         </div>
         <div class="nav-links">
-            <a href="index.html">Home</a>
+            <a href="index.html" class="active">Home</a>
             <a href="products.html">Products</a>
-            <a href="heritage.html">Heritage</a>
             <a href="about.html">About Us</a>
             <a href="privacy.html">Privacy Policy</a>
             <a href="terms.html">Terms</a>
         </div>
     </nav>
 
-    <section class="hero-container">
-        <span class="badge">100% Hygienically Dried & Chemical Free</span>
-        <h1 class="hero-title">PREMIUM SEA FOOD</h1>
-        <div class="hero-subtitle">Authentic Taste Direct From Harbour</div>
-
-        <div class="main-showcase">
-            <div class="product-3d-box">
-                <span class="pack-tag">BEST SELLER</span>
-                <img src="assets/products/highlights/PRODUCT_PACK_FRONT.webp" alt="Munambam Dried Prawns Highlight Pack">
-            </div>
-            <div class="taste-bubble">✨ 100% HYGIENICALLY DRIED</div>
+    <header>
+        <div class="badge">100% HYGIENICALLY DRIED & CHEMICAL FREE</div>
+        <h1>MUNAMBAM SEAFOODS</h1>
+        <p class="subtitle">Authentic Coastal Provisions Direct From Harbour</p>
+        
+        <div class="hero-brand-box">
+            <img src="assets/MUNAMBAM_Seafood_Logo_HQ.png" alt="Munambam Seafoods Crest">
+            <h3>Direct Sourcing</h3>
+            <p>Bringing traditional coastal flavor and protein-rich nutrition straight to your kitchen table with zero preservatives.</p>
         </div>
 
-        <a href="https://wa.me/917907804747" class="btn-order btn-whatsapp"><i class="fab fa-whatsapp"></i> Order Now via WhatsApp</a>
-    </section>
+        <a href="products.html" class="btn-main"><i class="fas fa-fish"></i> Explore Products</a>
+    </header>
 
-    <!-- Products Section with 6 Products -->
-    <section class="products-section" id="products">
-        <h2 class="section-title">Our Coastal Provisions</h2>
-        <div class="grid">
-            <div class="card">
-                <img src="assets/products/PRODUCT_1.webp" alt="Cleaned Dried Prawns">
-                <h3>Cleaned Dried Prawns</h3>
-                <p>100% Meat Weight, Zero Salt & Chemical Free (250g)</p>
-                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Cleaned%20Dried%20Prawns" class="btn-order" style="padding: 10px 24px; font-size: 0.85rem;">Order Now</a>
-            </div>
-
-            <div class="card">
-                <img src="assets/products/PRODUCT_2.webp" alt="Uncleaned Dried Prawns">
-                <h3>Uncleaned Dried Prawns</h3>
-                <p>Hygienically Dried Direct From Harbour</p>
-                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Uncleaned%20Dried%20Prawns" class="btn-order" style="padding: 10px 24px; font-size: 0.85rem;">Order Now</a>
-            </div>
-
-            <div class="card">
-                <img src="assets/products/PRODUCT_3.webp" alt="Prawn Chammanthi Podi">
-                <h3>Prawn Chammanthi Podi</h3>
-                <p>Authentic Kerala Homemade Blend</p>
-                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Prawn%20Chammanthi%20Podi" class="btn-order" style="padding: 10px 24px; font-size: 0.85rem;">Order Now</a>
-            </div>
-
-            <div class="card">
-                <img src="assets/products/PRODUCT_4.webp" alt="Dried Shark">
-                <h3>Premium Dried Shark</h3>
-                <p>Traditional sundried quality (250g)</p>
-                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Dried%20Shark" class="btn-order" style="padding: 10px 24px; font-size: 0.85rem;">Order Now</a>
-            </div>
-
-            <div class="card">
-                <img src="assets/products/PRODUCT_5.webp" alt="Dried Tuna">
-                <h3>Premium Dried Tuna</h3>
-                <p>Rich in flavor, clean & hygienic</p>
-                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Dried%20Tuna" class="btn-order" style="padding: 10px 24px; font-size: 0.85rem;">Order Now</a>
-            </div>
-
-            <div class="card">
-                <img src="assets/products/PRODUCT_6.webp" alt="Dried Mackerel">
-                <h3>Premium Dried Mackerel</h3>
-                <p>Authentic harbour taste</p>
-                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Dried%20Mackerel" class="btn-order" style="padding: 10px 24px; font-size: 0.85rem;">Order Now</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Why Choose Us Section -->
-    <section class="why-us">
-        <h2 class="section-title">Why Munambam Seafoods?</h2>
-        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
-            <div class="card" style="box-shadow: none; border: 1px solid #cbd5e1; background: rgba(255,255,255,0.8);">
-                <i class="fas fa-ship" style="font-size: 2.2rem; color: var(--primary-blue); margin-bottom: 15px;"></i>
+    <section class="features-section">
+        <h2>Why Munambam Seafoods?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-ship"></i></div>
                 <h3>Directly Sourced</h3>
                 <p>From Munambam harbour straight to your kitchen table.</p>
             </div>
-            <div class="card" style="box-shadow: none; border: 1px solid #cbd5e1; background: rgba(255,255,255,0.8);">
-                <i class="fas fa-leaf" style="font-size: 2.2rem; color: #10b981; margin-bottom: 15px;"></i>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-leaf"></i></div>
                 <h3>100% Chemical Free</h3>
                 <p>Natural, sun-dried traditional methods with zero preservatives.</p>
             </div>
-            <div class="card" style="box-shadow: none; border: 1px solid #cbd5e1; background: rgba(255,255,255,0.8);">
-                <i class="fas fa-truck" style="font-size: 2.2rem; color: var(--accent-gold); margin-bottom: 15px;"></i>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-truck-fast"></i></div>
                 <h3>Fast Delivery</h3>
                 <p>Pan-India shipping with secure, air-tight packaging.</p>
             </div>
         </div>
+    </section>
+
+    <section class="heritage-section" id="heritage">
+        <h2>Our Coastal Heritage</h2>
+        <p>Munambam Harbour stands as one of Kerala's most vibrant fishing hubs, rich with maritime traditions passed down through generations. We bridge this authentic heritage directly to modern households by ensuring stringent hygiene and traditional sun-drying methods.</p>
     </section>
 
     <div class="footer-wrapper" id="contact">
@@ -586,10 +521,11 @@
             <p>Direct Sourcing From Munambam Harbour | Fast Delivery Across India</p>
             
             <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="products.html">Products</a>
                 <a href="about.html">About Us</a>
                 <a href="privacy.html">Privacy Policy</a>
                 <a href="terms.html">Terms of Service</a>
-                <a href="products.html">Products</a>
             </div>
 
             <div class="social-icons">
