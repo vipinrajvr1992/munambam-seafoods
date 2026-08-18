@@ -496,7 +496,11 @@
 <body>
 
     <div id="fish-cursor">
-        <img src="assets/icon/icon-fish.svg" width="50" height="30" alt="Fish Cursor" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
+        <svg width="50" height="30" viewBox="0 0 50 30" style="fill:none; stroke:#C5A059; stroke-width:2; stroke-linecap:round; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
+            <path d="M 5,15 Q 25,-5 45,25 M 5,15 Q 25,35 45,5" />
+            <path d="M 15,8.5 Q 18,15 15,21.5" />
+            <circle cx="10" cy="14.5" r="1.5" fill="#C5A059" stroke="none"/>
+        </svg>
     </div>
 
     <div class="ocean-bg-elements" id="oceanElements">
@@ -599,7 +603,7 @@
     </div>
 
     <script>
-        // 1. Fish Cursor (Cursor touch aarum cheyyenda, independent aayittan move cheyyunnathu)
+        // 1. Fish Cursor (Independent movement, exactly as requested)
         const fishCursor = document.getElementById('fish-cursor');
         document.addEventListener('mousemove', (e) => {
             fishCursor.style.left = e.clientX + 'px';
@@ -607,7 +611,6 @@
         });
 
         // 2. Background Animated Sea Creatures
-        // Cursor code above is intentionally untouched.
         const container = document.getElementById('oceanElements');
 
         const creatureFiles = {
@@ -617,24 +620,8 @@
             prawn: 'assets/icon/icon-prawn.svg'
         };
 
-        /*
-         * EXACT CREATURE COUNT / DIRECTION
-         * --------------------------------
-         * 1 Big Shark  -> LEFT
-         * 1 Octopus    -> RIGHT
-         * 3 Fish       -> RIGHT
-         * 2 Fish       -> LEFT
-         * 3 Prawns     -> RIGHT
-         * 2 Prawns     -> LEFT
-         *
-         * Total = 12
-         *
-         * Every creature has its own permanent horizontal lane.
-         * Therefore two creatures can never occupy the same lane and
-         * cannot overlap while swimming.
-         */
         const spawnList = [
-            { type: 'shark',   size: 115, direction: 'left',  lane: 11,  duration: 34000, delay: -7000 },
+            { type: 'shark',   size: 115, direction: 'right', lane: 11,  duration: 34000, delay: -7000 },
             { type: 'fish',    size: 34,  direction: 'right', lane: 19,  duration: 27000, delay: -14000 },
             { type: 'prawn',   size: 30,  direction: 'left',  lane: 27,  duration: 30000, delay: -4000 },
             { type: 'octopus', size: 58,  direction: 'right', lane: 35,  duration: 32000, delay: -19000 },
@@ -648,11 +635,6 @@
             { type: 'prawn',   size: 30,  direction: 'right', lane: 93,  duration: 31000, delay: -5000 }
         ];
 
-        /*
-         * Each lane is unique.
-         * No vertical movement is applied.
-         * This is the important part that prevents overlap.
-         */
         spawnList.forEach((item, index) => {
             const el = document.createElement('div');
             el.className = 'ocean-creature';
@@ -665,20 +647,15 @@
             img.draggable = false;
             img.decoding = 'async';
 
-            // Right-facing = original artwork.
-            // Left-facing = horizontal mirror.
             img.style.transform =
                 item.direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)';
 
             el.appendChild(img);
 
-            // Each creature has its own lane and never changes vertical position.
             el.style.width = `${item.size}px`;
             el.style.height = `${item.size}px`;
             el.style.top = `${item.lane}vh`;
 
-            // Start each creature at a different point along its own lane.
-            // This keeps the screen naturally populated without creating pairs.
             const startPercent = 8 + ((index * 17) % 78);
             el.style.left =
                 item.direction === 'right'
@@ -687,11 +664,6 @@
 
             container.appendChild(el);
 
-            /*
-             * One-way infinite movement.
-             * IMPORTANT: no alternate direction.
-             * The creature always keeps the requested direction.
-             */
             const distance = window.innerWidth + item.size + 140;
 
             el.animate(
