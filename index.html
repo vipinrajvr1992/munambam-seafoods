@@ -497,8 +497,11 @@
 
     <div id="fish-cursor">
         <svg width="50" height="30" viewBox="0 0 50 30" style="fill:none; stroke:#C5A059; stroke-width:2; stroke-linecap:round; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
+            <!-- മീനിന്റെ ശരീരവും വാലും (രണ്ട് വളഞ്ഞ വരകൾ എക്സ് ആകൃതിയിൽ ക്രോസ് ചെയ്യുന്നത്) -->
             <path d="M 5,15 Q 25,-5 45,25 M 5,15 Q 25,35 45,5" />
+            <!-- തലയുടെ ഭാഗത്തെ വളഞ്ഞ വര -->
             <path d="M 15,8.5 Q 18,15 15,21.5" />
+            <!-- കണ്ണ് -->
             <circle cx="10" cy="14.5" r="1.5" fill="#C5A059" stroke="none"/>
         </svg>
     </div>
@@ -603,7 +606,7 @@
     </div>
 
     <script>
-        // 1. Fish Cursor (Independent movement, exactly as requested)
+        // 1. Fish Cursor (നിങ്ങൾ നൽകിയ കസ്റ്റം കോഡ് ചേർത്തു)
         const fishCursor = document.getElementById('fish-cursor');
         document.addEventListener('mousemove', (e) => {
             fishCursor.style.left = e.clientX + 'px';
@@ -620,19 +623,20 @@
             prawn: 'assets/icon/icon-prawn.svg'
         };
 
+        // ഓവർലാപ്പ് വരാതിരിക്കാൻ Lanes കൃത്യമായി മാറ്റി നൽകിയിട്ടുണ്ട്
         const spawnList = [
-            { type: 'shark',   size: 115, direction: 'right', lane: 11,  duration: 34000, delay: -7000 },
-            { type: 'fish',    size: 34,  direction: 'right', lane: 19,  duration: 27000, delay: -14000 },
+            { type: 'shark',   size: 115, direction: 'left',  lane: 5,   duration: 34000, delay: -7000 },
+            { type: 'fish',    size: 34,  direction: 'right', lane: 20,  duration: 27000, delay: -14000 },
             { type: 'prawn',   size: 30,  direction: 'left',  lane: 27,  duration: 30000, delay: -4000 },
             { type: 'octopus', size: 58,  direction: 'right', lane: 35,  duration: 32000, delay: -19000 },
-            { type: 'fish',    size: 36,  direction: 'left',  lane: 43,  duration: 28000, delay: -9000 },
-            { type: 'prawn',   size: 32,  direction: 'right', lane: 51,  duration: 31000, delay: -16000 },
-            { type: 'fish',    size: 35,  direction: 'right', lane: 59,  duration: 29000, delay: -3000 },
-            { type: 'prawn',   size: 29,  direction: 'left',  lane: 67,  duration: 30000, delay: -12000 },
-            { type: 'fish',    size: 33,  direction: 'left',  lane: 75,  duration: 28000, delay: -21000 },
-            { type: 'prawn',   size: 31,  direction: 'right', lane: 81,  duration: 32000, delay: -8000 },
-            { type: 'fish',    size: 37,  direction: 'right', lane: 87,  duration: 27000, delay: -17000 },
-            { type: 'prawn',   size: 30,  direction: 'right', lane: 93,  duration: 31000, delay: -5000 }
+            { type: 'fish',    size: 36,  direction: 'left',  lane: 48,  duration: 28000, delay: -9000 },
+            { type: 'prawn',   size: 32,  direction: 'right', lane: 55,  duration: 31000, delay: -16000 },
+            { type: 'fish',    size: 35,  direction: 'right', lane: 62,  duration: 29000, delay: -3000 },
+            { type: 'prawn',   size: 29,  direction: 'left',  lane: 69,  duration: 30000, delay: -12000 },
+            { type: 'fish',    size: 33,  direction: 'left',  lane: 76,  duration: 28000, delay: -21000 },
+            { type: 'prawn',   size: 31,  direction: 'right', lane: 83,  duration: 32000, delay: -8000 },
+            { type: 'fish',    size: 37,  direction: 'right', lane: 89,  duration: 27000, delay: -17000 },
+            { type: 'prawn',   size: 30,  direction: 'right', lane: 95,  duration: 31000, delay: -5000 }
         ];
 
         spawnList.forEach((item, index) => {
@@ -647,8 +651,12 @@
             img.draggable = false;
             img.decoding = 'async';
 
-            img.style.transform =
-                item.direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)';
+            // സ്രാവ് പുറകോട്ട് പോകുന്ന പ്രശ്നം പരിഹരിക്കാൻ ഇവിടെ പ്രത്യേകം കോഡ് നൽകിയിട്ടുണ്ട്
+            let flipTransform = item.direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)';
+            if(item.type === 'shark') {
+                flipTransform = item.direction === 'left' ? 'scaleX(1)' : 'scaleX(-1)';
+            }
+            img.style.transform = flipTransform;
 
             el.appendChild(img);
 
