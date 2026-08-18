@@ -1191,6 +1191,66 @@
             }
         }
 
+
+        /* =========================================================
+           READABLE TERMS TYPOGRAPHY — NAVY / BLACK ONLY
+        ========================================================== */
+
+        .content-container {
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255,250,240,0.72),
+                    rgba(247,240,223,0.46)
+                ) !important;
+            backdrop-filter: blur(18px) saturate(115%);
+            -webkit-backdrop-filter: blur(18px) saturate(115%);
+            border: 1px solid rgba(255,250,240,.58) !important;
+            box-shadow:
+                0 28px 70px rgba(0,0,0,.14),
+                0 2px 0 rgba(255,255,255,.55) inset,
+                0 0 0 1px rgba(255,255,255,.18) inset !important;
+        }
+
+        .content-container .badge {
+            background: rgba(6,27,58,.06) !important;
+            color: #061b3a !important;
+            border-color: rgba(6,27,58,.14) !important;
+        }
+
+        .content-container h1 {
+            color: #061b3a !important;
+        }
+
+        .content-container h2 {
+            color: #09274d !important;
+        }
+
+        .content-container p,
+        .content-container ul li {
+            color: #111827 !important;
+        }
+
+        .content-container p strong,
+        .content-container ul li strong {
+            color: #061b3a !important;
+            font-weight: 700;
+        }
+
+        .content-container a {
+            color: #061b3a !important;
+            font-weight: 700;
+        }
+
+        .content-container ul li::before {
+            color: #061b3a !important;
+        }
+
+        .content-container::after {
+            background: #061b3a !important;
+            opacity: .16 !important;
+        }
+
     </style>
 
 </head>
