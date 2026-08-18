@@ -476,112 +476,60 @@
         /* =========================================================
            HERO
         ========================================================= */
-
         .hero {
             position: relative;
-
             z-index: 2;
-
-            width:
-                min(
-                    calc(100% - 32px),
-                    1240px
-                );
-
-            min-height:
-                640px;
-
-            margin:
-                22px auto 0;
-
-            padding:
-                70px 30px 110px;
-
+            width: min(calc(100% - 32px), 1240px);
+            min-height: 650px;
+            margin: 8px auto 0;
+            padding: 78px 30px 105px;
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
             text-align: center;
-
-            overflow: hidden;
-
-            border-radius:
-                38px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    var(--navy-2),
-                    var(--navy),
-                    #04152f
-                );
-
-            border:
-                1px solid
-                rgba(142,216,245,.13);
-
-            box-shadow:
-                0 25px 70px
-                rgba(0,0,0,.26);
+            overflow: visible;
+            border-radius: 0;
+            background: transparent;
+            border: none;
+            box-shadow: none;
         }
 
         .hero::before {
             content: "";
-
             position: absolute;
-
             inset: 0;
-
+            pointer-events: none;
             background:
-                radial-gradient(
-                    circle at 50% 28%,
-                    rgba(142,216,245,.13),
-                    transparent 30%
-                ),
-                radial-gradient(
-                    circle at 10% 80%,
-                    rgba(198,154,58,.10),
-                    transparent 25%
-                ),
-                radial-gradient(
-                    circle at 90% 65%,
-                    rgba(22,141,204,.10),
-                    transparent 25%
-                );
-
-            pointer-events:
-                none;
+                radial-gradient(circle at 50% 30%, rgba(142,216,245,.13), transparent 27%),
+                radial-gradient(ellipse at 50% 100%, rgba(22,141,204,.12), transparent 45%);
+            opacity: .85;
+            z-index: 0;
         }
 
+        /* Open-ocean landing page: no boxed hero.
+           Moving sea objects and the subtle wave layers stay visible behind the copy. */
         .hero::after {
             content: "";
-
             position: absolute;
-
-            left: -5%;
-            right: -5%;
-
-            bottom: -95px;
-
-            height: 170px;
-
-            background:
-                var(--cream);
-
-            border-radius:
-                50% 50% 0 0 /
-                55% 55% 0 0;
-
-            opacity:
-                .98;
+            left: -8%;
+            right: -8%;
+            bottom: -72px;
+            height: 125px;
+            pointer-events: none;
+            background: linear-gradient(
+                180deg,
+                transparent 0 25%,
+                rgba(142,216,245,.035) 25% 31%,
+                transparent 31% 100%
+            );
+            border-radius: 50%;
+            z-index: 0;
         }
 
         .hero-content {
             position: relative;
-
             z-index: 5;
+            isolation: isolate;
 
             display: flex;
 
@@ -589,46 +537,19 @@
 
             align-items: center;
         }
-
         .hero-logo {
-            width:
-                clamp(
-                    150px,
-                    18vw,
-                    220px
-                );
-
-            height:
-                clamp(
-                    150px,
-                    18vw,
-                    220px
-                );
-
-            object-fit:
-                contain;
-
-            display:
-                block;
-
-            margin-bottom:
-                24px;
-
+            width: clamp(160px, 19vw, 235px);
+            height: clamp(160px, 19vw, 235px);
+            object-fit: contain;
+            display: block;
+            margin-bottom: 26px;
             filter:
-                drop-shadow(
-                    0 18px 30px
-                    rgba(0,0,0,.35)
-                );
-
-            animation:
-                logoFloat
-                4.5s
-                ease-in-out
-                infinite
-                alternate;
-
-            will-change:
-                transform;
+                drop-shadow(0 7px 3px rgba(0,0,0,.20))
+                drop-shadow(0 16px 12px rgba(0,0,0,.24))
+                drop-shadow(0 28px 32px rgba(0,0,0,.30));
+            transform: translateZ(0);
+            animation: logoFloat 4.5s ease-in-out infinite alternate;
+            will-change: transform, filter;
         }
 
         @keyframes logoFloat {
@@ -669,6 +590,9 @@
 
             color:
                 var(--cream);
+
+            text-shadow:
+                0 5px 18px rgba(0,0,0,.26);
 
             font-size:
                 clamp(
@@ -1307,7 +1231,7 @@
                 3;
 
             background:
-                var(--navy);
+                #04152f;
 
             color:
                 var(--white);
@@ -1323,75 +1247,61 @@
         }
 
         /*
-           LAYER 1 — CREAM
+           PREMIUM REAL SEA TIDE — 3 OCEAN LAYERS
+           Deep navy + ocean blue + light blue.
+           No gold. No flat/straight divider.
+           The three ribbons follow different curves so the footer
+           enters the page like a natural rolling sea.
         */
 
-        .footer-wave-cream {
-            position:
-                absolute;
-
-            top:
-                -1px;
-
-            left:
-                0;
-
-            width:
-                100%;
-
-            height:
-                115px;
-
-            pointer-events:
-                none;
-        }
-
-        /*
-           LAYER 2 — LIGHT BLUE
-        */
-
-        .footer-wave-blue {
-            position:
-                absolute;
-
-            top:
-                12px;
-
-            left:
-                0;
-
-            width:
-                100%;
-
-            height:
-                100px;
-
-            pointer-events:
-                none;
-        }
-
-        /*
-           LAYER 3 — GOLD
-        */
-
+        .footer-wave-cream,
+        .footer-wave-blue,
         .footer-wave-gold {
-            position:
-                absolute;
+            position: absolute;
+            left: -2%;
+            width: 104%;
+            pointer-events: none;
+            overflow: hidden;
+            line-height: 0;
+        }
 
-            top:
-                28px;
+        /* Layer 1 — deep navy tide */
+        .footer-wave-cream {
+            top: 0;
+            height: 145px;
+            z-index: 1;
+        }
 
-            left:
-                0;
+        .footer-wave-cream svg {
+            display: block;
+            width: 100%;
+            height: 145px;
+        }
 
-            width:
-                100%;
+        /* Layer 2 — normal ocean blue tide */
+        .footer-wave-blue {
+            top: 8px;
+            height: 132px;
+            z-index: 2;
+        }
 
-            height:
-                85px;
+        .footer-wave-blue svg {
+            display: block;
+            width: 100%;
+            height: 132px;
+        }
 
-            pointer-events:
-                none;
+        /* Layer 3 — light-blue surface crest */
+        .footer-wave-gold {
+            top: 16px;
+            height: 118px;
+            z-index: 3;
+        }
+
+        .footer-wave-gold svg {
+            display: block;
+            width: 100%;
+            height: 118px;
         }
 
         .footer-content {
@@ -1648,10 +1558,13 @@
                     calc(100% - 20px);
 
                 min-height:
-                    580px;
+                    590px;
 
                 padding:
                     55px 20px 95px;
+
+                margin-top:
+                    4px;
             }
 
             .quality-strip {
@@ -1735,10 +1648,10 @@
 
             .hero-logo {
                 width:
-                    155px;
+                    165px;
 
                 height:
-                    155px;
+                    165px;
             }
 
             .hero-kicker {
@@ -2418,7 +2331,7 @@
     <footer class="footer">
 
 
-        <!-- CREAM WAVE -->
+        <!-- DEEP NAVY WAVE -->
 
         <div
             class="footer-wave-cream"
@@ -2426,29 +2339,30 @@
         >
 
             <svg
-                viewBox="0 0 1440 115"
+                viewBox="0 0 1440 145"
                 preserveAspectRatio="none"
             >
-
                 <path
                     d="
-                        M0 48
-                        C170 105 310 8 490 48
-                        S800 105 980 48
-                        S1260 8 1440 48
-                        V0
-                        H0
+                        M0 73
+                        C150 112 300 116 465 78
+                        C650 35 790 35 965 78
+                        C1135 119 1290 110 1440 67
+                        L1440 105
+                        C1290 147 1135 153 960 115
+                        C790 78 650 77 470 116
+                        C300 153 145 150 0 111
                         Z
                     "
-                    fill="#fffaf0"
+                    fill="#0d315c"
+                    opacity=".95"
                 />
-
             </svg>
 
         </div>
 
 
-        <!-- LIGHT BLUE WAVE -->
+        <!-- NORMAL OCEAN BLUE WAVE -->
 
         <div
             class="footer-wave-blue"
@@ -2456,30 +2370,30 @@
         >
 
             <svg
-                viewBox="0 0 1440 100"
+                viewBox="0 0 1440 132"
                 preserveAspectRatio="none"
             >
-
                 <path
                     d="
-                        M0 48
-                        C170 8 310 92 490 48
-                        S800 8 980 48
-                        S1260 92 1440 48
-                        V0
-                        H0
+                        M0 70
+                        C160 105 300 108 470 72
+                        C650 34 800 34 970 70
+                        C1145 108 1290 105 1440 65
+                        L1440 91
+                        C1290 129 1140 132 965 95
+                        C795 60 650 60 475 98
+                        C300 135 155 132 0 96
                         Z
                     "
-                    fill="#8ed8f5"
-                    opacity=".85"
+                    fill="#168dcc"
+                    opacity=".98"
                 />
-
             </svg>
 
         </div>
 
 
-        <!-- GOLD WAVE -->
+        <!-- LIGHT BLUE SURFACE WAVE -->
 
         <div
             class="footer-wave-gold"
@@ -2487,24 +2401,24 @@
         >
 
             <svg
-                viewBox="0 0 1440 85"
+                viewBox="0 0 1440 118"
                 preserveAspectRatio="none"
             >
-
                 <path
                     d="
-                        M0 40
-                        C170 78 310 12 490 40
-                        S800 78 980 40
-                        S1260 12 1440 40
-                        V0
-                        H0
+                        M0 63
+                        C155 91 300 94 475 62
+                        C650 30 805 30 975 62
+                        C1145 95 1290 91 1440 58
+                        L1440 76
+                        C1290 110 1140 113 970 79
+                        C800 46 650 47 475 80
+                        C300 113 150 110 0 82
                         Z
                     "
-                    fill="#c69a3a"
-                    opacity=".95"
+                    fill="#8ed8f5"
+                    opacity=".92"
                 />
-
             </svg>
 
         </div>
