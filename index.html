@@ -84,7 +84,7 @@
 
         .ocean-creature {
             position: absolute;
-            opacity: 0.25;
+            opacity: 0.20;
             will-change: transform;
         }
 
@@ -610,7 +610,7 @@
             fishCursor.style.top = e.clientY + 'px';
         });
 
-        // 2. Background Animated Creatures using Assets SVGs
+        // 2. Background Non-overlapping Creative Elements Setup
         const container = document.getElementById('oceanElements');
 
         const creatureFiles = {
@@ -620,51 +620,62 @@
             prawn: 'assets/icon/icon-prawn.svg'
         };
 
-        const types = ['fish', 'shark', 'octopus', 'prawn'];
-        const totalItems = 15;
-        const positions = [];
+        // Exact list based on your specific requirements:
+        // - 1 big shark moving left
+        // - 1 octopus moving right
+        // - 3 fish right, 2 fish left (total 5 fish)
+        // - 3 prawns right, 2 prawns left (total 5 prawns)
+        const spawnList = [
+            { type: 'shark', size: 130, moveRight: false }, // Big shark moving left
+            { type: 'octopus', size: 85, moveRight: true },   // Octopus moving right
+            
+            // 3 Fish Right
+            { type: 'fish', size: 45, moveRight: true },
+            { type: 'fish', size: 40, moveRight: true },
+            { type: 'fish', size: 50, moveRight: true },
+            
+            // 2 Fish Left
+            { type: 'fish', size: 42, moveRight: false },
+            { type: 'fish', size: 48, moveRight: false },
 
-        for (let i = 0; i < totalItems; i++) {
-            const type = types[Math.floor(Math.random() * types.length)];
-            const filePath = creatureFiles[type];
+            // 3 Prawns Right
+            { type: 'prawn', size: 38, moveRight: true },
+            { type: 'prawn', size: 42, moveRight: true },
+            { type: 'prawn', size: 35, moveRight: true },
 
+            // 2 Prawns Left
+            { type: 'prawn', size: 40, moveRight: false },
+            { type: 'prawn', size: 36, moveRight: false }
+        ];
+
+        const gridRows = 4;
+        const gridCols = 3;
+        const cellWidth = 100 / gridCols;
+        const cellHeight = 100 / gridRows;
+
+        let index = 0;
+        spawnList.forEach((item) => {
             const el = document.createElement('div');
             el.className = 'ocean-creature';
 
-            let scale = 0.6 + Math.random() * 0.7;
-            if (type === 'shark') scale = 1.2 + Math.random() * 0.4;
-            if (type === 'octopus') scale = 0.8 + Math.random() * 0.4;
+            // Non-overlapping grid-based distribution with localized randomness
+            const row = Math.floor(index / gridCols);
+            const col = index % gridCols;
+            index++;
 
-            const w = Math.round(60 * scale);
-            const moveRight = Math.random() > 0.5; // Random direction: Left or Right
-
-            let x, y, overlap;
-            let safety = 0;
-            do {
-                overlap = false;
-                x = Math.random() * 85;
-                y = 10 + Math.random() * 75;
-
-                for (let pos of positions) {
-                    if (Math.hypot(x - pos.x, y - pos.y) < 18) {
-                        overlap = true;
-                        break;
-                    }
-                }
-                safety++;
-            } while (overlap && safety < 30);
-
-            positions.push({ x, y });
+            const x = col * cellWidth + 5 + Math.random() * (cellWidth - 15);
+            const y = row * cellHeight + 8 + Math.random() * (cellHeight - 20);
 
             el.style.left = x + 'vw';
             el.style.top = y + 'vh';
 
-            // Using <img> tag with assets path and scaleX for proper mirror effect
-            el.innerHTML = `<img src="${filePath}" width="${w}" alt="${type}" style="transform: scaleX(${moveRight ? 1 : -1});">`;
+            const filePath = creatureFiles[item.type];
+            // If moveRight is true, scaleX(1) faces right. If moveRight is false, scaleX(-1) mirrors it to face left.
+            el.innerHTML = `<img src="${filePath}" width="${item.size}" alt="${item.type}" style="transform: scaleX(${item.moveRight ? 1 : -1});">`;
 
-            const duration = 20 + Math.random() * 20;
-            const yTravel = (Math.random() - 0.5) * 50;
-            const xTravel = moveRight ? (80 + Math.random() * 40) : -(80 + Math.random() * 40);
+            const duration = 25 + Math.random() * 15;
+            const yTravel = (Math.random() - 0.5) * 30;
+            const xTravel = item.moveRight ? (40 + Math.random() * 30) : -(40 + Math.random() * 30);
 
             el.animate([
                 { transform: `translate(0px, 0px)` },
@@ -677,7 +688,7 @@
             });
 
             container.appendChild(el);
-        }
+        });
     </script>
 </body>
 </html>
