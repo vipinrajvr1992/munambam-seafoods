@@ -7,7 +7,7 @@
     <title>Munambam Seafoods | Premium Coastal Provisions & Dried Seafood from Muziris Harbour</title>
 
     <meta name="title" content="Munambam Seafoods | Premium Coastal Provisions & Dried Seafood from Muziris Harbour">
-    <meta name="description" content="Discover authentic coastal provisions and hygienically processed traditional seafood directly from the historic Muziris-Munambam harbour. 100% natural, chemical-free, and premium quality.">
+    <meta name="description" content="Discover authentic coastal provisions and hygienically processed traditional seafood directly from the historic Muziris-Munambam harbour. 100% natural, low sodium, protein-rich, hygienically prepared, and chemical-free.">
     <meta name="keywords" content="Munambam Seafoods, Muziris Harbour seafood, dried prawns, coastal provisions, traditional dried fish Kerala, chemical free seafood, Pallipuram Ernakulam">
     <meta name="robots" content="index, follow, max-image-preview:large">
 
@@ -17,7 +17,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.munambamseafoods.online/">
     <meta property="og:title" content="Munambam Seafoods | Premium Coastal Provisions from Muziris Harbour">
-    <meta property="og:description" content="Authentic coastal provisions and hygienically processed traditional seafood directly from the historic Muziris-Munambam harbour.">
+    <meta property="og:description" content="100% natural, low-sodium, protein-rich coastal provisions, hygienically prepared and carefully sourced from Munambam.">
     <meta property="og:image" content="https://www.munambamseafoods.online/assets/MUNAMBAM_Seafood_Logo_HQ.png">
 
     <!-- Geo Meta -->
@@ -473,12 +473,12 @@
         ========================= */
 
         .features-section {
-            padding: 20px 8% 60px;
+            padding: 30px 8% 80px;
 
             position: relative;
             z-index: 2;
 
-            max-width: 1200px;
+            max-width: 1040px;
 
             margin: 0 auto;
         }
@@ -486,49 +486,88 @@
         .features-grid {
             display: grid;
 
-            grid-template-columns:
-                repeat(2, minmax(0, 1fr));
+            grid-template-columns: 1fr;
 
-            gap: 25px;
+            gap: 26px;
+
+            max-width: 900px;
+
+            margin: 0 auto;
         }
 
         .feature-card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.93);
 
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
 
-            border-radius: 20px;
+            border-radius: 24px;
 
-            padding: 25px;
+            padding: 30px 34px;
+
+            min-height: 185px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
 
             box-shadow: var(--card-shadow);
 
             border:
-                1px solid rgba(255, 255, 255, 0.8);
+                1px solid rgba(255, 255, 255, 0.85);
 
             transition:
-                transform 0.25s ease;
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+        .feature-card::after {
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+
+            top: 0;
+
+            width: 5px;
+
+            height: 100%;
+
+            background: var(--primary-blue);
+
+            opacity: 0.85;
         }
 
         .feature-card:hover {
             transform: translate3d(0, -5px, 0);
+
+            box-shadow:
+                0 24px 48px rgba(2, 132, 199, 0.13);
         }
 
         .feature-card h3 {
             font-family: var(--font-heading);
 
-            font-size: 1.2rem;
+            font-size: 1.35rem;
 
             color: var(--dark-ocean);
 
-            margin-bottom: 10px;
+            margin-bottom: 13px;
 
             display: flex;
 
             align-items: center;
 
-            gap: 10px;
+            gap: 11px;
+
+            line-height: 1.25;
         }
 
         .feature-card h3 i {
@@ -538,12 +577,125 @@
         }
 
         .feature-card p {
-            color: #64748b;
+            color: #52657d;
+
+            font-size: 0.96rem;
+
+            line-height: 1.75;
+
+            max-width: 790px;
+
+            margin: 0;
+        }
+
+        .feature-card p span {
+            display: block;
+
+            margin-top: 7px;
+
+            color: #71839a;
 
             font-size: 0.9rem;
-
-            line-height: 1.6;
         }
+
+        .section-kicker {
+            text-align: center;
+
+            color: var(--primary-blue);
+
+            font-size: 0.78rem;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 9px;
+        }
+
+        .section-title {
+            text-align: center;
+
+            font-family: var(--font-heading);
+
+            color: var(--dark-ocean);
+
+            font-size: 2rem;
+
+            margin-bottom: 30px;
+
+            letter-spacing: -0.5px;
+        }
+
+        /* =========================
+           BRAND STORY
+        ========================= */
+
+        .brand-story {
+            position: relative;
+
+            z-index: 2;
+
+            padding:
+                20px 8% 80px;
+
+            max-width: 1040px;
+
+            margin: 0 auto;
+
+            text-align: center;
+        }
+
+        .brand-story-inner {
+            background:
+                rgba(255, 255, 255, 0.68);
+
+            backdrop-filter: blur(10px);
+
+            -webkit-backdrop-filter: blur(10px);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.78);
+
+            border-radius: 28px;
+
+            padding:
+                42px 35px;
+
+            box-shadow:
+                0 18px 40px rgba(2, 132, 199, 0.07);
+        }
+
+        .brand-story h2 {
+            font-family: var(--font-heading);
+
+            color: var(--dark-ocean);
+
+            font-size: 2rem;
+
+            margin-bottom: 13px;
+
+            line-height: 1.25;
+        }
+
+        .brand-story p:not(.section-kicker) {
+            color: #52657d;
+
+            max-width: 720px;
+
+            margin:
+                0 auto 24px;
+
+            font-size: 0.98rem;
+
+            line-height: 1.75;
+        }
+
+        .brand-story-button {
+            margin-top: 4px;
+        }
+
 
         /* =========================
            FOOTER
@@ -727,11 +879,50 @@
 
             .features-section {
                 padding:
-                    20px 6% 50px;
+                    25px 6% 55px;
             }
 
             .features-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .feature-card {
+                min-height: 175px;
+
+                padding:
+                    27px 25px;
+            }
+
+            .feature-card h3 {
+                font-size: 1.18rem;
+            }
+
+            .feature-card p {
+                font-size: 0.91rem;
+
+                line-height: 1.7;
+            }
+
+            .section-title {
+                font-size: 1.65rem;
+            }
+
+            .brand-story {
+                padding:
+                    5px 6% 55px;
+            }
+
+            .brand-story-inner {
+                padding:
+                    32px 22px;
+            }
+
+            .brand-story h2 {
+                font-size: 1.55rem;
+            }
+
+            .brand-story p:not(.section-kicker) {
+                font-size: 0.91rem;
             }
 
             .ocean-waves {
@@ -951,7 +1142,7 @@
         </h1>
 
         <p>
-            Direct Harbour Sourcing of Authentic Protein-Rich Coastal Provisions from Muziris Heritage Shores
+            100% Natural Coastal Provisions from Munambam Harbour — Protein-Rich, Low in Sodium, Hygienically Prepared and Carefully Packed.
         </p>
 
         <a
@@ -974,21 +1165,32 @@
         aria-label="Why choose Munambam Seafoods"
     >
 
+        <div class="section-kicker">
+            Why Choose Munambam
+        </div>
+
+        <h2 class="section-title">
+            Naturally Coastal. Carefully Prepared.
+        </h2>
+
         <div class="features-grid">
 
             <div class="feature-card">
 
                 <h3>
                     <i
-                        class="fas fa-landmark"
+                        class="fas fa-water"
                         aria-hidden="true"
                     ></i>
 
-                    Historic Muziris Heritage
+                    100% Natural Products
                 </h3>
 
                 <p>
-                    Rooted in the ancient maritime traditions of Muziris, our operations capture centuries of Kerala's legendary coastal trade and fishing legacy right from Munambam harbor.
+                    Authentic coastal seafood provisions made from naturally sourced ingredients, keeping the character of the sea and the traditional taste of Munambam close to your kitchen.
+                    <span>
+                        No unnecessary artificial additions — just honest coastal provisions prepared with care.
+                    </span>
                 </p>
 
             </div>
@@ -998,15 +1200,18 @@
 
                 <h3>
                     <i
-                        class="fas fa-anchor"
+                        class="fas fa-heartbeat"
                         aria-hidden="true"
                     ></i>
 
-                    Prime Harbor Sourcing
+                    Low Sodium &amp; Protein-Rich
                 </h3>
 
                 <p>
-                    Direct proximity to Munambam fishing docks ensures our fresh catch is handpicked within hours of landing, maintaining uncompromised quality and natural ocean flavor.
+                    Naturally protein-rich seafood provisions that fit beautifully into a balanced everyday diet, with a focus on clean, simple coastal nutrition.
+                    <span>
+                        A wholesome seafood choice with naturally occurring protein and a mindful approach to sodium.
+                    </span>
                 </p>
 
             </div>
@@ -1020,11 +1225,14 @@
                         aria-hidden="true"
                     ></i>
 
-                    Hygienically Sun-Dried
+                    Hygienically Prepared
                 </h3>
 
                 <p>
-                    Traditional open-air coastal drying techniques optimized carefully with modern hygiene standards—delivering 100% natural, chemical-free, and premium quality provisions.
+                    Every product is prepared with careful attention to hygiene, handling, drying and packing so the authentic coastal character is preserved from preparation to delivery.
+                    <span>
+                        Traditional coastal care combined with clean and responsible preparation practices.
+                    </span>
                 </p>
 
             </div>
@@ -1034,18 +1242,57 @@
 
                 <h3>
                     <i
-                        class="fas fa-shipping-fast"
+                        class="fas fa-shield-halved"
                         aria-hidden="true"
                     ></i>
 
-                    Fast Pan-India Delivery
+                    Chemical-Free &amp; Carefully Packed
                 </h3>
 
                 <p>
-                    Reliable logistics and airtight vacuum packaging to safely deliver authentic coastal seafood delicacies straight from Pallipuram, Ernakulam to your kitchen across India.
+                    Our products are prepared without unwanted chemical additives and are carefully packed to help protect their quality, freshness and natural character during delivery.
+                    <span>
+                        From Munambam Harbour to your home, every pack is handled with quality and care.
+                    </span>
                 </p>
 
             </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         BRAND STATEMENT
+    ========================= -->
+
+    <section
+        class="brand-story"
+        aria-label="About Munambam Seafoods"
+    >
+
+        <div class="brand-story-inner">
+
+            <p class="section-kicker">
+                From Munambam Harbour
+            </p>
+
+            <h2>
+                Authentic Coastal Provisions, Prepared With Purpose
+            </h2>
+
+            <p>
+                From carefully sourced seafood to hygienic preparation and thoughtful packing, Munambam Seafoods brings the character of Kerala's coast to homes across India.
+            </p>
+
+            <a
+                href="/products/"
+                class="btn-main brand-story-button"
+            >
+                <i class="fas fa-fish" aria-hidden="true"></i>
+                Discover Our Products
+            </a>
 
         </div>
 
