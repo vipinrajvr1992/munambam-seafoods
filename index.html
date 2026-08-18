@@ -340,12 +340,24 @@
             margin-bottom: 18px;
         }
 
+        /* Why Choose Us Section Styles */
+        .why-us {
+            padding: 70px 8%;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            border-top: 1px solid rgba(2, 132, 199, 0.1);
+            border-bottom: 1px solid rgba(2, 132, 199, 0.1);
+        }
+
         .footer-wrapper {
             position: relative;
             background: var(--dark-ocean);
             color: var(--white);
             padding-top: 0;
-            margin-top: 60px;
+            margin-top: 0;
             z-index: 2;
         }
 
@@ -493,6 +505,7 @@
         <a href="https://wa.me/917907804747" class="btn-order btn-whatsapp"><i class="fab fa-whatsapp"></i> Order Now via WhatsApp</a>
     </section>
 
+    <!-- Products Section with 6 Products -->
     <section class="products-section" id="products">
         <h2 class="section-title">Our Coastal Provisions</h2>
         <div class="grid">
@@ -515,6 +528,49 @@
                 <h3>Prawn Chammanthi Podi</h3>
                 <p>Authentic Kerala Homemade Blend</p>
                 <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Prawn%20Chammanthi%20Podi" class="btn-order" style="padding: 10px 24px; font-size: 0.85rem;">Order Now</a>
+            </div>
+
+            <div class="card">
+                <img src="assets/products/PRODUCT_4.webp" alt="Dried Shark">
+                <h3>Premium Dried Shark</h3>
+                <p>Traditional sundried quality (250g)</p>
+                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Dried%20Shark" class="btn-order" style="padding: 10px 24px; font-size: 0.85rem;">Order Now</a>
+            </div>
+
+            <div class="card">
+                <img src="assets/products/PRODUCT_5.webp" alt="Dried Tuna">
+                <h3>Premium Dried Tuna</h3>
+                <p>Rich in flavor, clean & hygienic</p>
+                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Dried%20Tuna" class="btn-order" style="padding: 10px 24px; font-size: 0.85rem;">Order Now</a>
+            </div>
+
+            <div class="card">
+                <img src="assets/products/PRODUCT_6.webp" alt="Dried Mackerel">
+                <h3>Premium Dried Mackerel</h3>
+                <p>Authentic harbour taste</p>
+                <a href="https://wa.me/917907804747?text=Hi,%20I%20want%20to%20order%20Dried%20Mackerel" class="btn-order" style="padding: 10px 24px; font-size: 0.85rem;">Order Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="why-us">
+        <h2 class="section-title">Why Munambam Seafoods?</h2>
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+            <div class="card" style="box-shadow: none; border: 1px solid #cbd5e1; background: rgba(255,255,255,0.8);">
+                <i class="fas fa-ship" style="font-size: 2.2rem; color: var(--primary-blue); margin-bottom: 15px;"></i>
+                <h3>Directly Sourced</h3>
+                <p>From Munambam harbour straight to your kitchen table.</p>
+            </div>
+            <div class="card" style="box-shadow: none; border: 1px solid #cbd5e1; background: rgba(255,255,255,0.8);">
+                <i class="fas fa-leaf" style="font-size: 2.2rem; color: #10b981; margin-bottom: 15px;"></i>
+                <h3>100% Chemical Free</h3>
+                <p>Natural, sun-dried traditional methods with zero preservatives.</p>
+            </div>
+            <div class="card" style="box-shadow: none; border: 1px solid #cbd5e1; background: rgba(255,255,255,0.8);">
+                <i class="fas fa-truck" style="font-size: 2.2rem; color: var(--accent-gold); margin-bottom: 15px;"></i>
+                <h3>Fast Delivery</h3>
+                <p>Pan-India shipping with secure, air-tight packaging.</p>
             </div>
         </div>
     </section>
