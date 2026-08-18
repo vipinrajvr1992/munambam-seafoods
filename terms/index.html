@@ -525,10 +525,10 @@
 
         .content-container {
             background:
-                linear-gradient(145deg, rgba(255,251,242,.98), rgba(247,241,230,.96));
+                linear-gradient(145deg, rgba(255,251,242,.64), rgba(247,241,230,.38));
             border: 1px solid rgba(197,160,89,.35);
             box-shadow:
-                0 30px 75px rgba(6,29,59,.15),
+                0 30px 75px rgba(6,29,59,.13),
                 0 2px 0 rgba(255,255,255,.95) inset;
         }
 
@@ -586,14 +586,19 @@
 
             margin: 0 auto;
 
+            /* Premium Munambam cream glass */
             background:
-                rgba(255, 255, 255, 0.92);
+                linear-gradient(
+                    135deg,
+                    rgba(255, 250, 240, 0.72),
+                    rgba(247, 240, 223, 0.46)
+                );
 
             backdrop-filter:
-                blur(12px);
+                blur(18px) saturate(115%);
 
             -webkit-backdrop-filter:
-                blur(12px);
+                blur(18px) saturate(115%);
 
             padding:
                 50px 40px;
@@ -602,11 +607,13 @@
                 30px;
 
             box-shadow:
-                var(--card-shadow);
+                0 28px 70px rgba(0,0,0,.14),
+                0 2px 0 rgba(255,255,255,.55) inset,
+                0 0 0 1px rgba(255,255,255,.18) inset;
 
             border:
                 1px solid
-                rgba(255, 255, 255, 0.8);
+                rgba(255, 250, 240, 0.58);
         }
 
 
