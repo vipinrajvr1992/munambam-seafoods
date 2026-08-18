@@ -243,17 +243,27 @@
             font-weight: 600;
         }
 
+        /* Grid Layout: Desktop 3 columns, Mobile 2 columns */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
         }
 
         .card {
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 25px 20px;
+            padding: 20px 15px;
             text-align: center;
             box-shadow: var(--card-shadow);
             transition: all 0.3s ease;
@@ -270,14 +280,14 @@
 
         .card img {
             width: 100%;
-            height: 190px;
+            height: 160px;
             object-fit: contain;
             margin-bottom: 15px;
         }
 
         .card h3 {
             font-family: var(--font-heading);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: var(--dark-ocean);
             margin-bottom: 8px;
             font-weight: 700;
@@ -285,23 +295,23 @@
 
         .card p {
             color: #64748b;
-            font-size: 0.88rem;
-            line-height: 1.5;
-            margin-bottom: 18px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            margin-bottom: 15px;
         }
 
         .btn-order {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             background: var(--primary-blue);
             color: var(--white);
-            padding: 10px 24px;
+            padding: 9px 16px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             box-shadow: 0 6px 15px rgba(2, 132, 199, 0.25);
             transition: all 0.3s ease;
         }
@@ -448,7 +458,6 @@
         </div>
     </nav>
 
-    <!-- Filter & Sort Controls Bar -->
     <div class="controls-container">
         <div class="filter-buttons">
             <button class="filter-btn active" data-filter="all">All Products</button>
