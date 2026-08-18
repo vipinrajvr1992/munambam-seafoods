@@ -82,12 +82,20 @@
             position: absolute;
             opacity: 0.22;
             will-change: transform;
+            pointer-events: none;
+            display: block;
+            line-height: 0;
+            z-index: 0;
         }
 
         .ocean-creature img {
             width: 100%;
-            height: auto;
+            height: 100%;
+            object-fit: contain;
             display: block;
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-drag: none;
         }
 
         .seaweed {
@@ -300,7 +308,7 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
             border-radius: 24px;
             padding: 30px 25px;
@@ -598,7 +606,8 @@
             fishCursor.style.top = e.clientY + 'px';
         });
 
-        // 2. Background Non-overlapping Creative Elements Setup (Strictly Separate Grid Placement)
+        // 2. Background Animated Sea Creatures
+        // Cursor code above is intentionally untouched.
         const container = document.getElementById('oceanElements');
 
         const creatureFiles = {
@@ -608,75 +617,100 @@
             prawn: 'assets/icon/icon-prawn.svg'
         };
 
-        // Exact requirements fulfilled:
-        // - 1 Big Shark moving Left (ScaleX(-1) for left direction)
-        // - 1 Octopus moving Right (ScaleX(1) for right direction)
-        // - 3 Fish Right, 2 Fish Left
-        // - 3 Prawns Right, 2 Prawns Left
-        // - All strictly small-sized and completely non-overlapping via isolated grid cells
+        /*
+         * EXACT CREATURE COUNT / DIRECTION
+         * --------------------------------
+         * 1 Big Shark  -> LEFT
+         * 1 Octopus    -> RIGHT
+         * 3 Fish       -> RIGHT
+         * 2 Fish       -> LEFT
+         * 3 Prawns     -> RIGHT
+         * 2 Prawns     -> LEFT
+         *
+         * Total = 12
+         *
+         * Every creature has its own permanent horizontal lane.
+         * Therefore two creatures can never occupy the same lane and
+         * cannot overlap while swimming.
+         */
         const spawnList = [
-            { type: 'shark', size: 95, moveRight: false },   // Small-sized Big Shark moving left
-            { type: 'octopus', size: 70, moveRight: true },  // Octopus moving right
-            
-            // 3 Fish Right
-            { type: 'fish', size: 38, moveRight: true },
-            { type: 'fish', size: 35, moveRight: true },
-            { type: 'fish', size: 40, moveRight: true },
-            
-            // 2 Fish Left
-            { type: 'fish', size: 36, moveRight: false },
-            { type: 'fish', size: 39, moveRight: false },
-
-            // 3 Prawns Right
-            { type: 'prawn', size: 32, moveRight: true },
-            { type: 'prawn', size: 35, moveRight: true },
-            { type: 'prawn', size: 30, moveRight: true },
-
-            // 2 Prawns Left
-            { type: 'prawn', size: 33, moveRight: false },
-            { type: 'prawn', size: 31, moveRight: false }
+            { type: 'shark',   size: 115, direction: 'left',  lane: 11,  duration: 34000, delay: -7000 },
+            { type: 'fish',    size: 34,  direction: 'right', lane: 19,  duration: 27000, delay: -14000 },
+            { type: 'prawn',   size: 30,  direction: 'left',  lane: 27,  duration: 30000, delay: -4000 },
+            { type: 'octopus', size: 58,  direction: 'right', lane: 35,  duration: 32000, delay: -19000 },
+            { type: 'fish',    size: 36,  direction: 'left',  lane: 43,  duration: 28000, delay: -9000 },
+            { type: 'prawn',   size: 32,  direction: 'right', lane: 51,  duration: 31000, delay: -16000 },
+            { type: 'fish',    size: 35,  direction: 'right', lane: 59,  duration: 29000, delay: -3000 },
+            { type: 'prawn',   size: 29,  direction: 'left',  lane: 67,  duration: 30000, delay: -12000 },
+            { type: 'fish',    size: 33,  direction: 'left',  lane: 75,  duration: 28000, delay: -21000 },
+            { type: 'prawn',   size: 31,  direction: 'right', lane: 81,  duration: 32000, delay: -8000 },
+            { type: 'fish',    size: 37,  direction: 'right', lane: 87,  duration: 27000, delay: -17000 },
+            { type: 'prawn',   size: 30,  direction: 'right', lane: 93,  duration: 31000, delay: -5000 }
         ];
 
-        const gridRows = 4;
-        const gridCols = 3;
-        const cellWidth = 100 / gridCols;
-        const cellHeight = 100 / gridRows;
-
-        let index = 0;
-        spawnList.forEach((item) => {
+        /*
+         * Each lane is unique.
+         * No vertical movement is applied.
+         * This is the important part that prevents overlap.
+         */
+        spawnList.forEach((item, index) => {
             const el = document.createElement('div');
             el.className = 'ocean-creature';
 
-            const row = Math.floor(index / gridCols);
-            const col = index % gridCols;
-            index++;
+            const img = document.createElement('img');
+            img.src = creatureFiles[item.type];
+            img.alt = '';
+            img.width = item.size;
+            img.height = item.size;
+            img.draggable = false;
+            img.decoding = 'async';
 
-            // Isolated grid allocation with safe padding to ensure absolute zero overlap
-            const x = col * cellWidth + 6 + Math.random() * (cellWidth - 18);
-            const y = row * cellHeight + 6 + Math.random() * (cellHeight - 22);
+            // Right-facing = original artwork.
+            // Left-facing = horizontal mirror.
+            img.style.transform =
+                item.direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)';
 
-            el.style.left = x + 'vw';
-            el.style.top = y + 'vh';
+            el.appendChild(img);
 
-            const filePath = creatureFiles[item.type];
-            // scaleX(1) faces right, scaleX(-1) mirrors to face left perfectly matching motion direction
-            el.innerHTML = `<img src="${filePath}" width="${item.size}" alt="${item.type}" style="transform: scaleX(${item.moveRight ? 1 : -1});">`;
+            // Each creature has its own lane and never changes vertical position.
+            el.style.width = `${item.size}px`;
+            el.style.height = `${item.size}px`;
+            el.style.top = `${item.lane}vh`;
 
-            const duration = 28 + Math.random() * 12;
-            const yTravel = (Math.random() - 0.5) * 25;
-            const xTravel = item.moveRight ? (35 + Math.random() * 25) : -(35 + Math.random() * 25);
-
-            el.animate([
-                { transform: `translate(0px, 0px)` },
-                { transform: `translate(${xTravel}vw, ${yTravel}px)` }
-            ], {
-                duration: duration * 1000,
-                iterations: Infinity,
-                direction: 'alternate',
-                easing: 'ease-in-out'
-            });
+            // Start each creature at a different point along its own lane.
+            // This keeps the screen naturally populated without creating pairs.
+            const startPercent = 8 + ((index * 17) % 78);
+            el.style.left =
+                item.direction === 'right'
+                    ? `calc(${startPercent}vw - ${item.size}px)`
+                    : `calc(${100 - startPercent}vw)`;
 
             container.appendChild(el);
+
+            /*
+             * One-way infinite movement.
+             * IMPORTANT: no alternate direction.
+             * The creature always keeps the requested direction.
+             */
+            const distance = window.innerWidth + item.size + 140;
+
+            el.animate(
+                [
+                    { transform: 'translate3d(0, 0, 0)' },
+                    {
+                        transform:
+                            item.direction === 'right'
+                                ? `translate3d(${distance}px, 0, 0)`
+                                : `translate3d(-${distance}px, 0, 0)`
+                    }
+                ],
+                {
+                    duration: item.duration,
+                    delay: item.delay,
+                    iterations: Infinity,
+                    easing: 'linear'
+                }
+            );
         });
     </script>
 </body>
