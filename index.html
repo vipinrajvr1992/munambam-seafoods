@@ -114,19 +114,24 @@
         }
 
         /* --------------------------------------------------
-            NAVIGATION
+            NAVIGATION - PREMIUM FLOATING PILL DESIGN
         -------------------------------------------------- */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px 8%;
-            background: rgba(255, 255, 255, 0.85);
+            padding: 12px 4%;
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(16px);
             position: sticky;
-            top: 0;
+            top: 20px;
             z-index: 1000;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            width: 85%;
+            max-width: 1200px;
+            margin: 20px auto 0 auto;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(2, 132, 199, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.6);
         }
 
         .logo-container {
@@ -166,7 +171,7 @@
         -------------------------------------------------- */
         .hero-container {
             position: relative;
-            padding: 60px 8% 100px 8%;
+            padding: 80px 8% 100px 8%;
             text-align: center;
             z-index: 2;
         }
@@ -484,6 +489,7 @@
         }
 
         @media (max-width: 768px) {
+            nav { width: 95%; padding: 12px 5%; top: 10px; margin-top: 10px;}
             .hero-title { font-size: 2.5rem; }
             .hero-subtitle { font-size: 1.2rem; }
             .taste-bubble { position: relative; left: 0; bottom: 0; margin-top: 20px; display: inline-block; }
@@ -606,7 +612,7 @@
     </div>
 
     <script>
-        // 1. Fish Cursor (നിങ്ങൾ നൽകിയ കസ്റ്റം കോഡ് ചേർത്തു)
+        // 1. Fish Cursor 
         const fishCursor = document.getElementById('fish-cursor');
         document.addEventListener('mousemove', (e) => {
             fishCursor.style.left = e.clientX + 'px';
@@ -623,12 +629,12 @@
             prawn: 'assets/icon/icon-prawn.svg'
         };
 
-        // ഓവർലാപ്പ് വരാതിരിക്കാൻ Lanes കൃത്യമായി മാറ്റി നൽകിയിട്ടുണ്ട്
         const spawnList = [
-            { type: 'shark',   size: 115, direction: 'left',  lane: 5,   duration: 34000, delay: -7000 },
+            // സ്രാവിനെ താഴേക്ക് മാറ്റാൻ lane 5-ൽ നിന്ന് 25 ലേക്ക് മാറ്റിയിട്ടുണ്ട് 
+            { type: 'shark',   size: 115, direction: 'left',  lane: 25,   duration: 34000, delay: -7000 },
             { type: 'fish',    size: 34,  direction: 'right', lane: 20,  duration: 27000, delay: -14000 },
-            { type: 'prawn',   size: 30,  direction: 'left',  lane: 27,  duration: 30000, delay: -4000 },
-            { type: 'octopus', size: 58,  direction: 'right', lane: 35,  duration: 32000, delay: -19000 },
+            { type: 'prawn',   size: 30,  direction: 'left',  lane: 35,  duration: 30000, delay: -4000 },
+            { type: 'octopus', size: 58,  direction: 'right', lane: 42,  duration: 32000, delay: -19000 },
             { type: 'fish',    size: 36,  direction: 'left',  lane: 48,  duration: 28000, delay: -9000 },
             { type: 'prawn',   size: 32,  direction: 'right', lane: 55,  duration: 31000, delay: -16000 },
             { type: 'fish',    size: 35,  direction: 'right', lane: 62,  duration: 29000, delay: -3000 },
@@ -651,7 +657,6 @@
             img.draggable = false;
             img.decoding = 'async';
 
-            // സ്രാവ് പുറകോട്ട് പോകുന്ന പ്രശ്നം പരിഹരിക്കാൻ ഇവിടെ പ്രത്യേകം കോഡ് നൽകിയിട്ടുണ്ട്
             let flipTransform = item.direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)';
             if(item.type === 'shark') {
                 flipTransform = item.direction === 'left' ? 'scaleX(1)' : 'scaleX(-1)';
