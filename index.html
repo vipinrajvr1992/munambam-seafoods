@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Primary SEO & Meta Tags -->
     <title>Munambam Seafoods | Coastal Provisions & Heritage | Buy Fresh & Premium Dried Fish Online</title>
     <meta name="title" content="Munambam Seafoods | Coastal Provisions & Heritage | Buy Fresh & Premium Dried Fish Online">
     <meta name="description" content="Order 100% authentic Munambam protein-rich, fresh fish, premium hygienically dried fish, and dried prawns online. Sourced directly from Munambam Harbour, chemical-free & traditional.">
@@ -12,16 +13,19 @@
     <meta name="author" content="Munambam Seafoods">
     <link rel="canonical" href="https://www.munambamseafoods.online/">
 
+    <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="assets/icon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/icon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/icon/favicon-16x16.png">
     <link rel="manifest" href="assets/icon/site.webmanifest">
     <link rel="icon" type="image/x-icon" href="assets/icon/favicon.ico">
 
+    <!-- Modern Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -42,7 +46,7 @@
             padding: 0;
             box-sizing: border-box;
             scroll-behavior: smooth;
-            cursor: none; /* ഡിഫോൾട്ട് കഴ്സർ ഹൈഡ് ചെയ്ത് മീൻ കഴ്സർ മാത്രം കാണിക്കാൻ */
+            cursor: none;
         }
 
         body {
@@ -65,7 +69,7 @@
         }
 
         /* --------------------------------------------------
-            BACKGROUND ANIMATIONS: MOVING SEA CREATURES & SEAWEEDS
+            BACKGROUND ANIMATIONS: MOVING SEA CREATURES
         -------------------------------------------------- */
         .ocean-bg-elements {
             position: fixed;
@@ -82,6 +86,12 @@
             position: absolute;
             opacity: 0.25;
             will-change: transform;
+        }
+
+        .ocean-creature img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         .seaweed {
@@ -481,14 +491,12 @@
 </head>
 <body>
 
+    <!-- Fish Cursor -->
     <div id="fish-cursor">
-        <svg width="50" height="30" viewBox="0 0 50 30" style="fill:none; stroke:#C5A059; stroke-width:2; stroke-linecap:round;">
-            <path d="M 5,15 Q 25,-5 45,25 M 5,15 Q 25,35 45,5" />
-            <path d="M 15,8.5 Q 18,15 15,21.5" />
-            <circle cx="10" cy="14.5" r="1.5" fill="#C5A059" stroke="none"/>
-        </svg>
+        <img src="assets/icon/icon-fish.svg" width="50" height="30" alt="Fish Cursor" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
     </div>
 
+    <!-- Background Dynamic Ocean Elements -->
     <div class="ocean-bg-elements" id="oceanElements">
         <svg class="seaweed seaweed-left" width="80" height="180" viewBox="0 0 100 200" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round">
             <path d="M 20,200 Q 40,150 10,100 T 30,0" />
@@ -500,6 +508,7 @@
         </svg>
     </div>
 
+    <!-- Header Navigation -->
     <nav>
         <div class="logo-container">
             <img src="assets/MUNAMBAM_Seafood_Logo_HQ.png" alt="Munambam Seafoods Logo">
@@ -512,6 +521,7 @@
         </div>
     </nav>
 
+    <!-- Hero Section -->
     <section class="hero-container">
         <span class="badge">100% Hygienically Dried & Chemical Free</span>
         <h1 class="hero-title">PREMIUM SEA FOOD</h1>
@@ -528,6 +538,7 @@
         <a href="https://wa.me/917907804747" class="btn-order btn-whatsapp"><i class="fab fa-whatsapp"></i> Order Now via WhatsApp</a>
     </section>
 
+    <!-- Products Section -->
     <section class="products-section" id="products">
         <h2 class="section-title">Our Coastal Provisions</h2>
         <div class="grid">
@@ -554,6 +565,7 @@
         </div>
     </section>
 
+    <!-- Heritage Section -->
     <section class="heritage-section" id="heritage">
         <div class="heritage-container">
             <h2>Our Heritage: From Muziris to Munambam</h2>
@@ -569,6 +581,7 @@
         </div>
     </section>
 
+    <!-- Footer Section -->
     <div class="footer-wrapper" id="contact">
         <div class="ocean-waves">
             <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
@@ -588,6 +601,7 @@
         </footer>
     </div>
 
+    <!-- JavaScript using assets SVG files directly -->
     <script>
         // 1. Fish Cursor
         const fishCursor = document.getElementById('fish-cursor');
@@ -596,26 +610,14 @@
             fishCursor.style.top = e.clientY + 'px';
         });
 
-        // 2. Background Animated Creatures (Fish, Shark, Octopus, Prawn)
+        // 2. Background Animated Creatures using Assets SVGs
         const container = document.getElementById('oceanElements');
 
-        const svgShapes = {
-            fish: {
-                viewBox: "0 0 50 30",
-                svg: '<path d="M 5,15 Q 25,-5 45,25 M 5,15 Q 25,35 45,5" /><path d="M 15,8.5 Q 18,15 15,21.5" /><circle cx="10" cy="14.5" r="1.5" fill="#0284c7" stroke="none"/>'
-            },
-            shark: {
-                viewBox: "0 0 100 60",
-                svg: '<path d="M 10,30 Q 20,22 30,22 L 40,15 L 43,22 L 75,22 Q 90,10 95,12 Q 88,28 95,45 Q 85,38 75,38 L 55,38 Q 45,45 38,38 L 15,42 Q 10,38 10,30 Z" /><circle cx="20" cy="28" r="2" fill="#0284c7" stroke="none"/><path d="M 25,28 Q 28,33 32,32" />'
-            },
-            octopus: {
-                viewBox: "0 0 100 100",
-                svg: '<path d="M 30,50 Q 30,20 50,20 Q 70,20 70,50 Q 70,60 65,65 L 65,85 Q 65,95 55,90 M 70,50 Q 80,45 85,55 Q 90,65 80,75 M 30,50 Q 20,45 15,55 Q 10,65 20,75 M 40,65 L 40,90 M 50,60 L 50,95" /><circle cx="42" cy="40" r="4"/><circle cx="58" cy="40" r="4"/><circle cx="42" cy="40" r="1.5" fill="#0284c7" stroke="none"/><circle cx="58" cy="40" r="1.5" fill="#0284c7" stroke="none"/>'
-            },
-            prawn: {
-                viewBox: "0 0 100 100",
-                svg: '<path d="M 20,30 Q 10,20 25,15 Q 40,10 55,20 L 75,35 Q 95,50 90,75 Q 85,95 70,85 Q 60,75 55,65 Q 40,55 30,60 Q 15,70 20,85" /><circle cx="28" cy="27" r="2" fill="#0284c7" stroke="none"/><path d="M 32,27 Q 42,28 50,35" />'
-            }
+        const creatureFiles = {
+            fish: 'assets/icon/icon-fish.svg',
+            shark: 'assets/icon/icon-shark.svg',
+            octopus: 'assets/icon/icon-octopus.svg',
+            prawn: 'assets/icon/icon-prawn.svg'
         };
 
         const types = ['fish', 'shark', 'octopus', 'prawn'];
@@ -624,17 +626,16 @@
 
         for (let i = 0; i < totalItems; i++) {
             const type = types[Math.floor(Math.random() * types.length)];
-            const data = svgShapes[type];
+            const filePath = creatureFiles[type];
 
             const el = document.createElement('div');
             el.className = 'ocean-creature';
 
-            let scale = 0.5 + Math.random() * 0.7;
-            if (type === 'shark') scale = 1.1 + Math.random() * 0.4;
-            if (type === 'octopus') scale = 0.7 + Math.random() * 0.4;
+            let scale = 0.6 + Math.random() * 0.7;
+            if (type === 'shark') scale = 1.2 + Math.random() * 0.4;
+            if (type === 'octopus') scale = 0.8 + Math.random() * 0.4;
 
-            const w = Math.round(50 * scale);
-            const h = Math.round(30 * scale);
+            const w = Math.round(60 * scale);
             const moveRight = Math.random() > 0.5; // Random direction: Left or Right
 
             let x, y, overlap;
@@ -658,10 +659,8 @@
             el.style.left = x + 'vw';
             el.style.top = y + 'vh';
 
-            // Head faces the direction of movement using scaleX mirror effect
-            el.innerHTML = `<svg width="${w}" height="${h}" viewBox="${data.viewBox}" style="fill:none; stroke:#0284c7; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; transform: scaleX(${moveRight ? 1 : -1});">
-                ${data.svg}
-            </svg>`;
+            // Using <img> tag with assets path and scaleX for proper mirror effect
+            el.innerHTML = `<img src="${filePath}" width="${w}" alt="${type}" style="transform: scaleX(${moveRight ? 1 : -1});">`;
 
             const duration = 20 + Math.random() * 20;
             const yTravel = (Math.random() - 0.5) * 50;
