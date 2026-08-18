@@ -95,15 +95,15 @@
 
         :root {
 
-            --bg-light: #e0f2fe;
+            --bg-light: #f7f1e6;
 
-            --primary-blue: #0284c7;
+            --primary-blue: #0b5f8a;
 
-            --dark-ocean: #071e3d;
+            --dark-ocean: #061d3b;
 
             --deep-navy: #0b2545;
 
-            --accent-gold: #d4af37;
+            --accent-gold: #c5a059;
 
             --white: #ffffff;
 
@@ -112,7 +112,7 @@
             --text-muted: #64748b;
 
             --card-shadow:
-                0 20px 40px rgba(2, 132, 199, 0.08);
+                0 24px 55px rgba(6, 29, 59, 0.11);
 
             --font-heading:
                 'Space Grotesk',
@@ -153,9 +153,9 @@
             background:
                 linear-gradient(
                     180deg,
-                    #e0f2fe 0%,
-                    #bae6fd 50%,
-                    #e0f2fe 100%
+                    #f7f1e6 0%,
+                    #dcecf4 48%,
+                    #f7f1e6 100%
                 );
 
             color: var(--text-dark);
@@ -378,7 +378,7 @@
 
             box-shadow:
                 0 8px 25px
-                rgba(2, 132, 199, 0.1);
+                rgba(197, 160, 89, 0.12);
 
             border:
                 1px solid
@@ -497,6 +497,93 @@
         }
 
 
+
+        /* =========================================================
+           PREMIUM NAVY / CREAM / GOLD SYSTEM
+        ========================================================== */
+
+        body {
+            background:
+                radial-gradient(circle at 10% 15%, rgba(197,160,89,.08), transparent 28%),
+                linear-gradient(180deg, #dcecf4 0%, #f7f1e6 46%, #dcecf4 100%);
+        }
+
+        nav {
+            background: rgba(255, 251, 242, .94);
+            border: 1px solid rgba(197,160,89,.24);
+            box-shadow:
+                0 14px 35px rgba(6,29,59,.12),
+                0 1px 0 rgba(255,255,255,.9) inset;
+        }
+
+        .nav-links a {
+            color: #102746;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #0b5f8a;
+        }
+
+        .content-section {
+            padding-top: 70px;
+        }
+
+        .content-container {
+            background:
+                linear-gradient(145deg, rgba(255,251,242,.98), rgba(247,241,230,.96));
+            border: 1px solid rgba(197,160,89,.35);
+            box-shadow:
+                0 30px 75px rgba(6,29,59,.15),
+                0 2px 0 rgba(255,255,255,.95) inset;
+        }
+
+        .badge {
+            background: rgba(197,160,89,.12);
+            color: #946b18;
+            border-color: rgba(197,160,89,.38);
+        }
+
+        h1 {
+            color: #061d3b;
+            letter-spacing: -.7px;
+        }
+
+        h2 {
+            color: #0b5f8a;
+        }
+
+        p,
+        ul li {
+            color: #334155;
+        }
+
+        p strong {
+            color: #061d3b;
+        }
+
+        ul li::before {
+            color: #c5a059;
+        }
+
+        .content-container::after {
+            content: "";
+            display: block;
+            width: 96px;
+            height: 2px;
+            margin: 30px auto 0;
+            background: linear-gradient(90deg, transparent, #c5a059, transparent);
+            opacity: .75;
+        }
+
+        .footer-wrapper {
+            background: #061d3b;
+        }
+
+        .social-icons a:hover {
+            background: #0b5f8a;
+        }
+
         .content-container {
 
             width: 100%;
@@ -506,7 +593,7 @@
             margin: 0 auto;
 
             background:
-                rgba(255, 255, 255, 0.92);
+                rgba(255, 251, 242, 0.97);
 
             backdrop-filter:
                 blur(12px);
@@ -525,7 +612,7 @@
 
             border:
                 1px solid
-                rgba(255, 255, 255, 0.8);
+                rgba(197, 160, 89, 0.30);
         }
 
 
@@ -538,7 +625,7 @@
             display: inline-block;
 
             background:
-                rgba(2, 132, 199, 0.1);
+                rgba(197, 160, 89, 0.12);
 
             color:
                 var(--primary-blue);
@@ -565,7 +652,7 @@
 
             border:
                 1px solid
-                rgba(2, 132, 199, 0.2);
+                rgba(197, 160, 89, 0.32);
         }
 
 
@@ -1167,7 +1254,7 @@
             height="180"
             viewBox="0 0 100 200"
             fill="none"
-            stroke="#0284c7"
+            stroke="#c5a059"
             stroke-width="2.2"
             stroke-linecap="round"
         >
@@ -1189,7 +1276,7 @@
             height="180"
             viewBox="0 0 100 200"
             fill="none"
-            stroke="#0284c7"
+            stroke="#c5a059"
             stroke-width="2.2"
             stroke-linecap="round"
         >
@@ -1426,7 +1513,7 @@
             >
 
                 <path
-                    fill="#071e3d"
+                    fill="#061d3b"
                     d="M0,32L48,42.7C96,53,192,75,288,80C384,85,480,75,576,58.7C672,43,768,21,864,21.3C960,21,1056,43,1152,53.3C1248,64,1344,64,1392,64L1440,64L1440,100L1392,100C1344,100,1248,100,1152,100C1056,100,960,100,864,100C768,100,672,100,576,100C480,100,384,100,288,100C192,100,96,100,48,100L0,100Z"
                 ></path>
 
