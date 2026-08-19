@@ -196,22 +196,48 @@
         /* CUSTOM CURSOR */
         #fish-cursor {
             position: fixed;
+
             left: 0;
             top: 0;
+
             width: 44px;
             height: 27px;
+
             pointer-events: none;
-            user-select: none;
-            -webkit-user-select: none;
+
             z-index: 99999;
-            transform: translate3d(-5px,-14px,0);
-            will-change: transform;
+
+            transform:
+                translate3d(-6px,-14px,0);
+
+            will-change:
+                transform;
         }
 
         #fish-cursor svg {
             display: block;
+
             width: 44px;
             height: 27px;
+
+            /* Stronger 3D shadow so the fish stays visible on cream/light backgrounds */
+            filter:
+                drop-shadow(
+                    0 1px 0
+                    rgba(18,24,32,.95)
+                )
+                drop-shadow(
+                    0 2px 2px
+                    rgba(18,24,32,.72)
+                )
+                drop-shadow(
+                    0 5px 6px
+                    rgba(0,0,0,.42)
+                )
+                drop-shadow(
+                    0 9px 10px
+                    rgba(0,0,0,.20)
+                );
         }
 
         /* =========================================================
