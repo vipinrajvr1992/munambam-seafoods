@@ -198,8 +198,8 @@
             position: fixed;
             left: 0;
             top: 0;
-            width: 42px;
-            height: 25px;
+            width: 44px;
+            height: 27px;
             pointer-events: none;
             user-select: none;
             -webkit-user-select: none;
@@ -210,8 +210,8 @@
 
         #fish-cursor svg {
             display: block;
-            width: 42px;
-            height: 25px;
+            width: 44px;
+            height: 27px;
         }
 
         /* OCEAN BACKGROUND */
@@ -843,21 +843,291 @@
             background: #168dcc !important;
         }
 
-        /* Remove gold/yellow from the decorative moving elements
-           while keeping them visible against the navy background. */
-        #fish-cursor svg {
-            stroke: #8fd5f5 !important;
-        }
-
-        #fish-cursor svg circle {
-            fill: #8fd5f5 !important;
-        }
-
         .ocean-waves path {
             fill: #061b3a !important;
         }
 
-    </style>
+    
+        /* =========================================================
+           PREMIUM WAVY FOOTER
+        ========================================================= */
+
+        .footer {
+            position:
+                relative;
+
+            z-index:
+                3;
+
+            background:
+                var(--navy);
+
+            color:
+                var(--white);
+
+            padding:
+                142px 20px 34px;
+
+            text-align:
+                center;
+
+            overflow:
+                hidden;
+        }
+
+        /*
+           PREMIUM REAL SEA TIDE — 3 OCEAN LAYERS
+           Deep navy + ocean blue + light blue.
+           No gold. No flat/straight divider.
+           The three ribbons follow different curves so the footer
+           enters the page like a natural rolling sea.
+        */
+
+        .footer-wave-navy,
+        .footer-wave-blue,
+        .footer-wave-light {
+            position: absolute;
+            left: -3%;
+            width: 106%;
+            pointer-events: none;
+            overflow: hidden;
+            line-height: 0;
+        }
+
+        /* Layer 1 — deep navy tide */
+        .footer-wave-navy {
+            top: -4px;
+            height: 170px;
+            z-index: 1;
+        }
+
+        .footer-wave-navy svg {
+            display: block;
+            width: 100%;
+            height: 170px;
+        }
+
+        /* Layer 2 — normal ocean blue tide */
+        .footer-wave-blue {
+            top: 10px;
+            height: 154px;
+            z-index: 2;
+        }
+
+        .footer-wave-blue svg {
+            display: block;
+            width: 100%;
+            height: 154px;
+        }
+
+        /* Layer 3 — light-blue surface crest */
+        .footer-wave-light {
+            top: 22px;
+            height: 138px;
+            z-index: 3;
+        }
+
+        .footer-wave-light svg {
+            display: block;
+            width: 100%;
+            height: 132px;
+        }
+
+        .footer-content {
+            position:
+                relative;
+
+            z-index:
+                5;
+
+            max-width:
+                850px;
+
+            margin:
+                0 auto;
+        }
+
+        .footer-logo {
+            width:
+                76px;
+
+            height:
+                76px;
+
+            object-fit:
+                contain;
+
+            margin-bottom:
+                13px;
+
+            filter:
+                drop-shadow(
+                    0 8px 16px
+                    rgba(0,0,0,.25)
+                );
+        }
+
+        .footer h3 {
+            margin:
+                0;
+
+            color:
+                var(--gold-light);
+
+            font-size:
+                1.5rem;
+
+            font-weight:
+                800;
+        }
+
+        .footer p {
+            margin:
+                10px auto 0;
+
+            max-width:
+                700px;
+
+            color:
+                #aebfd2;
+
+            font-size:
+                .88rem;
+
+            line-height:
+                1.7;
+        }
+
+        .footer-links {
+            display:
+                flex;
+
+            flex-wrap:
+                wrap;
+
+            justify-content:
+                center;
+
+            gap:
+                21px;
+
+            margin:
+                25px 0;
+        }
+
+        .footer-links a {
+            color:
+                #e2edf6;
+
+            text-decoration:
+                none;
+
+            font-size:
+                .86rem;
+
+            font-weight:
+                650;
+
+            transition:
+                color .2s ease;
+        }
+
+        .footer-links a:hover {
+            color:
+                var(--gold-light);
+        }
+
+        .footer-contact {
+            display:
+                flex;
+
+            justify-content:
+                center;
+
+            flex-wrap:
+                wrap;
+
+            gap:
+                12px;
+
+            margin:
+                20px 0;
+        }
+
+        /* ICON-ONLY SOCIAL / CONTACT LINKS */
+        .contact-link {
+            width: 48px;
+            height: 48px;
+            padding: 0;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 1px solid rgba(142,216,245,.24);
+            border-radius: 50%;
+
+            color: var(--light-blue);
+            background: rgba(255,255,255,.025);
+
+            text-decoration: none;
+
+            transition:
+                transform .22s ease,
+                background .22s ease,
+                border-color .22s ease,
+                color .22s ease,
+                box-shadow .22s ease;
+        }
+
+        .contact-link svg {
+            width: 21px;
+            height: 21px;
+            display: block;
+            fill: currentColor;
+            stroke: currentColor;
+            stroke-width: 0;
+            transition: transform .22s ease;
+        }
+
+        .contact-link:hover {
+            background: rgba(142,216,245,.10);
+            border-color: var(--light-blue);
+            color: var(--white);
+            transform: translate3d(0,-3px,0);
+            box-shadow: 0 10px 24px rgba(0,0,0,.20);
+        }
+
+        .contact-link:hover svg {
+            transform: scale(1.08);
+        }
+
+        .contact-link:focus-visible {
+            outline: 2px solid var(--light-blue);
+            outline-offset: 4px;
+        }
+
+        .copyright {
+            margin-top:
+                30px !important;
+
+            padding-top:
+                18px;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,.08);
+
+            font-size:
+                .76rem !important;
+
+            color:
+                #71869c !important;
+        }
+
+
+
+</style>
 
 
 <style id="about-theme-product-overrides">
@@ -1135,15 +1405,6 @@ footer p{
     background:var(--blue) !important;
 }
 
-/* Same fish cursor treatment as About */
-#fish-cursor svg{
-    filter:
-        drop-shadow(0 1px 0 rgba(18,24,32,.95))
-        drop-shadow(0 2px 2px rgba(18,24,32,.72))
-        drop-shadow(0 5px 6px rgba(0,0,0,.42))
-        drop-shadow(0 9px 10px rgba(0,0,0,.20)) !important;
-}
-
 @media (max-width:768px){
     .controls-container{
         width:calc(100% - 28px) !important;
@@ -1201,7 +1462,7 @@ footer p{
         <svg
             viewBox="0 0 50 30"
             fill="none"
-            stroke="#C5A059"
+            stroke="#e0bc68"
             stroke-width="2"
             stroke-linecap="round"
         >
@@ -1218,7 +1479,7 @@ footer p{
                 cx="10"
                 cy="14.5"
                 r="1.5"
-                fill="#C5A059"
+                fill="#e0bc68"
                 stroke="none"
             />
 
@@ -1778,38 +2039,126 @@ footer p{
          FOOTER
     ========================================================== -->
 
-    <div class="footer-wrapper">
+            <footer class="footer">
 
+
+        <!-- DEEP NAVY WAVE -->
 
         <div
-            class="ocean-waves"
+            class="footer-wave-navy"
             aria-hidden="true"
         >
 
             <svg
-                viewBox="0 0 1440 100"
+                viewBox="0 0 1440 170"
                 preserveAspectRatio="none"
             >
-
                 <path
-                    fill="#071e3d"
-                    d="M0,32L48,42.7C96,53,192,75,288,80C384,85,480,75,576,58.7C672,43,768,21,864,21.3C960,21,1056,43,1152,53.3C1248,64,1344,64,1392,64L1440,64L1440,100L1392,100C1344,100,1248,100,1152,100C1056,100,960,100,864,100C768,100,672,100,576,100C480,100,384,100,288,100C192,100,96,100,48,100L0,100Z"
-                ></path>
-
+                    d="
+                        M0 78
+                        C170 116 325 120 490 78
+                        C655 37 805 39 970 80
+                        C1140 122 1295 116 1440 70
+                        L1440 111
+                        C1295 151 1135 154 965 113
+                        C800 73 655 72 485 114
+                        C320 155 165 151 0 119
+                        Z
+                    "
+                    fill="#0d315c"
+                    opacity=".95"
+                />
             </svg>
 
         </div>
 
 
-        <footer>
+        <!-- OCEAN BLUE TIDE LAYER -->
+
+        <div
+            class="footer-wave-blue"
+            aria-hidden="true"
+        >
+
+            <svg
+                viewBox="0 0 1440 154"
+                preserveAspectRatio="none"
+            >
+                <path
+                    d="
+                        M0 73
+                        C165 108 305 111 475 72
+                        C650 32 805 35 980 73
+                        C1145 111 1295 108 1440 64
+                        L1440 94
+                        C1295 133 1140 136 975 98
+                        C800 60 650 59 470 101
+                        C300 140 155 137 0 101
+                        Z
+                    "
+                    fill="#168dcc"
+                    opacity=".98"
+                />
+            </svg>
+
+        </div>
+
+
+        <!-- LIGHT BLUE SURFACE TIDE LAYER -->
+
+        <div
+            class="footer-wave-light"
+            aria-hidden="true"
+        >
+
+            <svg
+                viewBox="0 0 1440 138"
+                preserveAspectRatio="none"
+            >
+                <path
+                    d="
+                        M0 67
+                        C155 96 300 99 480 63
+                        C655 29 810 31 980 65
+                        C1145 98 1290 95 1440 58
+                        L1440 81
+                        C1290 115 1140 117 975 88
+                        C805 53 650 52 475 87
+                        C300 121 150 117 0 89
+                        Z
+                    "
+                    fill="#8ed8f5"
+                    opacity=".92"
+                />
+            </svg>
+
+        </div>
+
+
+        <div class="footer-content">
+
+
+            <img
+                class="footer-logo"
+                src="/assets/MUNAMBAM_Seafood_Logo_HQ.png"
+                alt="Munambam Seafoods"
+                width="76"
+                height="76"
+                loading="lazy"
+                decoding="async"
+            >
+
 
             <h3>
-                Munambam Seafoods
+                MUNAMBAM SEAFOODS
             </h3>
 
 
             <p>
-                Direct Sourcing From Munambam Harbour, Pallipuram, Ernakulam, Kerala | Fast Delivery Across India
+                Premium coastal provisions from
+                Munambam Harbour, Pallipuram, Ernakulam,
+                Kerala — built with purpose and prepared
+                for a wider world.
             </p>
 
 
@@ -1817,6 +2166,10 @@ footer p{
 
                 <a href="/">
                     Home
+                </a>
+
+                <a href="/products/">
+                    Products
                 </a>
 
                 <a href="/about/">
@@ -1828,93 +2181,71 @@ footer p{
                 </a>
 
                 <a href="/terms/">
-                    Terms of Service
-                </a>
-
-                <a href="/products/">
-                    Products
+                    Terms
                 </a>
 
             </div>
 
 
-            <div class="social-icons">
+            <div class="footer-contact" aria-label="Munambam Seafoods social and contact links">
 
-                <a
-                    href="https://wa.me/917907804747"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="WhatsApp"
-                >
-
-                    <i
-                        class="fab fa-whatsapp"
-                        aria-hidden="true"
-                    ></i>
-
+                <!-- WhatsApp -->
+                <a class="contact-link"
+                   href="https://wa.me/917907804747"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="WhatsApp"
+                   title="WhatsApp">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.15 1.6 5.96L.05 24l6.3-1.65a11.87 11.87 0 0 0 5.71 1.46h.01c6.56 0 11.9-5.34 11.9-11.9 0-3.18-1.24-6.16-3.45-8.43ZM12.07 21.8h-.01a9.88 9.88 0 0 1-5.04-1.38l-.36-.21-3.74.98 1-3.65-.23-.37a9.86 9.86 0 1 1 8.38 4.63Zm5.42-7.39c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.74-1.64-2.04-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.49 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.21 5.09 4.5.71.31 1.27.49 1.7.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.28.17-1.41-.07-.12-.27-.2-.57-.35Z"/>
+                    </svg>
                 </a>
 
-
-                <a
-                    href="mailto:connect.munambamseafoods@gmail.com"
-                    aria-label="Email"
-                >
-
-                    <i
-                        class="fas fa-envelope"
-                        aria-hidden="true"
-                    ></i>
-
+                <!-- Email -->
+                <a class="contact-link"
+                   href="mailto:connect.munambamseafoods@gmail.com"
+                   aria-label="Email"
+                   title="Email">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2 4.5A2.5 2.5 0 0 1 4.5 2h15A2.5 2.5 0 0 1 22 4.5v15a2.5 2.5 0 0 1-2.5 2.5h-15A2.5 2.5 0 0 1 2 19.5v-15Zm2.5-.5a.5.5 0 0 0-.31.89L12 10.96l7.81-6.07A.5.5 0 0 0 19.5 4h-15ZM20 6.3l-7.39 5.74a1 1 0 0 1-1.22 0L4 6.3v13.2c0 .28.22.5.5.5h15c.28 0 .5-.22.5-.5V6.3Z"/>
+                    </svg>
                 </a>
 
-
-                <a
-                    href="https://www.instagram.com/munambamseafoods"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Instagram"
-                >
-
-                    <i
-                        class="fab fa-instagram"
-                        aria-hidden="true"
-                    ></i>
-
+                <!-- Instagram -->
+                <a class="contact-link"
+                   href="https://www.instagram.com/munambamseafoods"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Instagram"
+                   title="Instagram">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5ZM17.75 6a1.25 1.25 0 1 1-1.25 1.25A1.25 1.25 0 0 1 17.75 6Z"/>
+                    </svg>
                 </a>
 
-
-                <a
-                    href="https://www.facebook.com/officialmunambamseafoods"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Facebook"
-                >
-
-                    <i
-                        class="fab fa-facebook-f"
-                        aria-hidden="true"
-                    ></i>
-
+                <!-- Facebook -->
+                <a class="contact-link"
+                   href="https://www.facebook.com/officialmunambamseafoods"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Facebook"
+                   title="Facebook">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M13.5 21v-8h2.75l.4-3h-3.15V8.08c0-.87.24-1.46 1.5-1.46h1.78V3.94c-.31-.04-1.38-.14-2.62-.14-2.6 0-4.38 1.59-4.38 4.51V10H7v3h2.78v8h3.72Z"/>
+                    </svg>
                 </a>
 
             </div>
 
 
-            <p
-                style="
-                    opacity: 0.6;
-                    font-size: 0.82rem;
-                "
-            >
-
-                &copy; 2026 Munambam Seafoods.
+            <p class="copyright">
+                © 2026 Munambam Seafoods.
                 All Rights Reserved.
-
             </p>
 
-        </footer>
+        </div>
 
-    </div>
+    </footer>
 
 
     <!-- =========================================================
