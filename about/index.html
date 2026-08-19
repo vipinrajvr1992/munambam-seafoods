@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -10,35 +8,46 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>
-        About Us | Munambam Seafoods - Coastal Provisions & Heritage
-    </title>
+    <title>About Us | Munambam Seafoods - Our Story &amp; Vision</title>
 
-    <meta
-        name="title"
-        content="About Us | Munambam Seafoods - Coastal Provisions & Heritage"
-    >
+    <meta name="description" content="Learn about Munambam Seafoods, our founders, coastal roots in Munambam, quality philosophy, and global vision.">
 
-    <meta
-        name="description"
-        content="Learn about Munambam Seafoods, our roots in Kerala's coastal heritage, and our commitment to authentic, hygienically processed seafood direct from Munambam Harbour."
-    >
+    <meta name="keywords" content="Munambam Seafoods, about Munambam Seafoods, Munambam Harbour, Kerala seafood, seafood founders, premium seafood">
 
     <meta
         name="robots"
         content="index, follow, max-image-preview:large"
     >
 
-    <link
-        rel="canonical"
-        href="https://www.munambamseafoods.online/about/"
+    <link rel="canonical" href="https://www.munambamseafoods.online/about/">
+
+    <!-- OPEN GRAPH -->
+    <meta
+        property="og:type"
+        content="website"
     >
 
+    <meta
+        property="og:url"
+        content="https://www.munambamseafoods.online/about/"
+    >
 
-    <!-- =========================================================
-         SITE ICONS
-    ========================================================== -->
+    <meta
+        property="og:title"
+        content="About Us | Munambam Seafoods - Our Story & Vision"
+    >
 
+    <meta
+        property="og:description"
+        content="Learn about Munambam Seafoods, our founders, coastal roots, quality philosophy and global vision."
+    >
+
+    <meta
+        property="og:image"
+        content="https://www.munambamseafoods.online/assets/MUNAMBAM_Seafood_Logo_HQ.png"
+    >
+
+    <!-- FAVICON -->
     <link
         rel="apple-touch-icon"
         sizes="180x180"
@@ -66,772 +75,941 @@
 
     <link
         rel="icon"
-        type="image/x-icon"
         href="/assets/icon/favicon.ico"
     >
-
-
-    <!-- =========================================================
-         PERFORMANCE
-    ========================================================== -->
-
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com"
-    >
-
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin
-    >
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
-        rel="stylesheet"
-    >
-
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    >
-
 
     <style>
 
         /* =========================================================
-           ROOT
-        ========================================================== */
+           MUNAMBAM SEAFOODS
+           MASTER HOME THEME
+        ========================================================= */
 
         :root {
+            --navy: #061b3a;
+            --navy-2: #09274d;
+            --navy-3: #0d315c;
 
-            --bg-light: #fffaf0;
+            --light-blue: #8ed8f5;
+            --light-blue-2: #bdeafa;
+            --blue: #168dcc;
 
-            --primary-blue: #168dcc;
+            --gold: #c69a3a;
+            --gold-light: #e0bc68;
 
-            --dark-ocean: #061b3a;
-
-            --deep-navy: #09274d;
-
-            --accent-gold: #c69a3a;
+            --cream: #fffaf0;
+            --cream-2: #f7f0df;
 
             --white: #ffffff;
-            --cream: #fffaf0;
+            --black: #101820;
 
-            --text-dark: #1e293b;
+            --text-dark: #142943;
+            --text-light: #d9e8f4;
+            --muted: #8ea5bd;
 
-            --text-muted: #64748b;
+            --border-gold:
+                rgba(198,154,58,.28);
 
-            --card-shadow:
-                0 20px 40px rgba(6, 29, 59, 0.10);
+            --shadow:
+                0 24px 60px rgba(0,0,0,.22);
 
-            --font-heading:
-                'Space Grotesk',
-                sans-serif;
+            --shadow-soft:
+                0 18px 45px rgba(0,0,0,.16);
 
-            --font-body:
-                'Plus Jakarta Sans',
-                sans-serif;
+            --max:
+                1180px;
         }
 
 
         /* =========================================================
            RESET
-        ========================================================== */
+        ========================================================= */
 
         *,
         *::before,
         *::after {
-
-            margin: 0;
-
-            padding: 0;
-
             box-sizing: border-box;
         }
 
-
         html {
-
             scroll-behavior: smooth;
         }
 
-
         body {
+            margin: 0;
+            min-height: 100vh;
+
+            background:
+                var(--navy);
+
+            color:
+                var(--cream);
 
             font-family:
-                var(--font-body);
+                "Segoe UI",
+                Arial,
+                Helvetica,
+                sans-serif;
 
-            background: var(--dark-ocean);
+            overflow-x: hidden;
 
-            color: var(--cream, #fffaf0);
-
-            min-height:
-                100vh;
-
-            overflow-x:
-                hidden;
-
-            position:
-                relative;
-
-            display:
-                flex;
-
-            flex-direction:
-                column;
-
-            cursor:
-                none;
+            cursor: none;
         }
 
-
-        /* =========================================================
-           DEFAULT CURSOR COMPLETELY HIDDEN
-        ========================================================== */
+        body::selection {
+            background: var(--gold);
+            color: var(--navy);
+        }
 
         a,
         button,
-        select,
         input,
         textarea,
-        [role="button"] {
+        select {
+            cursor: none !important;
+        }
 
-            cursor:
-                none !important;
+        img {
+            max-width: 100%;
+        }
+
+        a {
+            color: inherit;
         }
 
 
         /* =========================================================
            CUSTOM FISH CURSOR
-        ========================================================== */
+        ========================================================= */
 
         #fish-cursor {
+            position: fixed;
 
-            position:
-                fixed;
+            left: 0;
+            top: 0;
 
-            left:
-                0;
+            width: 44px;
+            height: 27px;
 
-            top:
-                0;
+            pointer-events: none;
 
-            width:
-                45px;
-
-            height:
-                25px;
-
-            pointer-events:
-                none;
-
-            user-select:
-                none;
-
-            -webkit-user-select:
-                none;
-
-            z-index:
-                10000;
+            z-index: 99999;
 
             transform:
-                translate(-5px, -15px);
+                translate3d(-6px,-14px,0);
 
             will-change:
-                left,
-                top;
-
-            display:
-                block;
+                transform;
         }
-
 
         #fish-cursor svg {
+            display: block;
 
-            display:
-                block;
+            width: 44px;
+            height: 27px;
 
-            width:
-                45px;
-
-            height:
-                25px;
+            /* Stronger 3D shadow so the fish stays visible on cream/light backgrounds */
+            filter:
+                drop-shadow(
+                    0 1px 0
+                    rgba(18,24,32,.95)
+                )
+                drop-shadow(
+                    0 2px 2px
+                    rgba(18,24,32,.72)
+                )
+                drop-shadow(
+                    0 5px 6px
+                    rgba(0,0,0,.42)
+                )
+                drop-shadow(
+                    0 9px 10px
+                    rgba(0,0,0,.20)
+                );
         }
 
 
         /* =========================================================
-           OCEAN BACKGROUND
-        ========================================================== */
+           MOVING OCEAN OBJECTS
+        ========================================================= */
 
-        .ocean-bg-elements {
+        .ocean-layer {
+            position: fixed;
 
-            position:
-                fixed;
+            inset: 0;
 
-            inset:
-                0;
+            width: 100%;
+            height: 100%;
 
-            width:
-                100%;
+            overflow: hidden;
 
-            height:
-                100%;
+            pointer-events: none;
 
-            pointer-events:
-                none;
-
-            overflow:
-                hidden;
-
-            z-index:
-                1;
+            z-index: 1;
         }
 
+        .creature {
+            position: absolute;
 
-        .ocean-creature {
+            display: block;
 
-            position:
-                absolute;
+            pointer-events: none;
 
-            opacity:
-                0.22;
-
-            pointer-events:
-                none;
-
-            user-select:
-                none;
-
-            display:
-                block;
-
-            line-height:
-                0;
-
-            z-index:
-                0;
+            opacity: .24;
 
             will-change:
                 transform;
+
+            user-select: none;
+
+            filter:
+                brightness(0)
+                saturate(100%)
+                invert(82%)
+                sepia(10%)
+                saturate(750%)
+                hue-rotate(158deg)
+                brightness(105%)
+                contrast(96%);
         }
 
+        .creature img {
+            display: block;
 
-        .ocean-creature img {
+            width: 100%;
+            height: 100%;
 
-            width:
-                100%;
+            object-fit: contain;
 
-            height:
-                100%;
+            pointer-events: none;
 
-            object-fit:
-                contain;
+            user-select: none;
 
-            display:
-                block;
-
-            pointer-events:
-                none;
-
-            user-select:
-                none;
-
-            -webkit-user-drag:
-                none;
+            -webkit-user-drag: none;
         }
 
+        .wave-decoration {
+            position: absolute;
 
-        /* =========================================================
-           SEAWEED
-        ========================================================== */
+            left: 0;
+            top: 0;
 
-        .seaweed {
+            width: 100%;
+            height: 180px;
 
-            position:
-                absolute;
+            opacity: .13;
 
-            bottom:
-                0;
-
-            opacity:
-                0.18;
-
-            transform-origin:
-                bottom center;
-
-            animation:
-                sway 4s ease-in-out infinite alternate;
-
-            will-change:
-                transform;
+            pointer-events: none;
         }
 
+        .wave-decoration svg {
+            display: block;
 
-        .seaweed-left {
-
-            left:
-                2%;
-        }
-
-
-        .seaweed-right {
-
-            right:
-                2%;
-
-            animation-delay:
-                -2s;
-        }
-
-
-        @keyframes sway {
-
-            0% {
-
-                transform:
-                    rotate(-6deg);
-            }
-
-            100% {
-
-                transform:
-                    rotate(6deg);
-            }
+            width: 100%;
+            height: 100%;
         }
 
 
         /* =========================================================
            NAVIGATION
-        ========================================================== */
+        ========================================================= */
 
-        nav {
+        .site-nav {
+            position: sticky;
 
-            display:
-                flex;
+            top: 16px;
 
-            align-items:
-                center;
-
-            justify-content:
-                space-between;
-
-            padding:
-                8px 3%;
-
-            background:
-                rgba(255, 251, 242, 0.94);
-
-            backdrop-filter:
-                blur(16px);
-
-            -webkit-backdrop-filter:
-                blur(16px);
-
-            position:
-                sticky;
-
-            top:
-                15px;
-
-            z-index:
-                1000;
+            z-index: 5000;
 
             width:
-                88%;
-
-            max-width:
-                1200px;
+                min(
+                    calc(100% - 32px),
+                    1240px
+                );
 
             margin:
-                15px auto 0;
+                16px auto 0;
+
+            min-height: 72px;
+
+            padding:
+                10px 22px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 25px;
+
+            background:
+                rgba(255,250,240,.97);
+
+            border:
+                1px solid
+                rgba(255,255,255,.85);
 
             border-radius:
                 50px;
 
-            box-shadow: 0 15px 40px rgba(0,0,0,.20);
+            box-shadow:
+                0 15px 40px
+                rgba(0,0,0,.20);
 
-            border: 1px solid rgba(255,255,255,.85);
+            backdrop-filter:
+                blur(14px);
+
+            -webkit-backdrop-filter:
+                blur(14px);
+        }
+
+        .brand {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            text-decoration: none;
+
+            flex-shrink: 0;
+        }
+
+        .brand img {
+            width: 48px;
+            height: 48px;
+
+            object-fit: contain;
+
+            filter:
+                drop-shadow(
+                    0 5px 8px
+                    rgba(0,0,0,.16)
+                );
+
+            transition:
+                transform .25s ease;
+        }
+
+        .brand:hover img {
+            transform:
+                scale(1.06)
+                rotate(-2deg);
+        }
+
+        .brand-text {
+            color:
+                var(--navy);
+
+            font-size:
+                1.12rem;
+
+            font-weight:
+                800;
+
+            letter-spacing:
+                -.5px;
+
+            white-space:
+                nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+
+            align-items: center;
+
+            gap: 28px;
+        }
+
+        .nav-links a {
+            position: relative;
+
+            padding:
+                10px 0;
+
+            text-decoration:
+                none;
+
+            color:
+                var(--navy);
+
+            font-size:
+                .93rem;
+
+            font-weight:
+                700;
+
+            transition:
+                color .2s ease;
+        }
+
+        .nav-links a::after {
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+            bottom: 3px;
+
+            width: 0;
+            height: 2px;
+
+            background:
+                var(--gold);
+
+            transition:
+                width .22s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color:
+                var(--blue);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
         }
 
 
-        .logo-container {
+        /* =========================================================
+           HERO
+        ========================================================= */
+        .hero {
+            position: relative;
+            z-index: 2;
+            width: min(calc(100% - 32px), 1240px);
+            min-height: 650px;
+            margin: 8px auto 0;
+            padding: 78px 30px 105px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: visible;
+            border-radius: 0;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+        }
 
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 50% 30%, rgba(142,216,245,.13), transparent 27%),
+                radial-gradient(ellipse at 50% 100%, rgba(22,141,204,.12), transparent 45%);
+            opacity: .85;
+            z-index: 0;
+        }
+
+        /* Open-ocean landing page: no boxed hero.
+           Moving sea objects and the subtle wave layers stay visible behind the copy. */
+        .hero::after {
+            content: "";
+            position: absolute;
+            left: -8%;
+            right: -8%;
+            bottom: -72px;
+            height: 125px;
+            pointer-events: none;
+            background: linear-gradient(
+                180deg,
+                transparent 0 25%,
+                rgba(142,216,245,.035) 25% 31%,
+                transparent 31% 100%
+            );
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 5;
+            isolation: isolate;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+        }
+        .hero-logo {
+            width: clamp(160px, 19vw, 235px);
+            height: clamp(160px, 19vw, 235px);
+            object-fit: contain;
+            display: block;
+            margin-bottom: 26px;
+            filter:
+                drop-shadow(0 7px 3px rgba(0,0,0,.20))
+                drop-shadow(0 16px 12px rgba(0,0,0,.24))
+                drop-shadow(0 28px 32px rgba(0,0,0,.30));
+            transform: translateZ(0);
+            animation: logoFloat 4.5s ease-in-out infinite alternate;
+            will-change: transform, filter;
+        }
+
+        @keyframes logoFloat {
+            from {
+                transform:
+                    translate3d(0,0,0);
+            }
+
+            to {
+                transform:
+                    translate3d(0,-8px,0);
+            }
+        }
+
+        .hero-kicker {
+            margin:
+                0 0 11px;
+
+            color:
+                var(--gold-light);
+
+            font-size:
+                .76rem;
+
+            font-weight:
+                800;
+
+            letter-spacing:
+                3.2px;
+
+            text-transform:
+                uppercase;
+        }
+
+        .hero-title {
+            margin:
+                0;
+
+            color:
+                var(--cream);
+
+            text-shadow:
+                0 5px 18px rgba(0,0,0,.26);
+
+            font-size:
+                clamp(
+                    2.15rem,
+                    5vw,
+                    4rem
+                );
+
+            line-height:
+                1.02;
+
+            letter-spacing:
+                -1.8px;
+
+            font-weight:
+                800;
+        }
+
+        .hero-title span {
+            color:
+                var(--light-blue);
+        }
+
+        .hero-description {
+            max-width:
+                760px;
+
+            margin:
+                20px auto 0;
+
+            color:
+                #c8d9e8;
+
+            font-size:
+                1rem;
+
+            line-height:
+                1.8;
+
+            font-weight:
+                500;
+        }
+
+        .hero-buttons {
             display:
                 flex;
 
-            align-items:
+            flex-wrap:
+                wrap;
+
+            justify-content:
                 center;
 
             gap:
                 12px;
 
-            text-decoration:
-                none;
-
-            flex-shrink:
-                0;
+            margin-top:
+                29px;
         }
 
-
-        .logo-container img {
-
-            width:
-                auto;
-
-            height:
-                44px;
-
+        .btn {
             display:
-                block;
-
-            filter:
-                drop-shadow(
-                    0 3px 6px
-                    rgba(0, 0, 0, 0.1)
-                );
-
-            transition:
-                transform 0.25s ease;
-
-            -webkit-user-drag:
-                none;
-        }
-
-
-        .logo-container:hover img {
-
-            transform:
-                scale(1.05);
-        }
-
-
-        .brand-name {
-
-            font-family:
-                var(--font-heading);
-
-            font-size:
-                1.25rem;
-
-            font-weight:
-                800;
-
-            color:
-                var(--dark-ocean);
-
-            letter-spacing:
-                -0.5px;
-
-            white-space:
-                nowrap;
-        }
-
-
-        .nav-links {
-
-            display:
-                flex;
+                inline-flex;
 
             align-items:
                 center;
 
-            gap:
-                22px;
-        }
+            justify-content:
+                center;
 
+            min-height:
+                49px;
 
-        .nav-links a {
+            padding:
+                0 25px;
+
+            border-radius:
+                50px;
 
             text-decoration:
                 none;
 
-            color: #52677f;
+            font-size:
+                .88rem;
 
             font-weight:
-                600;
-
-            font-size:
-                0.88rem;
+                800;
 
             transition:
-                color 0.2s ease;
-
-            white-space:
-                nowrap;
+                transform .2s ease,
+                box-shadow .2s ease,
+                background .2s ease,
+                border-color .2s ease;
         }
 
-
-        .nav-links a:hover,
-        .nav-links a.active {
+        .btn-primary {
+            background:
+                var(--gold);
 
             color:
-                var(--primary-blue);
+                var(--navy);
+
+            box-shadow:
+                0 12px 28px
+                rgba(198,154,58,.22);
+        }
+
+        .btn-primary:hover {
+            transform:
+                translate3d(0,-3px,0);
+
+            background:
+                var(--gold-light);
+
+            box-shadow:
+                0 17px 32px
+                rgba(198,154,58,.28);
+        }
+
+        .btn-secondary {
+            background:
+                rgba(255,255,255,.06);
+
+            color:
+                var(--cream);
+
+            border:
+                1px solid
+                rgba(142,216,245,.30);
+        }
+
+        .btn-secondary:hover {
+            transform:
+                translate3d(0,-3px,0);
+
+            background:
+                rgba(142,216,245,.12);
+
+            border-color:
+                var(--light-blue);
+
+            box-shadow:
+                0 12px 25px
+                rgba(0,0,0,.18);
         }
 
 
         /* =========================================================
-           MAIN CONTENT
-        ========================================================== */
+           QUALITY STRIP
+        ========================================================= */
 
-        .content-section {
+        .quality-strip {
+            position:
+                relative;
 
+            z-index:
+                8;
+
+            width:
+                min(
+                    calc(100% - 48px),
+                    1080px
+                );
+
+            margin:
+                -34px auto 0;
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(4,1fr);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255,250,240,.78),
+                    rgba(247,240,223,.58)
+                );
+
+            border:
+                1px solid
+                rgba(255,255,255,.55);
+
+            backdrop-filter:
+                blur(18px)
+                saturate(115%);
+
+            -webkit-backdrop-filter:
+                blur(18px)
+                saturate(115%);
+
+            border-radius:
+                22px;
+
+            box-shadow:
+                var(--shadow);
+
+            overflow:
+                hidden;
+        }
+
+        .quality-item {
             padding:
-                60px 8% 80px;
+                23px 15px;
 
+            text-align:
+                center;
+
+            border-right:
+                1px solid
+                rgba(198,154,58,.20);
+        }
+
+        .quality-item:last-child {
+            border-right:
+                none;
+        }
+
+        .quality-number {
+            display:
+                block;
+
+            color:
+                var(--gold);
+
+            font-size:
+                1.05rem;
+
+            font-weight:
+                850;
+
+            margin-bottom:
+                5px;
+        }
+
+        .quality-label {
+            color:
+                var(--navy);
+
+            font-size:
+                .74rem;
+
+            font-weight:
+                800;
+
+            letter-spacing:
+                .8px;
+
+            text-transform:
+                uppercase;
+        }
+
+
+        /* =========================================================
+           MAIN QUALITY SECTION
+        ========================================================= */
+
+        .section {
             position:
                 relative;
 
             z-index:
                 2;
 
-            flex:
-                1;
-        }
-
-
-
-        /* =========================================================
-           PREMIUM NAVY / CREAM / GOLD CONTENT
-        ========================================================== */
-
-        .content-section {
-            padding-top: 70px;
-        }
-
-        .content-container {
-            background: linear-gradient(135deg, rgba(255,250,240,.64), rgba(247,240,223,.38));
-            border: 1px solid rgba(198,154,58,.35);
-            box-shadow:
-                0 28px 70px rgba(0,0,0,.13),
-                0 2px 0 rgba(255,255,255,.9) inset;
-        }
-
-        .badge {
-            background: rgba(197,160,89,.12);
-            color: #9a6f19;
-            border-color: rgba(197,160,89,.38);
-        }
-
-        h1 {
-            color: #061b3a;
-        }
-
-        h2 {
-            color: #09274d;
-        }
-
-        p, ul li {
-            color: #52677f;
-        }
-
-        ul li::before {
-            color: #c69a3a;
-        }
-
-        .content-container::after {
-            content: "";
-            display: block;
-            width: 90px;
-            height: 2px;
-            margin: 28px auto 0;
-            background: linear-gradient(90deg, transparent, #c69a3a, transparent);
-            opacity: .7;
-        }
-
-        .content-container {
-
             width:
-                100%;
-
-            max-width:
-                900px;
+                min(
+                    calc(100% - 32px),
+                    var(--max)
+                );
 
             margin:
                 0 auto;
 
-            /* Soft cream glass — lighter and more transparent like the Home page */
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(255,250,240,0.72),
-                    rgba(247,240,223,0.46)
-                );
-
-            backdrop-filter:
-                blur(18px) saturate(115%);
-
-            -webkit-backdrop-filter:
-                blur(18px) saturate(115%);
-
             padding:
-                50px 40px;
-
-            border-radius:
-                30px;
-
-            box-shadow:
-                0 28px 70px rgba(0,0,0,.14),
-                0 2px 0 rgba(255,255,255,.55) inset,
-                0 0 0 1px rgba(255,255,255,.18) inset;
-
-            border:
-                1px solid
-                rgba(255,250,240,.58);
+                100px 20px 35px;
         }
 
+        .section-heading {
+            text-align:
+                center;
 
-        /* =========================================================
-           BADGE
-        ========================================================== */
+            margin-bottom:
+                42px;
+        }
 
-        .badge {
-
+        .eyebrow {
             display:
                 inline-block;
 
-            background:
-                rgba(6, 29, 59, 0.10);
+            margin-bottom:
+                10px;
 
             color:
-                var(--primary-blue);
-
-            padding:
-                6px 18px;
-
-            border-radius:
-                50px;
+                var(--gold-light);
 
             font-size:
-                0.8rem;
+                .72rem;
 
             font-weight:
-                700;
+                850;
 
             text-transform:
                 uppercase;
 
             letter-spacing:
-                1.2px;
+                3px;
+        }
 
-            margin-bottom:
+        .section-heading h2 {
+            margin:
+                0;
+
+            color:
+                var(--cream);
+
+            font-size:
+                clamp(
+                    1.85rem,
+                    4vw,
+                    2.75rem
+                );
+
+            line-height:
+                1.1;
+
+            letter-spacing:
+                -1px;
+
+            font-weight:
+                800;
+        }
+
+        .section-heading p {
+            max-width:
+                700px;
+
+            margin:
+                15px auto 0;
+
+            color:
+                #9fb5c9;
+
+            line-height:
+                1.75;
+
+            font-size:
+                .96rem;
+        }
+
+
+        /* =========================================================
+           FEATURE CARDS
+        ========================================================= */
+
+        .features {
+            display:
+                grid;
+
+            grid-template-columns:
+                1fr;
+
+            gap:
                 20px;
+
+            max-width:
+                850px;
+
+            margin:
+                0 auto;
+        }
+
+        .feature {
+            position:
+                relative;
+
+            padding:
+                30px 32px 31px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255,250,240,.76),
+                    rgba(247,240,223,.54)
+                );
 
             border:
                 1px solid
-                rgba(197, 160, 89, 0.28);
+                rgba(255,255,255,.58);
+
+            backdrop-filter:
+                blur(18px)
+                saturate(115%);
+
+            -webkit-backdrop-filter:
+                blur(18px)
+                saturate(115%);
+
+            border-radius:
+                25px;
+
+            box-shadow:
+                var(--shadow-soft);
+
+            overflow:
+                hidden;
+
+            transition:
+                transform .25s ease,
+                box-shadow .25s ease;
         }
 
-
-        /* =========================================================
-           TYPOGRAPHY
-        ========================================================== */
-
-        h1 {
-
-            font-family:
-                var(--font-heading);
-
-            font-size:
-                2.5rem;
-
-            color:
-                var(--dark-ocean);
-
-            margin-bottom:
-                20px;
-
-            letter-spacing:
-                -0.5px;
-
-            line-height:
-                1.15;
-        }
-
-
-        h2 {
-
-            font-family:
-                var(--font-heading);
-
-            font-size:
-                1.5rem;
-
-            color:
-                var(--primary-blue);
-
-            margin:
-                35px 0 15px;
-
-            line-height:
-                1.25;
-        }
-
-
-        p {
-
-            font-size:
-                1rem;
-
-            line-height:
-                1.8;
-
-            color: #52677f;
-
-            margin-bottom:
-                20px;
-        }
-
-
-        p strong {
-
-            color:
-                var(--dark-ocean);
-
-            font-weight:
-                700;
-        }
-
-
-        /* =========================================================
-           COMMITMENT LIST
-        ========================================================== */
-
-        ul {
-
-            list-style:
-                none;
-
-            margin:
-                20px 0;
-        }
-
-
-        ul li {
-
-            font-size:
-                1rem;
-
-            line-height:
-                1.8;
-
-            color: #52677f;
-
-            margin-bottom:
-                12px;
-
-            padding-left:
-                30px;
-
-            position:
-                relative;
-        }
-
-
-        ul li::before {
-
+        .feature::before {
             content:
-                '✓';
+                "";
 
             position:
                 absolute;
@@ -842,1424 +1020,1212 @@
             top:
                 0;
 
+            width:
+                5px;
+
+            height:
+                100%;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    var(--gold),
+                    var(--light-blue)
+                );
+        }
+
+        .feature:hover {
+            transform:
+                translate3d(0,-5px,0);
+
+            box-shadow:
+                0 25px 55px
+                rgba(0,0,0,.22);
+        }
+
+        .feature-top {
+            display:
+                block;
+
+            margin-bottom:
+                12px;
+        }
+
+        .feature-icon {
+            width:
+                43px;
+
+            height:
+                43px;
+
+            flex:
+                0 0 43px;
+
+            display:
+                none;
+
+            place-items:
+                center;
+
+            border-radius:
+                50%;
+
             color:
-                var(--primary-blue);
+                var(--gold);
+
+            background:
+                var(--cream-2);
+
+            border:
+                1px solid
+                rgba(198,154,58,.28);
+
+            font-size:
+                .8rem;
+
+            font-weight:
+                900;
+        }
+
+        .feature h3 {
+            margin:
+                0;
+
+            color:
+                var(--navy);
+
+            font-size:
+                1.25rem;
+
+            line-height:
+                1.25;
 
             font-weight:
                 800;
         }
 
+        .feature p {
+            margin:
+                0;
+
+            color:
+                #52677f;
+
+            font-size:
+                .93rem;
+
+            line-height:
+                1.75;
+        }
+
+        .feature-extra {
+            display:
+                block;
+
+            margin-top:
+                8px;
+
+            color:
+                var(--navy-3);
+
+            font-size:
+                .86rem;
+
+            font-weight:
+                650;
+        }
+
 
         /* =========================================================
-           TABLET
-        ========================================================== */
+           BRAND STORY
+        ========================================================= */
 
-        @media (max-width: 900px) {
+        .story {
+            position:
+                relative;
 
-            .content-section {
+            z-index:
+                2;
 
-                padding-left:
-                    6%;
+            width:
+                min(
+                    calc(100% - 32px),
+                    1050px
+                );
 
-                padding-right:
-                    6%;
-            }
+            margin:
+                75px auto 100px;
+
+            padding:
+                70px 30px;
+
+            text-align:
+                center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255,250,240,.80),
+                    rgba(247,240,223,.56)
+                );
+
+            border:
+                1px solid
+                rgba(255,255,255,.60);
+
+            backdrop-filter:
+                blur(20px)
+                saturate(120%);
+
+            -webkit-backdrop-filter:
+                blur(20px)
+                saturate(120%);
+
+            border-radius:
+                32px;
+
+            box-shadow:
+                var(--shadow);
+        }
+
+        /* Story tagline — keep it clearly readable on the glass card */
+        .story .eyebrow {
+            color: var(--navy);
+        }
+
+        .story-logo {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width:
+                82px;
+
+            height:
+                82px;
+
+            object-fit:
+                contain;
+
+            margin-bottom:
+                18px;
+
+            filter:
+                drop-shadow(
+                    0 9px 15px
+                    rgba(0,0,0,.18)
+                );
+        }
+
+        .story h2 {
+            margin:
+                0 auto;
+
+            color:
+                var(--navy);
+
+            font-size:
+                clamp(
+                    1.8rem,
+                    4vw,
+                    2.5rem
+                );
+
+            line-height:
+                1.15;
+
+            font-weight:
+                800;
+        }
+
+        .story p {
+            margin-left: auto;
+            margin-right: auto;
+            max-width:
+                720px;
+
+            margin:
+                17px auto 28px;
+
+            color:
+                #52677f;
+
+            font-size:
+                .97rem;
+
+            line-height:
+                1.8;
+        }
+
+
+        /* =========================================================
+           PREMIUM WAVY FOOTER
+        ========================================================= */
+
+        .footer {
+            position:
+                relative;
+
+            z-index:
+                3;
+
+            background:
+                var(--navy);
+
+            color:
+                var(--white);
+
+            padding:
+                142px 20px 34px;
+
+            text-align:
+                center;
+
+            overflow:
+                hidden;
+        }
+
+        /*
+           PREMIUM REAL SEA TIDE — 3 OCEAN LAYERS
+           Deep navy + ocean blue + light blue.
+           No gold. No flat/straight divider.
+           The three ribbons follow different curves so the footer
+           enters the page like a natural rolling sea.
+        */
+
+        .footer-wave-navy,
+        .footer-wave-blue,
+        .footer-wave-light {
+            position: absolute;
+            left: -3%;
+            width: 106%;
+            pointer-events: none;
+            overflow: hidden;
+            line-height: 0;
+        }
+
+        /* Layer 1 — deep navy tide */
+        .footer-wave-navy {
+            top: -4px;
+            height: 170px;
+            z-index: 1;
+        }
+
+        .footer-wave-navy svg {
+            display: block;
+            width: 100%;
+            height: 170px;
+        }
+
+        /* Layer 2 — normal ocean blue tide */
+        .footer-wave-blue {
+            top: 10px;
+            height: 154px;
+            z-index: 2;
+        }
+
+        .footer-wave-blue svg {
+            display: block;
+            width: 100%;
+            height: 154px;
+        }
+
+        /* Layer 3 — light-blue surface crest */
+        .footer-wave-light {
+            top: 22px;
+            height: 138px;
+            z-index: 3;
+        }
+
+        .footer-wave-light svg {
+            display: block;
+            width: 100%;
+            height: 132px;
+        }
+
+        .footer-content {
+            position:
+                relative;
+
+            z-index:
+                5;
+
+            max-width:
+                850px;
+
+            margin:
+                0 auto;
+        }
+
+        .footer-logo {
+            width:
+                76px;
+
+            height:
+                76px;
+
+            object-fit:
+                contain;
+
+            margin-bottom:
+                13px;
+
+            filter:
+                drop-shadow(
+                    0 8px 16px
+                    rgba(0,0,0,.25)
+                );
+        }
+
+        .footer h3 {
+            margin:
+                0;
+
+            color:
+                var(--gold-light);
+
+            font-size:
+                1.5rem;
+
+            font-weight:
+                800;
+        }
+
+        .footer p {
+            margin:
+                10px auto 0;
+
+            max-width:
+                700px;
+
+            color:
+                #aebfd2;
+
+            font-size:
+                .88rem;
+
+            line-height:
+                1.7;
+        }
+
+        .footer-links {
+            display:
+                flex;
+
+            flex-wrap:
+                wrap;
+
+            justify-content:
+                center;
+
+            gap:
+                21px;
+
+            margin:
+                25px 0;
+        }
+
+        .footer-links a {
+            color:
+                #e2edf6;
+
+            text-decoration:
+                none;
+
+            font-size:
+                .86rem;
+
+            font-weight:
+                650;
+
+            transition:
+                color .2s ease;
+        }
+
+        .footer-links a:hover {
+            color:
+                var(--gold-light);
+        }
+
+        .footer-contact {
+            display:
+                flex;
+
+            justify-content:
+                center;
+
+            flex-wrap:
+                wrap;
+
+            gap:
+                12px;
+
+            margin:
+                20px 0;
+        }
+
+        /* ICON-ONLY SOCIAL / CONTACT LINKS */
+        .contact-link {
+            width: 48px;
+            height: 48px;
+            padding: 0;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 1px solid rgba(142,216,245,.24);
+            border-radius: 50%;
+
+            color: var(--light-blue);
+            background: rgba(255,255,255,.025);
+
+            text-decoration: none;
+
+            transition:
+                transform .22s ease,
+                background .22s ease,
+                border-color .22s ease,
+                color .22s ease,
+                box-shadow .22s ease;
+        }
+
+        .contact-link svg {
+            width: 21px;
+            height: 21px;
+            display: block;
+            fill: currentColor;
+            stroke: currentColor;
+            stroke-width: 0;
+            transition: transform .22s ease;
+        }
+
+        .contact-link:hover {
+            background: rgba(142,216,245,.10);
+            border-color: var(--light-blue);
+            color: var(--white);
+            transform: translate3d(0,-3px,0);
+            box-shadow: 0 10px 24px rgba(0,0,0,.20);
+        }
+
+        .contact-link:hover svg {
+            transform: scale(1.08);
+        }
+
+        .contact-link:focus-visible {
+            outline: 2px solid var(--light-blue);
+            outline-offset: 4px;
+        }
+
+        .copyright {
+            margin-top:
+                30px !important;
+
+            padding-top:
+                18px;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,.08);
+
+            font-size:
+                .76rem !important;
+
+            color:
+                #71869c !important;
+        }
+
+
+        /* =========================================================
+           FOCUS
+        ========================================================= */
+
+        a:focus-visible {
+            outline:
+                2px solid
+                var(--gold);
+
+            outline-offset:
+                4px;
+
+            border-radius:
+                4px;
         }
 
 
         /* =========================================================
            MOBILE
-        ========================================================== */
+        ========================================================= */
 
-        @media (max-width: 768px) {
+        @media (max-width: 850px) {
 
-            nav {
-
+            .site-nav {
                 width:
-                    94%;
-
-                padding:
-                    8px 4%;
+                    calc(100% - 20px);
 
                 top:
                     10px;
 
                 margin-top:
                     10px;
+
+                padding:
+                    9px 15px;
             }
 
+            .brand-text {
+                font-size:
+                    .98rem;
+            }
+
+            .brand img {
+                width:
+                    42px;
+
+                height:
+                    42px;
+            }
 
             .nav-links {
+                gap:
+                    14px;
+            }
 
-                display:
+            .nav-links a {
+                font-size:
+                    .77rem;
+            }
+
+            .hero {
+                width:
+                    calc(100% - 20px);
+
+                min-height:
+                    590px;
+
+                padding:
+                    55px 20px 95px;
+
+                margin-top:
+                    4px;
+            }
+
+            .quality-strip {
+                grid-template-columns:
+                    repeat(2,1fr);
+
+                margin-top:
+                    -25px;
+            }
+
+            .quality-item:nth-child(2) {
+                border-right:
                     none;
             }
 
-
-            .logo-container img {
-
-                height:
-                    40px;
-            }
-
-
-            .brand-name {
-
-                font-size:
-                    1.05rem;
-            }
-
-
-            .content-section {
-
-                padding:
-                    35px 5% 65px;
-            }
-
-
-            .content-container {
-
-                padding:
-                    32px 22px;
-
-                border-radius:
-                    24px;
-            }
-
-
-            h1 {
-
-                font-size:
-                    2rem;
-            }
-
-
-            h2 {
-
-                font-size:
-                    1.35rem;
-
-                margin-top:
-                    30px;
-            }
-
-
-            p,
-            ul li {
-
-                font-size:
-                    0.92rem;
-
-                line-height:
-                    1.75;
+            .quality-item:nth-child(-n+2) {
+                border-bottom:
+                    1px solid
+                    rgba(198,154,58,.20);
             }
         }
 
 
-        /* =========================================================
-           SMALL MOBILE
-        ========================================================== */
+        @media (max-width: 620px) {
 
-        @media (max-width: 520px) {
+            .site-nav {
+                border-radius:
+                    25px;
 
-            .logo-container {
-
-                gap:
-                    8px;
+                min-height:
+                    62px;
             }
 
+            .brand-text {
+                display:
+                    none;
+            }
 
-            .logo-container img {
+            .brand img {
+                width:
+                    44px;
 
                 height:
-                    36px;
+                    44px;
             }
 
+            .nav-links {
+                gap:
+                    11px;
 
-            .brand-name {
+                overflow-x:
+                    auto;
 
+                scrollbar-width:
+                    none;
+            }
+
+            .nav-links::-webkit-scrollbar {
+                display:
+                    none;
+            }
+
+            .nav-links a {
                 font-size:
-                    0.92rem;
+                    .72rem;
+
+                white-space:
+                    nowrap;
             }
 
-
-            .content-container {
-
-                padding:
-                    28px 18px;
+            .hero {
+                margin-top:
+                    12px;
 
                 border-radius:
-                    20px;
+                    0;
+
+                min-height:
+                    575px;
             }
 
+            .hero-logo {
+                width:
+                    165px;
 
-            h1 {
-
-                font-size:
-                    1.75rem;
+                height:
+                    165px;
             }
 
-
-            .badge {
-
+            .hero-kicker {
                 font-size:
-                    0.7rem;
+                    .62rem;
+
+                letter-spacing:
+                    2px;
+            }
+
+            .hero-title {
+                font-size:
+                    2rem;
+            }
+
+            .hero-description {
+                font-size:
+                    .87rem;
+
+                line-height:
+                    1.65;
+            }
+
+            .hero-buttons {
+                flex-direction:
+                    column;
+
+                width:
+                    min(100%,280px);
+            }
+
+            .btn {
+                width:
+                    100%;
+            }
+
+            .quality-strip {
+                width:
+                    calc(100% - 28px);
+
+                border-radius:
+                    18px;
+            }
+
+            .quality-item {
+                padding:
+                    18px 8px;
+            }
+
+            .quality-number {
+                font-size:
+                    .86rem;
+            }
+
+            .quality-label {
+                font-size:
+                    .60rem;
+            }
+
+            .section {
+                width:
+                    calc(100% - 20px);
 
                 padding:
-                    6px 13px;
+                    75px 10px 20px;
+            }
+
+            .feature {
+                padding:
+                    25px 23px 27px;
+            }
+
+            .feature h3 {
+                font-size:
+                    1.1rem;
+            }
+
+            .feature p {
+                font-size:
+                    .87rem;
+            }
+
+            .story {
+                width:
+                    calc(100% - 20px);
+
+                margin:
+                    55px auto 75px;
+
+                padding:
+                    50px 20px;
+            }
+
+            .story p {
+                font-size:
+                    .88rem;
+            }
+
+            .footer {
+                padding:
+                    120px 15px 25px;
+            }
+
+            .footer-links {
+                gap:
+                    14px;
+            }
+
+            .footer-contact {
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .contact-link {
+                width: 44px;
+                height: 44px;
+            }
+
+            .contact-link svg {
+                width: 19px;
+                height: 19px;
             }
         }
 
 
         /* =========================================================
            TOUCH DEVICES
-        ========================================================== */
+        ========================================================= */
 
-        @media
-        (hover: none)
-        and
-        (pointer: coarse) {
-
-            #fish-cursor {
-
-                display:
-                    none;
-            }
-
+        @media (hover:none) and (pointer:coarse) {
 
             body,
             a,
-            button,
-            select {
-
+            button {
                 cursor:
                     auto !important;
+            }
+
+            #fish-cursor {
+                display:
+                    none;
             }
         }
 
 
         /* =========================================================
            REDUCED MOTION
-        ========================================================== */
+        ========================================================= */
 
         @media (prefers-reduced-motion: reduce) {
 
             html {
-
                 scroll-behavior:
                     auto;
             }
 
-
             *,
             *::before,
             *::after {
-
                 animation-duration:
-                    0.01ms !important;
+                    .01ms !important;
 
                 animation-iteration-count:
                     1 !important;
 
                 transition-duration:
-                    0.01ms !important;
+                    .01ms !important;
             }
         }
 
-
-        /* =========================================================
-           READABLE ABOUT TYPOGRAPHY — NAVY / BLACK ONLY
-        ========================================================== */
-
-        .content-container {
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(255,250,240,0.72),
-                    rgba(247,240,223,0.46)
-                );
-            backdrop-filter: blur(18px) saturate(115%);
-            -webkit-backdrop-filter: blur(18px) saturate(115%);
-            border: 1px solid rgba(255,250,240,.58);
-            box-shadow:
-                0 28px 70px rgba(0,0,0,.14),
-                0 2px 0 rgba(255,255,255,.55) inset;
-        }
-
-        .badge {
-            background: rgba(6,27,58,.06) !important;
-            color: #061b3a !important;
-            border: 1px solid rgba(6,27,58,.14) !important;
-        }
-
-        .content-container h1 {
-            color: #061b3a !important;
-        }
-
-        .content-container h2 {
-            color: #09274d !important;
-        }
-
-        .content-container p,
-        .content-container ul li {
-            color: #111827 !important;
-        }
-
-        .content-container p strong,
-        .content-container ul li strong {
-            color: #061b3a !important;
-            font-weight: 700;
-        }
-
-        .content-container ul li::before {
-            color: #061b3a !important;
-        }
-
-        .content-container::after {
-            background: #061b3a !important;
-            opacity: .18 !important;
-        }
-
-        .content-container > p:last-child {
-            color: #061b3a !important;
-        }
-
-    
-        
-        /* =========================================================
-           CLEAN MUNAMBAM VISUAL SYSTEM
-           - Cream glass About content
-           - Navy / black text only
-           - Reference-style large layered wave footer
-           - Copper fish cursor with charcoal outline
-        ========================================================== */
-
-        :root{
-            --page-cream:#fffdf7;
-            --glass-cream:rgba(255,250,238,.68);
-            --glass-edge:rgba(255,255,255,.78);
-            --ink-black:#111827;
-            --ink-navy:#061b3a;
-            --ink-deep:#09274d;
-            --wave-blue:#287fe0;
-            --wave-mid:#1768c7;
-            --wave-navy:#0b326c;
-            --wave-deep:#061f4d;
-            --wave-highlight:#59b9ef;
-            --cursor-copper:#B8860B;
-            --cursor-outline:#1A1A1A;
-        }
-
-        html,
-        body{
-            background:var(--page-cream) !important;
-            color:var(--ink-black) !important;
-        }
-
-        body{
-            min-height:100vh;
-        }
-
-        /* Keep the existing ocean creatures subtle, but never over content/footer. */
-        .ocean-bg-elements{
-            z-index:1 !important;
-        }
-
-        .content-section{
-            position:relative !important;
-            z-index:2 !important;
-            background:transparent !important;
-        }
-
-        /* ABOUT = cream glass, readable, not blue. */
-        .content-container{
-            position:relative;
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(255,250,238,.78),
-                    rgba(255,253,247,.48)
-                ) !important;
-            border:1px solid var(--glass-edge) !important;
-            backdrop-filter:blur(22px) saturate(115%) !important;
-            -webkit-backdrop-filter:blur(22px) saturate(115%) !important;
-            box-shadow:
-                0 28px 70px rgba(6,27,58,.12),
-                0 2px 0 rgba(255,255,255,.92) inset,
-                0 0 0 1px rgba(255,255,255,.30) inset !important;
-        }
-
-        .content-container h1{
-            color:var(--ink-navy) !important;
-            text-shadow:none !important;
-        }
-
-        .content-container h2{
-            color:var(--ink-deep) !important;
-            text-shadow:none !important;
-        }
-
-        .content-container p,
-        .content-container ul li{
-            color:var(--ink-black) !important;
-            text-shadow:none !important;
-        }
-
-        .content-container p strong,
-        .content-container ul li strong{
-            color:var(--ink-navy) !important;
-        }
-
-        .content-container .badge{
-            background:rgba(6,27,58,.055) !important;
-            color:var(--ink-navy) !important;
-            border:1px solid rgba(6,27,58,.14) !important;
-        }
-
-        .content-container ul li::before{
-            color:var(--ink-navy) !important;
-        }
-
-        .content-container::after{
-            background:var(--ink-navy) !important;
-            opacity:.16 !important;
-        }
-
-        /* =========================================================
-           FOOTER — REBUILT FROM ZERO TO MATCH THE REFERENCE
-        ========================================================== */
-
-        .munambam-wave-footer{
-            position:relative !important;
-            isolation:isolate;
-            width:100%;
-            min-height:720px;
-            margin-top:120px;
-            overflow:hidden;
-            background:var(--page-cream) !important;
-            color:var(--ink-navy) !important;
-            z-index:3 !important;
-        }
-
-        /* Content sits in a dedicated cream area above the waves.
-           Therefore links/icons can never overlap the wave artwork. */
-        .wave-footer-content{
-            position:relative;
-            z-index:5;
-            width:min(1100px,92%);
-            min-height:265px;
-            margin:0 auto;
-            padding:62px 20px 24px;
-            text-align:center;
-        }
-
-        .wave-footer-content h3{
-            margin:0 0 10px;
-            font-family:var(--font-heading);
-            font-size:clamp(1.55rem,2.6vw,2.25rem);
-            line-height:1.15;
-            font-weight:700;
-            color:var(--ink-navy) !important;
-            letter-spacing:-.4px;
-        }
-
-        .wave-footer-content > p{
-            margin:0 auto;
-            max-width:850px;
-            color:var(--ink-black) !important;
-            font-size:.92rem;
-            line-height:1.6;
-        }
-
-        .wave-footer-links{
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            flex-wrap:wrap;
-            gap:10px 25px;
-            margin:24px auto 18px;
-        }
-
-        .wave-footer-links a{
-            color:var(--ink-navy) !important;
-            text-decoration:none;
-            font-size:.86rem;
-            font-weight:600;
-            transition:opacity .2s ease, transform .2s ease;
-        }
-
-        .wave-footer-links a:hover{
-            color:var(--ink-black) !important;
-            opacity:.72;
-            transform:translateY(-1px);
-        }
-
-        .wave-footer-social{
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            gap:10px;
-        }
-
-        .wave-footer-social a{
-            width:34px;
-            height:34px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            border:1px solid rgba(6,27,58,.18);
-            border-radius:50%;
-            background:rgba(255,255,255,.28);
-            color:var(--ink-navy) !important;
-            text-decoration:none;
-            font-size:.9rem;
-            transition:transform .2s ease, background .2s ease;
-        }
-
-        .wave-footer-social a:hover{
-            transform:translateY(-2px);
-            background:rgba(6,27,58,.08);
-        }
-
-        .wave-footer-copy{
-            margin-top:14px !important;
-            font-size:.74rem !important;
-            opacity:.62;
-        }
-
-        /* Large reference-style layered waves. */
-        .reference-wave-art{
-            position:absolute;
-            z-index:1;
-            left:0;
-            right:0;
-            bottom:0;
-            width:100%;
-            height:500px;
-            pointer-events:none;
-            line-height:0;
-        }
-
-        .reference-wave-art svg{
-            display:block;
-            width:100%;
-            height:100%;
-            overflow:visible;
-        }
-
-        .reference-wave-art path{
-            stroke:none;
-        }
-
-        .wave-rear{
-            fill:#287fe0;
-        }
-
-        .wave-navy{
-            fill:#0b326c;
-        }
-
-        .wave-blue{
-            fill:#1768c7;
-        }
-
-        .wave-light{
-            fill:#59b9ef;
-        }
-
-        .wave-deep{
-            fill:#061f4d;
-        }
-
-        .wave-front{
-            fill:#1f69c8;
-        }
-
-        /* =========================================================
-           CURSOR — COPPER FILL + DARK OUTLINE
-        ========================================================== */
-
-        body,
-        body a,
-        body button,
-        body select,
-        body input,
-        body textarea,
-        body [role="button"]{
-            cursor:none !important;
-        }
-
-        #fish-cursor{
-            position:fixed !important;
-            left:0 !important;
-            top:0 !important;
-            width:45px !important;
-            height:25px !important;
-            display:block !important;
-            pointer-events:none !important;
-            user-select:none !important;
-            -webkit-user-select:none !important;
-            z-index:2147483647 !important;
-            transform:translate(-5px,-15px) !important;
-            opacity:1 !important;
-            visibility:visible !important;
-            will-change:left,top;
-        }
-
-        #fish-cursor svg{
-            display:block !important;
-            width:45px !important;
-            height:25px !important;
-            overflow:visible !important;
-        }
-
-        #fish-cursor .cursor-outline{
-            fill:none;
-            stroke:var(--cursor-outline);
-            stroke-width:5;
-            stroke-linecap:round;
-            stroke-linejoin:round;
-        }
-
-        #fish-cursor .cursor-fill{
-            fill:none;
-            stroke:var(--cursor-copper);
-            stroke-width:2.25;
-            stroke-linecap:round;
-            stroke-linejoin:round;
-        }
-
-        #fish-cursor .cursor-eye{
-            fill:var(--cursor-copper);
-            stroke:var(--cursor-outline);
-            stroke-width:1.2;
-        }
-
-        @media (hover:none) and (pointer:coarse){
-            #fish-cursor{
-                display:none !important;
-            }
-
-            body,
-            body a,
-            body button,
-            body select,
-            body input,
-            body textarea,
-            body [role="button"]{
-                cursor:auto !important;
-            }
-        }
-
-        @media (max-width:768px){
-            .munambam-wave-footer{
-                min-height:590px;
-                margin-top:70px;
-            }
-
-            .wave-footer-content{
-                min-height:215px;
-                padding:42px 16px 20px;
-            }
-
-            .wave-footer-content h3{
-                font-size:1.55rem;
-            }
-
-            .wave-footer-content > p{
-                font-size:.78rem;
-            }
-
-            .wave-footer-links{
-                gap:8px 16px;
-                margin-top:18px;
-            }
-
-            .wave-footer-links a{
-                font-size:.76rem;
-            }
-
-            .reference-wave-art{
-                height:390px;
-            }
-        }
-
-        @media (max-width:520px){
-            .munambam-wave-footer{
-                min-height:520px;
-            }
-
-            .wave-footer-content{
-                width:94%;
-                min-height:190px;
-                padding:34px 10px 18px;
-            }
-
-            .wave-footer-content h3{
-                font-size:1.35rem;
-            }
-
-            .wave-footer-content > p{
-                font-size:.72rem;
-            }
-
-            .wave-footer-links{
-                gap:7px 13px;
-                margin:16px auto 14px;
-            }
-
-            .wave-footer-links a{
-                font-size:.7rem;
-            }
-
-            .wave-footer-social a{
-                width:31px;
-                height:31px;
-                font-size:.78rem;
-            }
-
-            .reference-wave-art{
-                height:345px;
-            }
-        }
-
-
-
-/* ================================================================
-   FINAL REBUILD — NAVY BACKGROUND / MAX GLASS ABOUT / REFERENCE WAVE
-   Do not alter the moving background objects or their animation.
-================================================================ */
-
-html, body {
-    background: #061b3a !important;
-    color: #111827 !important;
+    </style>
+<style>
+/* =========================================================
+   ABOUT PAGE
+   Same Home theme, same ocean background, same typography.
+========================================================= */
+
+.about-main {
+    position: relative;
+    z-index: 2;
+    width: min(calc(100% - 32px), var(--max));
+    margin: 0 auto;
+    padding: 78px 20px 90px;
 }
 
-body {
-    position: relative !important;
-    min-height: 100vh !important;
-    overflow-x: hidden !important;
+.about-intro {
+    max-width: 850px;
+    margin: 0 auto 42px;
+    text-align: center;
 }
 
-/* Moving decorative objects remain visible on the navy background. */
-.ocean-bg-elements {
-    position: fixed !important;
-    inset: 0 !important;
-    z-index: 1 !important;
-    pointer-events: none !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-.ocean-creature,
-.seaweed {
-    z-index: 1 !important;
+.about-intro h1 {
+    margin: 0;
+    color: var(--cream);
+    font-size: clamp(2.15rem, 5vw, 3.45rem);
+    line-height: 1.08;
+    letter-spacing: -1.5px;
+    font-weight: 800;
+    text-shadow: 0 5px 18px rgba(0,0,0,.26);
 }
 
-nav {
-    position: sticky !important;
-    z-index: 1000 !important;
+.about-intro p {
+    max-width: 760px;
+    margin: 18px auto 0;
+    color: #c8d9e8;
+    font-size: 1rem;
+    line-height: 1.8;
 }
 
-.content-section {
-    position: relative !important;
-    z-index: 2 !important;
-    background: transparent !important;
-}
-
-/* About card: very light cream, highly transparent glass. */
-.content-container {
-    position: relative !important;
-    background:
-        linear-gradient(
-            135deg,
-            rgba(255,250,238,.54) 0%,
-            rgba(255,253,247,.30) 48%,
-            rgba(245,239,225,.22) 100%
-        ) !important;
-    border: 1px solid rgba(255,255,255,.52) !important;
-    backdrop-filter: blur(26px) saturate(120%) !important;
-    -webkit-backdrop-filter: blur(26px) saturate(120%) !important;
-    box-shadow:
-        0 30px 85px rgba(0,0,0,.24),
-        0 2px 0 rgba(255,255,255,.52) inset,
-        0 0 0 1px rgba(255,255,255,.12) inset !important;
-}
-
-.content-container::before {
+.about-container {
+    width: min(100%, 960px);
+    margin: 0 auto;
+    padding: 48px 44px;
     background: linear-gradient(
         135deg,
-        rgba(255,255,255,.18),
-        transparent 34%,
-        transparent 70%,
-        rgba(255,255,255,.05)
-    ) !important;
+        rgba(255,250,240,.80),
+        rgba(247,240,223,.56)
+    );
+    border: 1px solid rgba(255,255,255,.60);
+    backdrop-filter: blur(20px) saturate(120%);
+    -webkit-backdrop-filter: blur(20px) saturate(120%);
+    border-radius: 32px;
+    box-shadow: var(--shadow);
+    color: var(--black);
 }
 
-/* Only black / navy text inside About. */
-.content-container h1,
-.content-container h2 {
-    color: #061b3a !important;
-    text-shadow: none !important;
+.about-block {
+    padding: 0 0 36px;
+    margin: 0 0 36px;
+    border-bottom: 1px solid rgba(198,154,58,.20);
 }
 
-.content-container p,
-.content-container ul li {
-    color: #111827 !important;
-    text-shadow: none !important;
+.about-block:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: 0;
 }
 
-.content-container p strong,
-.content-container ul li strong,
-.content-container .badge,
-.content-container ul li::before,
-.content-container > p:last-child,
-.content-container > p:last-child strong {
-    color: #061b3a !important;
+.about-block h2 {
+    margin: 0 0 17px;
+    color: var(--navy-2);
+    font-size: clamp(1.45rem, 3vw, 2rem);
+    line-height: 1.2;
+    letter-spacing: -.5px;
+    font-weight: 800;
 }
 
-.content-container .badge {
-    background: rgba(255,255,255,.16) !important;
-    border: 1px solid rgba(6,27,58,.12) !important;
+.about-block p {
+    margin: 0 0 17px;
+    color: #182638;
+    font-size: .96rem;
+    line-height: 1.82;
 }
 
-/* ================================================================
-   PREMIUM WAVE FOOTER — NAVY BODY / TWO WAVE LAYERS ONLY
-   No cream/white footer panel. The footer itself is the navy field.
-================================================================ */
-.munambam-wave-footer {
-    position: relative !important;
-    isolation: isolate !important;
-    width: 100% !important;
-    min-height: 500px !important;
-    margin-top: 110px !important;
-    overflow: hidden !important;
-    background: #061b3a !important;
-    color: #f6edd8 !important;
-    z-index: 3 !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
+.about-block p:last-child {
+    margin-bottom: 0;
 }
 
-/* The footer details live INSIDE the navy body, below the wave crest. */
-.wave-footer-content {
-    position: relative !important;
-    z-index: 8 !important;
-    width: min(1080px, 92%) !important;
-    min-height: 360px !important;
-    margin: 0 auto !important;
-    padding: 175px 20px 42px !important;
-    text-align: center !important;
+.about-block strong {
+    color: var(--navy);
 }
 
-.wave-footer-content h3 {
-    margin: 0 0 10px !important;
-    color: #d7ad45 !important;
-    font-size: clamp(1.65rem, 2.4vw, 2.15rem) !important;
-    font-weight: 800 !important;
-    letter-spacing: .02em !important;
+.founder-card {
+    margin-top: 24px;
+    padding: 28px 28px 22px;
+    background: rgba(255,255,255,.28);
+    border: 1px solid rgba(198,154,58,.20);
+    border-radius: 22px;
+    box-shadow: 0 14px 35px rgba(0,0,0,.10);
 }
 
-.wave-footer-content > p {
-    margin: 0 auto 22px !important;
-    color: #f6edd8 !important;
-    font-size: .92rem !important;
-    line-height: 1.7 !important;
+.founder-card h3 {
+    margin: 0 0 6px;
+    color: var(--navy);
+    font-size: 1.35rem;
+    line-height: 1.25;
+    font-weight: 800;
 }
 
-.wave-footer-links {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    flex-wrap: wrap !important;
-    gap: 10px 26px !important;
-    margin: 18px auto 20px !important;
+.founder-role {
+    margin-bottom: 17px !important;
+    color: var(--navy-3) !important;
+    font-size: .82rem !important;
+    line-height: 1.55 !important;
 }
 
-.wave-footer-links a {
-    color: #f6edd8 !important;
-    text-decoration: none !important;
-    font-weight: 650 !important;
-    transition: color .25s ease, transform .25s ease !important;
+.about-block ul {
+    list-style: none;
+    margin: 18px 0 0;
+    padding: 0;
 }
 
-.wave-footer-links a:hover {
-    color: #d7ad45 !important;
-    transform: translateY(-1px) !important;
+.about-block ul li {
+    position: relative;
+    margin: 0 0 12px;
+    padding-left: 28px;
+    color: #182638;
+    font-size: .94rem;
+    line-height: 1.76;
 }
 
-.wave-footer-social {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 12px !important;
-    margin: 14px auto 24px !important;
+.about-block ul li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--gold);
+    font-weight: 900;
 }
 
-.wave-footer-social a {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 42px !important;
-    height: 42px !important;
-    border-radius: 50% !important;
-    color: #f6edd8 !important;
-    background: rgba(111, 194, 239, .06) !important;
-    border: 1px solid rgba(111, 194, 239, .34) !important;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.08) !important;
-    transition: .25s ease !important;
+.principles {
+    list-style: none;
+    counter-reset: principle;
+    margin: 18px 0 22px;
+    padding: 0;
 }
 
-.wave-footer-social a:hover {
-    color: #d7ad45 !important;
-    border-color: rgba(215,173,69,.72) !important;
-    transform: translateY(-2px) !important;
+.principles li {
+    position: relative;
+    counter-increment: principle;
+    margin: 0 0 12px;
+    padding: 14px 16px 14px 55px;
+    background: rgba(255,255,255,.27);
+    border: 1px solid rgba(198,154,58,.14);
+    border-radius: 14px;
+    color: #182638;
+    font-size: .94rem;
+    line-height: 1.7;
 }
 
-.wave-footer-copy {
-    margin: 0 !important;
-    padding-top: 18px !important;
-    border-top: 1px solid rgba(246,237,216,.16) !important;
-    color: rgba(246,237,216,.64) !important;
-    font-size: .78rem !important;
+.principles li::before {
+    content: counter(principle);
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 27px;
+    height: 27px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--gold-light);
+    font-size: .75rem;
+    font-weight: 900;
 }
 
-/* Two clean flowing layers only — no box, no cream field. */
-.reference-wave-art {
-    position: absolute !important;
-    left: 0 !important;
-    right: 0 !important;
-    top: 0 !important;
-    width: 100% !important;
-    height: 175px !important;
-    z-index: 2 !important;
-    pointer-events: none !important;
+.about-block blockquote {
+    margin: 25px 0;
+    padding: 18px 22px;
+    border-left: 4px solid var(--gold);
+    border-radius: 0 14px 14px 0;
+    background: rgba(6,27,58,.055);
+    color: var(--navy);
+    font-family: Georgia, serif;
+    font-size: 1.08rem;
+    line-height: 1.65;
 }
 
-.reference-wave-art svg {
-    width: 100% !important;
-    height: 100% !important;
-    display: block !important;
-}
-
-/* Premium two-tone sea: deep/normal blue + light-blue highlight. */
-.wave-rear { fill: #1768c7 !important; }
-.wave-navy,
-.wave-blue,
-.wave-deep,
-.wave-front { display: none !important; }
-.wave-light { fill: #65c5f2 !important; }
-
-@media (max-width:768px){
-    .munambam-wave-footer {
-        min-height: 455px !important;
-        margin-top: 75px !important;
-    }
-    .wave-footer-content {
-        width: 94% !important;
-        min-height: 330px !important;
-        padding: 145px 14px 34px !important;
-    }
-    .reference-wave-art {
-        height: 145px !important;
-    }
-    .wave-footer-links {
-        gap: 9px 17px !important;
-    }
-}
-
-@media (max-width:520px){
-    .munambam-wave-footer {
-        min-height: 425px !important;
-    }
-    .wave-footer-content {
-        padding: 120px 10px 28px !important;
-    }
-    .reference-wave-art {
-        height: 122px !important;
-    }
-    .wave-footer-content h3 {
-        font-size: 1.35rem !important;
-    }
-    .wave-footer-content > p {
-        font-size: .75rem !important;
-    }
-    .wave-footer-social a {
-        width: 36px !important;
-        height: 36px !important;
-    }
-}
-
-/* ================================================================
-   CUSTOM FISH CURSOR — ALWAYS TOPMOST
-   Copper fill/stroke + charcoal/navy outline for contrast.
-================================================================ */
-html, body, a, button, select, input, textarea, [role="button"] {
-    cursor: none !important;
-}
-
-#fish-cursor {
-    position: fixed !important;
-    left: 0 !important;
-    top: 0 !important;
-    width: 45px !important;
-    height: 25px !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: none !important;
-    user-select: none !important;
-    -webkit-user-select: none !important;
-    z-index: 2147483647 !important;
-    transform: translate(-5px,-15px) !important;
-    isolation: isolate !important;
-}
-
-#fish-cursor svg {
-    width: 45px !important;
-    height: 25px !important;
-    display: block !important;
-    overflow: visible !important;
-}
-
-#fish-cursor .cursor-outline {
-    fill: none !important;
-    stroke: #1A1A1A !important;
-    stroke-width: 5 !important;
-    stroke-linecap: round !important;
-    stroke-linejoin: round !important;
-}
-
-#fish-cursor .cursor-fill {
-    fill: none !important;
-    stroke: #B8860B !important;
-    stroke-width: 2.35 !important;
-    stroke-linecap: round !important;
-    stroke-linejoin: round !important;
-}
-
-#fish-cursor .cursor-eye {
-    fill: #B8860B !important;
-    stroke: #1A1A1A !important;
-    stroke-width: 1.25 !important;
-}
-
-/* Cursor must never disappear behind navigation, waves, glass or objects. */
-nav,
-.content-section,
-.munambam-wave-footer,
-.reference-wave-art,
-.ocean-bg-elements,
-.ocean-creature,
-.seaweed {
-    /* intentionally below #fish-cursor */
+.about-signoff {
+    margin-top: 28px !important;
+    padding-top: 25px;
+    border-top: 1px solid rgba(198,154,58,.25);
+    text-align: center;
+    color: var(--navy) !important;
+    font-family: var(--font-heading);
+    font-size: 1.08rem !important;
 }
 
 @media (max-width: 768px) {
-    .content-container {
-        background:
-            linear-gradient(
-                135deg,
-                rgba(255,250,238,.58),
-                rgba(255,253,247,.32)
-            ) !important;
-        backdrop-filter: blur(22px) saturate(118%) !important;
-        -webkit-backdrop-filter: blur(22px) saturate(118%) !important;
+    .about-main {
+        padding: 55px 8px 70px;
     }
 
-}
-
-@media (hover:none) and (pointer:coarse) {
-    /* No physical mouse exists on touch devices. */
-    #fish-cursor { display: none !important; }
-    html, body, a, button, select, input, textarea, [role="button"] {
-        cursor: auto !important;
+    .about-container {
+        padding: 32px 22px;
+        border-radius: 24px;
     }
-}
 
-
-/* ================================================================
-   FINAL VISUAL FIX — TRUE WAVE FOOTER / NO FOOTER PILL / VISIBLE CURSOR
-   This override intentionally comes last so the earlier global nav rules
-   cannot turn the footer navigation into a cream card.
-================================================================ */
-html, body {
-    background: #061b3a !important;
-}
-
-/* Keep all moving artwork behind the UI, but visible on navy. */
-.ocean-bg-elements {
-    z-index: 1 !important;
-    opacity: 1 !important;
-}
-
-/* Footer is one continuous navy field. There is NO cream/white footer box. */
-.munambam-wave-footer {
-    position: relative !important;
-    width: 100% !important;
-    min-height: 610px !important;
-    margin: 105px 0 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-    isolation: isolate !important;
-    background: #061b3a !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    color: #f7edd8 !important;
-}
-
-/* Footer content is directly on the navy footer, not inside a card. */
-.munambam-wave-footer .wave-footer-content {
-    position: relative !important;
-    z-index: 6 !important;
-    width: min(1100px, 92%) !important;
-    min-height: 500px !important;
-    margin: 0 auto !important;
-    padding: 205px 20px 44px !important;
-    background: transparent !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    text-align: center !important;
-}
-
-.munambam-wave-footer .wave-footer-content h3 {
-    margin: 0 0 10px !important;
-    color: #d9ad45 !important;
-    font-family: var(--font-heading) !important;
-    font-size: clamp(1.65rem, 2.5vw, 2.2rem) !important;
-    font-weight: 800 !important;
-}
-
-.munambam-wave-footer .wave-footer-content > p {
-    margin: 0 auto 22px !important;
-    max-width: 900px !important;
-    color: #f7edd8 !important;
-    background: transparent !important;
-    font-size: .92rem !important;
-    line-height: 1.7 !important;
-}
-
-/* IMPORTANT: this is a nav element, so reset EVERY global nav property. */
-.munambam-wave-footer nav.wave-footer-links {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: auto !important;
-    max-width: none !important;
-    min-height: 0 !important;
-    margin: 22px auto !important;
-    padding: 0 !important;
-    gap: 10px 26px !important;
-    background: transparent !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    flex-wrap: wrap !important;
-}
-
-.munambam-wave-footer .wave-footer-links a {
-    color: #f7edd8 !important;
-    background: transparent !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    font-size: .86rem !important;
-    font-weight: 650 !important;
-    text-decoration: none !important;
-}
-
-.munambam-wave-footer .wave-footer-links a:hover {
-    color: #d9ad45 !important;
-    transform: translateY(-1px) !important;
-}
-
-.munambam-wave-footer .wave-footer-social {
-    position: relative !important;
-    z-index: 7 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 12px !important;
-    margin: 16px auto 24px !important;
-}
-
-.munambam-wave-footer .wave-footer-social a {
-    width: 42px !important;
-    height: 42px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 0 !important;
-    border-radius: 50% !important;
-    border: 1px solid rgba(101,197,242,.34) !important;
-    background: rgba(101,197,242,.045) !important;
-    color: #f7edd8 !important;
-    box-shadow: none !important;
-}
-
-.munambam-wave-footer .wave-footer-copy {
-    margin: 0 !important;
-    padding-top: 18px !important;
-    border-top: 1px solid rgba(247,237,216,.14) !important;
-    color: rgba(247,237,216,.58) !important;
-    font-size: .76rem !important;
-}
-
-/* TRUE SEA-TIDE ART: only two strokes. No rectangle, no filled top area. */
-.munambam-wave-footer .reference-wave-art {
-    position: absolute !important;
-    left: 0 !important;
-    right: 0 !important;
-    top: 0 !important;
-    bottom: auto !important;
-    width: 100% !important;
-    height: 205px !important;
-    z-index: 4 !important;
-    pointer-events: none !important;
-    overflow: visible !important;
-}
-
-.munambam-wave-footer .reference-wave-art svg {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-    overflow: visible !important;
-}
-
-.munambam-wave-footer .reference-wave-art path {
-    fill: none !important;
-    stroke-linecap: round !important;
-    stroke-linejoin: round !important;
-    vector-effect: non-scaling-stroke !important;
-}
-
-/* Deep/normal blue base tide */
-.munambam-wave-footer .reference-wave-art .wave-rear {
-    display: block !important;
-    stroke: #1768c7 !important;
-    stroke-width: 30 !important;
-}
-
-/* Light-blue crest/highlight */
-.munambam-wave-footer .reference-wave-art .wave-light {
-    display: block !important;
-    stroke: #65c5f2 !important;
-    stroke-width: 10 !important;
-}
-
-/* Absolutely no other wave layers. */
-.munambam-wave-footer .reference-wave-art .wave-navy,
-.munambam-wave-footer .reference-wave-art .wave-blue,
-.munambam-wave-footer .reference-wave-art .wave-deep,
-.munambam-wave-footer .reference-wave-art .wave-front {
-    display: none !important;
-}
-
-/* Cursor: always above every page layer. */
-html, body, a, button, select, input, textarea, [role="button"] {
-    cursor: none !important;
-}
-
-#fish-cursor {
-    position: fixed !important;
-    left: 0 !important;
-    top: 0 !important;
-    width: 48px !important;
-    height: 30px !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: none !important;
-    z-index: 2147483647 !important;
-    transform: translate(-7px,-15px) !important;
-    isolation: isolate !important;
-    mix-blend-mode: normal !important;
-}
-
-#fish-cursor svg {
-    display: block !important;
-    width: 48px !important;
-    height: 30px !important;
-    overflow: visible !important;
-}
-
-#fish-cursor .cursor-outline {
-    fill: #B8860B !important;
-    stroke: #1A1A1A !important;
-    stroke-width: 7 !important;
-    stroke-linejoin: round !important;
-}
-
-#fish-cursor .cursor-fill {
-    fill: #B8860B !important;
-    stroke: #B8860B !important;
-    stroke-width: 2 !important;
-}
-
-#fish-cursor .cursor-eye {
-    fill: #1A1A1A !important;
-    stroke: #B8860B !important;
-    stroke-width: 1.5 !important;
-}
-
-@media (max-width: 768px) {
-    .munambam-wave-footer {
-        min-height: 520px !important;
-        margin-top: 75px !important;
+    .founder-card {
+        padding: 22px 18px 18px;
+        border-radius: 18px;
     }
-    .munambam-wave-footer .wave-footer-content {
-        min-height: 430px !important;
-        padding: 165px 14px 34px !important;
-    }
-    .munambam-wave-footer .reference-wave-art {
-        height: 165px !important;
+
+    .about-block p,
+    .about-block ul li,
+    .principles li {
+        font-size: .90rem;
+        line-height: 1.75;
     }
 }
 
 @media (max-width: 520px) {
-    .munambam-wave-footer {
-        min-height: 470px !important;
+    .about-main {
+        width: calc(100% - 16px);
+        padding-left: 0;
+        padding-right: 0;
     }
-    .munambam-wave-footer .wave-footer-content {
-        min-height: 390px !important;
-        padding: 140px 10px 28px !important;
+
+    .about-container {
+        padding: 28px 18px;
+        border-radius: 20px;
     }
-    .munambam-wave-footer .reference-wave-art {
-        height: 145px !important;
+
+    .about-block h2 {
+        font-size: 1.35rem;
     }
-    .munambam-wave-footer nav.wave-footer-links {
-        gap: 8px 15px !important;
-    }
-    .munambam-wave-footer .wave-footer-social a {
-        width: 36px !important;
-        height: 36px !important;
+
+    .principles li {
+        padding-left: 49px;
     }
 }
-
 </style>
-
 </head>
-
-
 <body>
 
-
-    <!-- =========================================================
-         CUSTOM FISH CURSOR
-    ========================================================== -->
-
-    <div id="fish-cursor" aria-hidden="true">
-        <svg viewBox="0 0 64 40" width="48" height="30" xmlns="http://www.w3.org/2000/svg">
-            <path class="cursor-outline" d="M8 20 C18 7 34 7 47 15 L59 7 L54 20 L59 33 L47 25 C34 33 18 33 8 20 Z"/>
-            <path class="cursor-fill" d="M8 20 C18 7 34 7 47 15 L59 7 L54 20 L59 33 L47 25 C34 33 18 33 8 20 Z"/>
-            <circle class="cursor-eye" cx="19" cy="17" r="2.2"/>
-        </svg>
-    </div>
-
-
-    <!-- =========================================================
-         MOVING OCEAN BACKGROUND
-    ========================================================== -->
+<!-- =========================================================
+         CUSTOM CURSOR
+    ========================================================= -->
 
     <div
-        class="ocean-bg-elements"
-        id="oceanElements"
+        id="fish-cursor"
         aria-hidden="true"
     >
 
-        <!-- Seaweed Left -->
-
         <svg
-            class="seaweed seaweed-left"
-            width="80"
-            height="180"
-            viewBox="0 0 100 200"
+            viewBox="0 0 50 30"
             fill="none"
-            stroke="#c69a3a"
-            stroke-width="2.2"
+            stroke="#e0bc68"
+            stroke-width="2"
             stroke-linecap="round"
         >
 
             <path
-                d="M 20,200 Q 40,150 10,100 T 30,0"
+                d="
+                    M5 15
+                    Q25 -5 45 25
+                    M5 15
+                    Q25 35 45 5
+                "
             />
 
             <path
-                d="M 50,200 Q 70,140 40,80 T 60,10"
+                d="
+                    M15 8.5
+                    Q18 15 15 21.5
+                "
             />
 
-        </svg>
-
-
-        <!-- Seaweed Right -->
-
-        <svg
-            class="seaweed seaweed-right"
-            width="80"
-            height="180"
-            viewBox="0 0 100 200"
-            fill="none"
-            stroke="#c69a3a"
-            stroke-width="2.2"
-            stroke-linecap="round"
-        >
-
-            <path
-                d="M 20,200 Q 40,150 10,100 T 30,0"
-            />
-
-            <path
-                d="M 50,200 Q 70,140 40,80 T 60,10"
+            <circle
+                cx="10"
+                cy="14.5"
+                r="1.5"
+                fill="#e0bc68"
+                stroke="none"
             />
 
         </svg>
 
     </div>
 
+<!-- =========================================================
+         MOVING OCEAN OBJECTS
+    ========================================================= -->
 
-    <!-- =========================================================
-         NAVIGATION
-    ========================================================== -->
+    <div
+        class="ocean-layer"
+        id="oceanLayer"
+        aria-hidden="true"
+    >
 
-    <nav aria-label="Main navigation">
+        <div class="wave-decoration">
 
+            <svg
+                viewBox="0 0 1440 180"
+                preserveAspectRatio="none"
+            >
 
-        <!-- LOGO -->
+                <path
+                    d="
+                        M0 95
+                        C180 20 300 165 480 95
+                        S780 20 960 95
+                        S1260 165 1440 95
+                        V0
+                        H0
+                        Z
+                    "
+                    fill="#8ed8f5"
+                />
+
+            </svg>
+
+        </div>
+
+    </div>
+
+<nav
+        class="site-nav"
+        aria-label="Main navigation"
+    >
 
         <a
             href="/"
-            class="logo-container"
+            class="brand"
             aria-label="Munambam Seafoods Home"
         >
 
             <img
                 src="/assets/MUNAMBAM_Seafood_Logo_HQ.png"
-                alt="Munambam Seafoods Logo"
-                width="44"
-                height="44"
+                alt="Munambam Seafoods"
+                width="48"
+                height="48"
+                fetchpriority="high"
                 decoding="async"
             >
 
-            <span class="brand-name">
+            <span class="brand-text">
                 MUNAMBAM SEAFOODS
             </span>
 
         </a>
 
 
-        <!-- NAV LINKS -->
-
         <div class="nav-links">
 
-            <a href="/">
+            <a
+                href="/"
+                class="active"
+                aria-current="page"
+            >
                 Home
             </a>
 
@@ -2267,11 +2233,7 @@ html, body, a, button, select, input, textarea, [role="button"] {
                 Products
             </a>
 
-            <a
-                href="/about/"
-                class="active"
-                aria-current="page"
-            >
+            <a href="/about/" class="active" aria-current="page">
                 About Us
             </a>
 
@@ -2290,307 +2252,449 @@ html, body, a, button, select, input, textarea, [role="button"] {
 
     <!-- =========================================================
          ABOUT CONTENT
+         Same visual system as the Home page.
     ========================================================== -->
 
-    <main class="content-section">
+    <main class="about-main">
 
-        <div class="content-container">
-            <span class="badge">Our Story &amp; Vision</span>
-
+        <section class="about-intro">
+            <span class="eyebrow">OUR STORY &amp; VISION</span>
             <h1>About Munambam Seafoods</h1>
-
             <p>
-                <strong>Munambam Seafoods was born from a shared vision between two people who believe that seafood from Kerala deserves a strong place in the premium global market.</strong>
+                From Munambam Harbour to the world — built on coastal roots,
+                technical knowledge, modern technology, and a commitment to quality.
             </p>
+        </section>
 
-            <p>
-                Founded by <strong>Vipinraj V R</strong> and <strong>Krishna Prasoon N P</strong>, Munambam Seafoods brings together two complementary strengths — fish processing, design, technology and digital marketing on one side, and aquaculture knowledge, field experience, marketing and communication on the other.
-            </p>
+        <div class="about-container">
 
-            <p>
-                Our connection to seafood is not simply a business decision. We are based close to <strong>Kodungallur and the historic Muziris region</strong>, surrounded by the coastal environment, fishing communities and harbour ecosystem that have been part of this region's identity for generations.
-            </p>
+            <section class="about-block">
+                <h2>Our Story &amp; Vision</h2>
 
-            <p>
-                Being close to the coast gives us a direct connection to the world behind the product — the people, the fishing environment, the seafood and the realities of handling and processing it.
-            </p>
+                <p><strong>Munambam Seafoods</strong> was born from a shared vision between two founders who believe that seafood from Kerala deserves a strong, recognized place in the premium global market.</p>
 
-            <p><strong>That connection is at the heart of Munambam Seafoods.</strong></p>
+                <p>Founded by <strong>Vipinraj V R</strong> and <strong>Krishna Prasoon N P</strong>, Munambam Seafoods brings together two complementary strengths — fish processing technology, digital product design, technology, marketing, and communications on one side, and industrial fisheries expertise, practical field experience, business development, and market strategy on the other.</p>
 
-            <h2>The People Behind Munambam</h2>
+                <p>Our connection to seafood is not simply a business decision. We are based close to <strong>Kodungallur and the historic Muziris region</strong>, deeply connected with the coastal environment, fishing communities, and harbour ecosystem that have been part of this region’s identity for generations.</p>
 
-            <h2>Vipinraj V R</h2>
-            <p><strong>Co-Founder · Fish Processing · Design · Technology · Digital Marketing</strong></p>
+                <p>Being close to the coast gives us a direct connection to the world behind the product — the people, the fishing environment, the seafood, and the realities of handling and processing it.</p>
 
-            <p>
-                Vipinraj brings together a background in <strong>Fish Processing Technology through VHSE</strong> with skills in <strong>design, web development and digital marketing</strong>.
-            </p>
+                <p><strong>That connection is at the heart of Munambam Seafoods.</strong></p>
+            </section>
 
-            <p>
-                His role extends beyond creating the visual identity of Munambam Seafoods. He focuses on building the brand's <strong>digital presence, communication, technology, customer experience and overall brand presentation</strong>.
-            </p>
+            <section class="about-block">
+                <h2>The People Behind Munambam</h2>
 
-            <p>
-                His vision is to help build Munambam Seafoods as a <strong>modern, technology-driven seafood brand</strong> with an identity strong enough to represent Kerala on an international platform.
-            </p>
+                <div class="founder-card">
+                    <h3>Vipinraj V R</h3>
+                    <p class="founder-role"><strong>Co-Founder · Fish Processing · Design &amp; Technology · Business &amp; Marketing</strong></p>
 
-            <h2>Krishna Prasoon N P</h2>
-            <p><strong>Co-Founder · Aquaculture Professional · Marketing &amp; Communications</strong></p>
+                    <ul>
+                        <li><strong>Technical Foundation:</strong> Holds a foundational background in Fish Processing Technology (VHSE), providing a practical understanding of seafood preservation, hygiene, and handling standards.</li>
+                        <li><strong>Brand &amp; Marketing Execution:</strong> Possesses strong capabilities in strategic marketing, brand communication, and digital growth, ensuring the brand's identity is clearly articulated.</li>
+                        <li><strong>Digital &amp; Experience Architecture:</strong> Focuses on building and managing core digital technology, application workflows, UI/UX, and end-to-end customer interaction.</li>
+                        <li><strong>Business Leadership:</strong> Brings hands-on experience as an independent business founder and builder, directing commercial strategy, brand positioning, and execution.</li>
+                        <li><strong>The Vision:</strong> Driven to build Munambam Seafoods as a modern, technology-backed seafood enterprise capable of representing Kerala on an international platform.</li>
+                    </ul>
+                </div>
 
-            <p>
-                Krishna Prasoon brings professional knowledge and practical experience from the <strong>aquaculture field</strong>, supported by an <strong>Aquaculture degree and postgraduate qualification</strong>.
-            </p>
+                <div class="founder-card">
+                    <h3>Krishna Prasoon N P</h3>
+                    <p class="founder-role"><strong>Co-Founder · Industrial Fisheries Professional · Marketing &amp; Communications</strong></p>
 
-            <p>
-                Alongside his technical background, he has strong capabilities in <strong>marketing, communication and relationship building</strong>, with an ability to understand people, markets and changing customer needs.
-            </p>
+                    <ul>
+                        <li><strong>Advanced Academic Qualification:</strong> Holds a Master of Science (M.Sc.) degree in Industrial Fisheries from Cochin University of Science and Technology (CUSAT) and a Bachelor’s degree (B.Sc.) in Aquaculture.</li>
+                        <li><strong>Field &amp; Industry Expertise:</strong> Brings practical experience in fisheries research, commercial aquaculture operations, B2B sales, corporate consulting, and business development.</li>
+                        <li><strong>Commercial Strategy:</strong> Combines technical domain expertise with strong skills in marketing, corporate client acquisition, communication, and relationship management.</li>
+                        <li><strong>Market Integration:</strong> Continuously aligns technical fisheries knowledge with evolving market dynamics and client requirements.</li>
+                        <li><strong>Sourcing &amp; Quality Foundation:</strong> Provides Munambam Seafoods with deep product insight, sustainable harbour sourcing practices, and operational rigor.</li>
+                    </ul>
+                </div>
+            </section>
 
-            <p>
-                His interest in <strong>continuous learning and adaptability</strong> allows him to keep developing his knowledge across different areas of the seafood and business ecosystem.
-            </p>
+            <section class="about-block">
+                <h2>Two Different Strengths. One Common Goal.</h2>
 
-            <p>
-                His combination of <strong>aquaculture knowledge, practical experience, marketing understanding and communication skills</strong> provides Munambam Seafoods with an important connection between product knowledge and market requirements.
-            </p>
+                <p>The foundation of Munambam Seafoods comes from the balance of our individual strengths:</p>
 
-            <h2>Two Different Strengths. One Common Goal.</h2>
+                <ul>
+                    <li><strong>Vipinraj</strong> brings fish processing knowledge, digital product design, web technology, strategic marketing, and business execution.</li>
+                    <li><strong>Prasoon</strong> brings industrial fisheries expertise, practical industry experience, corporate sales, communication, and a deep understanding of the seafood ecosystem.</li>
+                </ul>
 
-            <p>The foundation of Munambam Seafoods comes from the combination of our individual strengths.</p>
-            <p><strong>Vipinraj brings fish processing knowledge, design, technology and digital marketing.</strong></p>
-            <p><strong>Prasoon brings aquaculture knowledge, practical industry experience, marketing, communication and a strong understanding of the seafood ecosystem.</strong></p>
-            <p>
-                Together, these complementary skills allow us to look at seafood from different perspectives — <strong>from the product itself to the people who produce it, the market that receives it and the brand that represents it.</strong>
-            </p>
-            <p>This is not simply about selling seafood.</p>
-            <p><strong>It is about building something we can stand behind.</strong></p>
+                <p>Together, these complementary skills allow us to look at seafood from every angle — from the raw catch at the harbour to the technology that processes it, the design that presents it, and the trust that sustains it.</p>
 
-            <h2>Why We Started</h2>
+                <p>This is not simply about selling seafood. It is about building a venture we stand behind with complete confidence.</p>
+            </section>
 
-            <p>We believe seafood can be much more than a commodity.</p>
-            <p>It can be <strong>clean, carefully handled, thoughtfully processed, nutritious and presented to a premium standard.</strong></p>
-            <p>Our goal is to develop seafood products with a clear philosophy:</p>
+            <section class="about-block">
+                <h2>Why We Started</h2>
 
-            <ul>
-                <li><strong>Natural.</strong></li>
-                <li><strong>Hygienic.</strong></li>
-                <li><strong>Protein-rich.</strong></li>
-                <li><strong>Mindful of sodium.</strong></li>
-                <li><strong>Free from unwanted chemical additives.</strong></li>
-                <li><strong>Uncompromising on quality.</strong></li>
-            </ul>
+                <p>We believe seafood should be much more than a generic commodity. It can be clean, carefully handled, thoughtfully processed, nutritious, and presented to a premium standard.</p>
 
-            <p>
-                We are not interested in building just another seafood label. We want to build a <strong>trusted seafood brand with a clear identity, strong standards and a genuine connection to its origin.</strong>
-            </p>
+                <p>Our product philosophy rests on six non-negotiable principles:</p>
 
-            <p>Every decision we make begins with one question:</p>
-            <p><strong>Would we confidently put our own names behind this product?</strong></p>
-            <p>If the answer is not yes, it does not belong under the Munambam name.</p>
+                <ol class="principles">
+                    <li><strong>Natural:</strong> 100% pure coastal produce with no artificial fillers.</li>
+                    <li><strong>Hygienic:</strong> Processed under strict sanitation and clean environmental standards.</li>
+                    <li><strong>Protein-Rich:</strong> Nutrient-dense seafood sourced straight from prime fishing grounds.</li>
+                    <li><strong>Mindful of Sodium:</strong> Balanced and controlled salt levels tailored for healthy consumption.</li>
+                    <li><strong>Chemical-Free:</strong> Zero harmful preservatives or chemical treatments.</li>
+                    <li><strong>Uncompromising Quality:</strong> Consistent high standards maintained across every single batch.</li>
+                </ol>
 
-            <h2>Rooted in Munambam</h2>
+                <p>We are not building a high-volume label; we are building a trusted brand anchored in transparency, origin, and standard.</p>
 
-            <p>Our location is an important part of who we are.</p>
-            <p>
-                Living close to <strong>Kodungallur and Muziris</strong> means being close to a region deeply connected with Kerala's maritime history and coastal life.
-            </p>
-            <p>The harbour, fishing communities and coastal environment are not distant concepts to us.</p>
-            <p><strong>They are part of the place we call home.</strong></p>
-            <p>
-                This proximity gives us an opportunity to understand seafood closer to its source and to build a brand that carries a genuine coastal identity rather than simply using one as a marketing story.
-            </p>
-            <p><strong>Munambam is not just our brand name. It represents where our story begins.</strong></p>
+                <blockquote><strong>"Would we confidently put our own names behind this product?"</strong></blockquote>
 
-            <h2>From the Coast to the World</h2>
+                <p>If the answer is not an absolute yes, it does not carry the Munambam name.</p>
+            </section>
 
-            <p>Our roots are local.</p>
-            <p><strong>Our ambition is global.</strong></p>
-            <p>
-                Munambam Seafoods is being built with an international outlook from the very beginning. Our long-term vision is to develop the brand and its products to meet the expectations of customers beyond India, with a focus on opportunities in markets such as the <strong>Middle East and Europe</strong>, while building the quality systems, processes and standards required for international trade and export.
-            </p>
-            <p>
-                We want to take products inspired by Kerala's coast and present them to the world through a brand that feels <strong>modern, trustworthy and premium.</strong>
-            </p>
-            <p>Our ambition is not simply to export a product.</p>
-            <p><strong>It is to export the identity, quality and character of Munambam.</strong></p>
+            <section class="about-block">
+                <h2>Rooted in Munambam</h2>
 
-            <h2>Quality Without Compromise</h2>
+                <p>Living close to <strong>Kodungallur and Muziris</strong> places us at the epicenter of Kerala’s maritime legacy.</p>
 
-            <p>For us, premium does not simply mean beautiful packaging or a higher price.</p>
-            <p>
-                Premium means <strong>what is inside the package, how the product is handled, how it is processed, how it is packed and whether we can confidently put our own names behind it.</strong>
-            </p>
-            <p>That is why quality is not an additional feature of Munambam Seafoods.</p>
-            <p><strong>Quality is the foundation of the brand.</strong></p>
-            <p>We believe that every product carrying the Munambam name should reflect our commitment to:</p>
+                <p>The harbour, the fishing fleets, and the coastal communities are not marketing concepts to us — they form our local environment. This proximity enables direct oversight at the harbour level, allowing us to build a brand rooted in genuine coastal authenticity.</p>
 
-            <ul>
-                <li><strong>Careful sourcing.</strong></li>
-                <li><strong>Hygienic handling.</strong></li>
-                <li><strong>Responsible processing.</strong></li>
-                <li><strong>Natural product quality.</strong></li>
-                <li><strong>Thoughtful packaging.</strong></li>
-                <li><strong>Consistent standards.</strong></li>
-            </ul>
+                <p><strong>Munambam</strong> is more than our name; it is where our origin and accountability reside.</p>
+            </section>
 
-            <p>And above all:</p>
-            <p><strong>No compromise on quality.</strong></p>
+            <section class="about-block">
+                <h2>From the Coast to the World</h2>
 
-            <h2>Our Vision</h2>
+                <p>While our roots are local, our outlook is global.</p>
 
-            <p>
-                To build <strong>Munambam Seafoods into a trusted premium seafood brand from Kerala with an international presence.</strong>
-            </p>
-            <p>
-                A brand where <strong>coastal tradition meets modern technology, aquaculture knowledge meets market understanding, and local identity meets global ambition.</strong>
-            </p>
-            <p>And where every product carries the confidence of the people who created it.</p>
+                <p>Munambam Seafoods is engineered with an international orientation from day one. Our long-term vision focuses on meeting global market standards, targeting opportunities across the <strong>Middle East (GCC) and Europe</strong>, and establishing export-compliant quality systems.</p>
 
-            <h2>Our Promise</h2>
+                <p>We aim to take Kerala’s coastal heritage and deliver it globally through a modern, reliable, and premium brand.</p>
 
-            <p>We are building Munambam Seafoods one product, one customer and one standard at a time.</p>
-            <p>
-                We may have started close to <strong>Munambam Harbour</strong>, but our vision reaches far beyond the coast.
-            </p>
-            <p>
-                We want customers to know where their seafood comes from, understand the people behind the brand, and feel confident about the quality they receive.
-            </p>
-            <p>Because ultimately, a strong brand is not built only by products.</p>
-            <p><strong>It is built by trust.</strong></p>
-            <p>And that trust is something we intend to earn — <strong>one pack at a time.</strong></p>
+                <p>Our objective is not merely exporting a commodity — it is exporting the <strong>identity, quality, and trust of Munambam</strong>.</p>
+            </section>
 
-            <p style="text-align:center; margin-top:35px; color:#061b3a; font-family:var(--font-heading); font-size:1.15rem;">
-                <strong>From Munambam Harbour. Built with Purpose. Made for the World.</strong>
-            </p>
-</div>
+            <section class="about-block">
+                <h2>Quality Without Compromise</h2>
 
+                <p>For us, 'premium' goes beyond elegant packaging or pricing. It defines the integrity of the catch, the discipline of processing, the reliability of packaging, and the accountability behind the label.</p>
+
+                <p>Quality is not an added feature at Munambam Seafoods — <strong>Quality is the foundation.</strong></p>
+
+                <p>Every unit carrying our name reflects our commitment to:</p>
+
+                <ul>
+                    <li>Precise Harbour Sourcing</li>
+                    <li>Hygienic &amp; Sanitary Handling</li>
+                    <li>Responsible Processing</li>
+                    <li>Natural Product Integrity</li>
+                    <li>Secure, Protective Packaging</li>
+                    <li>Absolute Consistency</li>
+                </ul>
+            </section>
+
+            <section class="about-block">
+                <h2>Our Vision</h2>
+
+                <p>To build Munambam Seafoods into a globally recognized, trusted premium seafood brand from Kerala — where coastal tradition meets modern technology, industrial fisheries science meets market insight, and local identity meets global ambition.</p>
+            </section>
+
+            <section class="about-block">
+                <h2>Our Promise</h2>
+
+                <p>We build Munambam Seafoods one batch, one customer, and one standard at a time.</p>
+
+                <p>Our vision extends far beyond the shoreline of Munambam Harbour. We want our customers to know exactly where their seafood originates, understand the professionals behind the brand, and enjoy complete confidence in what they consume.</p>
+
+                <p>Brands are built on products, but lasting institutions are built on <strong>trust</strong>. That is the trust we earn with every pack.</p>
+
+                <p class="about-signoff"><strong>From Munambam Harbour. Built with Purpose. Made for the World.</strong></p>
+            </section>
+
+        </div>
     </main>
 
 
-    <!-- =========================================================
-         FOOTER
-    ========================================================== -->
+<footer class="footer">
 
-    
-    <!-- =========================================================
-         REFERENCE-STYLE WAVE FOOTER
-         Large cream/glass upper area + layered blue ocean waves.
-         Footer content has its own safe zone and never sits on the waves.
-    ========================================================== -->
-    <footer class="munambam-wave-footer">
-        <div class="wave-footer-content">
-            <h3>Munambam Seafoods</h3>
-            <p>Direct Sourcing From Munambam Harbour, Pallipuram, Ernakulam, Kerala</p>
 
-            <nav class="wave-footer-links" aria-label="Footer navigation">
-                <a href="/">Home</a>
-                <a href="/products/">Products</a>
-                <a href="/about/">About Us</a>
-                <a href="/privacy/">Privacy Policy</a>
-                <a href="/terms/">Terms of Service</a>
-            </nav>
+        <!-- DEEP NAVY WAVE -->
 
-            <div class="wave-footer-social" aria-label="Social links">
-                <a href="https://wa.me/917907804747" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-                    <i class="fab fa-whatsapp" aria-hidden="true"></i>
+        <div
+            class="footer-wave-navy"
+            aria-hidden="true"
+        >
+
+            <svg
+                viewBox="0 0 1440 170"
+                preserveAspectRatio="none"
+            >
+                <path
+                    d="
+                        M0 78
+                        C170 116 325 120 490 78
+                        C655 37 805 39 970 80
+                        C1140 122 1295 116 1440 70
+                        L1440 111
+                        C1295 151 1135 154 965 113
+                        C800 73 655 72 485 114
+                        C320 155 165 151 0 119
+                        Z
+                    "
+                    fill="#0d315c"
+                    opacity=".95"
+                />
+            </svg>
+
+        </div>
+
+
+        <!-- OCEAN BLUE TIDE LAYER -->
+
+        <div
+            class="footer-wave-blue"
+            aria-hidden="true"
+        >
+
+            <svg
+                viewBox="0 0 1440 154"
+                preserveAspectRatio="none"
+            >
+                <path
+                    d="
+                        M0 73
+                        C165 108 305 111 475 72
+                        C650 32 805 35 980 73
+                        C1145 111 1295 108 1440 64
+                        L1440 94
+                        C1295 133 1140 136 975 98
+                        C800 60 650 59 470 101
+                        C300 140 155 137 0 101
+                        Z
+                    "
+                    fill="#168dcc"
+                    opacity=".98"
+                />
+            </svg>
+
+        </div>
+
+
+        <!-- LIGHT BLUE SURFACE TIDE LAYER -->
+
+        <div
+            class="footer-wave-light"
+            aria-hidden="true"
+        >
+
+            <svg
+                viewBox="0 0 1440 138"
+                preserveAspectRatio="none"
+            >
+                <path
+                    d="
+                        M0 67
+                        C155 96 300 99 480 63
+                        C655 29 810 31 980 65
+                        C1145 98 1290 95 1440 58
+                        L1440 81
+                        C1290 115 1140 117 975 88
+                        C805 53 650 52 475 87
+                        C300 121 150 117 0 89
+                        Z
+                    "
+                    fill="#8ed8f5"
+                    opacity=".92"
+                />
+            </svg>
+
+        </div>
+
+
+        <div class="footer-content">
+
+
+            <img
+                class="footer-logo"
+                src="/assets/MUNAMBAM_Seafood_Logo_HQ.png"
+                alt="Munambam Seafoods"
+                width="76"
+                height="76"
+                loading="lazy"
+                decoding="async"
+            >
+
+
+            <h3>
+                MUNAMBAM SEAFOODS
+            </h3>
+
+
+            <p>
+                Premium coastal provisions from
+                Munambam Harbour, Pallipuram, Ernakulam,
+                Kerala — built with purpose and prepared
+                for a wider world.
+            </p>
+
+
+            <div class="footer-links">
+
+                <a href="/">
+                    Home
                 </a>
-                <a href="mailto:connect.munambamseafoods@gmail.com" aria-label="Email">
-                    <i class="fas fa-envelope" aria-hidden="true"></i>
+
+                <a href="/products/">
+                    Products
                 </a>
-                <a href="https://www.instagram.com/munambamseafoods" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                    <i class="fab fa-instagram" aria-hidden="true"></i>
+
+                <a href="/about/">
+                    About Us
                 </a>
-                <a href="https://www.facebook.com/officialmunambamseafoods" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                    <i class="fab fa-facebook-f" aria-hidden="true"></i>
+
+                <a href="/privacy/">
+                    Privacy Policy
                 </a>
+
+                <a href="/terms/">
+                    Terms
+                </a>
+
             </div>
 
-            <p class="wave-footer-copy">&copy; 2026 Munambam Seafoods. All Rights Reserved.</p>
+
+            <div class="footer-contact" aria-label="Munambam Seafoods social and contact links">
+
+                <!-- WhatsApp -->
+                <a class="contact-link"
+                   href="https://wa.me/917907804747"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="WhatsApp"
+                   title="WhatsApp">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.15 1.6 5.96L.05 24l6.3-1.65a11.87 11.87 0 0 0 5.71 1.46h.01c6.56 0 11.9-5.34 11.9-11.9 0-3.18-1.24-6.16-3.45-8.43ZM12.07 21.8h-.01a9.88 9.88 0 0 1-5.04-1.38l-.36-.21-3.74.98 1-3.65-.23-.37a9.86 9.86 0 1 1 8.38 4.63Zm5.42-7.39c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.74-1.64-2.04-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.49 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.21 5.09 4.5.71.31 1.27.49 1.7.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.28.17-1.41-.07-.12-.27-.2-.57-.35Z"/>
+                    </svg>
+                </a>
+
+                <!-- Email -->
+                <a class="contact-link"
+                   href="mailto:connect.munambamseafoods@gmail.com"
+                   aria-label="Email"
+                   title="Email">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2 4.5A2.5 2.5 0 0 1 4.5 2h15A2.5 2.5 0 0 1 22 4.5v15a2.5 2.5 0 0 1-2.5 2.5h-15A2.5 2.5 0 0 1 2 19.5v-15Zm2.5-.5a.5.5 0 0 0-.31.89L12 10.96l7.81-6.07A.5.5 0 0 0 19.5 4h-15ZM20 6.3l-7.39 5.74a1 1 0 0 1-1.22 0L4 6.3v13.2c0 .28.22.5.5.5h15c.28 0 .5-.22.5-.5V6.3Z"/>
+                    </svg>
+                </a>
+
+                <!-- Instagram -->
+                <a class="contact-link"
+                   href="https://www.instagram.com/munambamseafoods"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Instagram"
+                   title="Instagram">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5ZM17.75 6a1.25 1.25 0 1 1-1.25 1.25A1.25 1.25 0 0 1 17.75 6Z"/>
+                    </svg>
+                </a>
+
+                <!-- Facebook -->
+                <a class="contact-link"
+                   href="https://www.facebook.com/officialmunambamseafoods"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Facebook"
+                   title="Facebook">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M13.5 21v-8h2.75l.4-3h-3.15V8.08c0-.87.24-1.46 1.5-1.46h1.78V3.94c-.31-.04-1.38-.14-2.62-.14-2.6 0-4.38 1.59-4.38 4.51V10H7v3h2.78v8h3.72Z"/>
+                    </svg>
+                </a>
+
+            </div>
+
+
+            <p class="copyright">
+                © 2026 Munambam Seafoods.
+                All Rights Reserved.
+            </p>
+
         </div>
 
-        <div class="reference-wave-art" aria-hidden="true">
-            <svg viewBox="0 0 1440 190" preserveAspectRatio="none">
-                <!-- Two independent flowing sea bands. No filled rectangle. -->
-                <path class="wave-rear" d="M0 76 C150 142 300 140 438 70 C570 4 700 12 824 86 C958 166 1072 164 1198 78 C1302 8 1370 10 1440 30"/>
-                <path class="wave-light" d="M0 66 C150 132 300 130 438 60 C570 -6 700 2 824 76 C958 156 1072 154 1198 68 C1302 -2 1370 0 1440 20"/>
-            </svg>
-        </div>
     </footer>
 
-<!-- =========================================================
-         JAVASCRIPT
-    ========================================================== -->
 
-    <script>
+<script>
+
 
         (() => {
 
-            'use strict';
+            "use strict";
 
 
             /* =====================================================
                CUSTOM CURSOR
             ===================================================== */
 
-            const fishCursor =
+            const cursor =
                 document.getElementById(
-                    'fish-cursor'
+                    "fish-cursor"
                 );
 
-
-            const hasMouse =
+            const mouseDevice =
                 window.matchMedia(
-                    '(hover: hover) and (pointer: fine)'
+                    "(hover:hover) and (pointer:fine)"
                 ).matches;
 
 
             if (
-                fishCursor &&
-                hasMouse
+                cursor &&
+                mouseDevice
             ) {
 
-                let mouseX = 0;
+                let x = 0;
+                let y = 0;
 
-                let mouseY = 0;
-
-                let cursorFrame = false;
+                let frame =
+                    false;
 
 
                 document.addEventListener(
-                    'mousemove',
+                    "mousemove",
+
                     (event) => {
 
-                        mouseX =
+                        x =
                             event.clientX;
 
-                        mouseY =
+                        y =
                             event.clientY;
 
 
-                        if (cursorFrame) {
-
+                        if (frame) {
                             return;
                         }
 
 
-                        cursorFrame =
+                        frame =
                             true;
 
 
                         requestAnimationFrame(
                             () => {
 
-                                fishCursor.style.left =
-                                    mouseX + 'px';
+                                cursor.style.transform =
+                                    `translate3d(
+                                        ${x - 6}px,
+                                        ${y - 14}px,
+                                        0
+                                    )`;
 
-                                fishCursor.style.top =
-                                    mouseY + 'px';
-
-                                cursorFrame =
+                                frame =
                                     false;
                             }
                         );
 
                     },
+
                     {
                         passive: true
                     }
@@ -2600,366 +2704,263 @@ html, body, a, button, select, input, textarea, [role="button"] {
 
 
             /* =====================================================
-               MOVING OCEAN CREATURES
-               
-               EXACT COUNT:
-
-               1 BIG SHARK  ←
-               1 OCTOPUS    →
-               3 FISH       →
-               2 FISH       ←
-               2 PRAWNS     ←
-               3 PRAWNS     →
+               MOVING SEA CREATURES
             ===================================================== */
 
-            const container =
+            const layer =
                 document.getElementById(
-                    'oceanElements'
+                    "oceanLayer"
                 );
 
 
-            if (!container) {
-
+            if (!layer) {
                 return;
             }
 
 
-            const reducedMotion =
+            const reduceMotion =
                 window.matchMedia(
-                    '(prefers-reduced-motion: reduce)'
+                    "(prefers-reduced-motion:reduce)"
                 ).matches;
 
 
-            if (reducedMotion) {
-
+            if (reduceMotion) {
                 return;
             }
 
 
-            const creatureFiles = {
+            const files = {
 
                 fish:
-                    '../assets/icon/icon-fish.svg',
+                    "/assets/icon/icon-fish.svg",
 
                 shark:
-                    '../assets/icon/icon-shark.svg',
+                    "/assets/icon/icon-shark.svg",
 
                 octopus:
-                    '../assets/icon/icon-octopus.svg',
+                    "/assets/icon/icon-octopus.svg",
 
                 prawn:
-                    '../assets/icon/icon-prawn.svg'
+                    "/assets/icon/icon-prawn.svg"
+
             };
 
 
-            /*
-             * Every creature has a separate vertical lane.
-             * This prevents visual overlap.
-             */
-
-            const spawnList = [
-
-                /* 1 BIG SHARK — LEFT */
+            const creatures = [
 
                 {
-                    type: 'shark',
-                    size: 115,
-                    direction: 'left',
-                    lane: 13,
-                    duration: 34000,
-                    delay: -7000
-                },
-
-
-                /* FISH — RIGHT */
-
-                {
-                    type: 'fish',
-                    size: 34,
-                    direction: 'right',
-                    lane: 20,
-                    duration: 27000,
-                    delay: -14000
-                },
-
-
-                /* PRAWN — LEFT */
-
-                {
-                    type: 'prawn',
-                    size: 30,
-                    direction: 'left',
-                    lane: 27,
-                    duration: 30000,
-                    delay: -4000
-                },
-
-
-                /* OCTOPUS — RIGHT */
-
-                {
-                    type: 'octopus',
-                    size: 58,
-                    direction: 'right',
-                    lane: 34,
-                    duration: 32000,
-                    delay: -19000
-                },
-
-
-                /* FISH — LEFT */
-
-                {
-                    type: 'fish',
-                    size: 36,
-                    direction: 'left',
-                    lane: 41,
-                    duration: 28000,
+                    type: "shark",
+                    size: 110,
+                    direction: "left",
+                    lane: 17,
+                    duration: 46000,
                     delay: -9000
                 },
 
-
-                /* PRAWN — RIGHT */
+                {
+                    type: "fish",
+                    size: 38,
+                    direction: "right",
+                    lane: 27,
+                    duration: 33000,
+                    delay: -15000
+                },
 
                 {
-                    type: 'prawn',
+                    type: "prawn",
                     size: 32,
-                    direction: 'right',
-                    lane: 48,
-                    duration: 31000,
-                    delay: -16000
+                    direction: "left",
+                    lane: 36,
+                    duration: 37000,
+                    delay: -6000
                 },
 
-
-                /* FISH — RIGHT */
-
                 {
-                    type: 'fish',
-                    size: 35,
-                    direction: 'right',
-                    lane: 55,
-                    duration: 29000,
-                    delay: -3000
+                    type: "octopus",
+                    size: 58,
+                    direction: "right",
+                    lane: 46,
+                    duration: 41000,
+                    delay: -19000
                 },
 
-
-                /* PRAWN — LEFT */
-
                 {
-                    type: 'prawn',
-                    size: 29,
-                    direction: 'left',
-                    lane: 62,
-                    duration: 30000,
-                    delay: -12000
+                    type: "fish",
+                    size: 36,
+                    direction: "left",
+                    lane: 56,
+                    duration: 35000,
+                    delay: -11000
                 },
 
-
-                /* FISH — LEFT */
-
                 {
-                    type: 'fish',
-                    size: 33,
-                    direction: 'left',
-                    lane: 69,
-                    duration: 28000,
-                    delay: -21000
-                },
-
-
-                /* PRAWN — RIGHT */
-
-                {
-                    type: 'prawn',
-                    size: 31,
-                    direction: 'right',
-                    lane: 76,
-                    duration: 32000,
-                    delay: -8000
-                },
-
-
-                /* FISH — RIGHT */
-
-                {
-                    type: 'fish',
-                    size: 37,
-                    direction: 'right',
-                    lane: 83,
-                    duration: 27000,
+                    type: "prawn",
+                    size: 32,
+                    direction: "right",
+                    lane: 65,
+                    duration: 39000,
                     delay: -17000
                 },
 
-
-                /* PRAWN — RIGHT */
+                {
+                    type: "fish",
+                    size: 37,
+                    direction: "right",
+                    lane: 74,
+                    duration: 35000,
+                    delay: -3000
+                },
 
                 {
-                    type: 'prawn',
-                    size: 30,
-                    direction: 'right',
-                    lane: 90,
-                    duration: 31000,
-                    delay: -5000
+                    type: "prawn",
+                    size: 31,
+                    direction: "left",
+                    lane: 82,
+                    duration: 38000,
+                    delay: -13000
+                },
+
+                {
+                    type: "fish",
+                    size: 34,
+                    direction: "left",
+                    lane: 89,
+                    duration: 36000,
+                    delay: -21000
                 }
 
             ];
 
 
-            const viewportWidth =
+            const viewport =
                 Math.max(
                     document.documentElement.clientWidth,
                     window.innerWidth || 0
                 );
 
 
-            spawnList.forEach(
+            const distance =
+                viewport + 280;
+
+
+            creatures.forEach(
                 (item, index) => {
 
-                    const element =
+                    const creature =
                         document.createElement(
-                            'div'
+                            "div"
                         );
 
 
-                    element.className =
-                        'ocean-creature';
+                    creature.className =
+                        "creature";
+
+
+                    creature.style.width =
+                        `${item.size}px`;
+
+                    creature.style.height =
+                        `${item.size}px`;
+
+                    creature.style.top =
+                        `${item.lane}vh`;
 
 
                     const image =
                         document.createElement(
-                            'img'
+                            "img"
                         );
 
 
                     image.src =
-                        creatureFiles[
-                            item.type
-                        ];
-
+                        files[item.type];
 
                     image.alt =
-                        '';
-
+                        "";
 
                     image.width =
                         item.size;
 
-
                     image.height =
                         item.size;
 
+                    image.decoding =
+                        "async";
 
                     image.draggable =
                         false;
 
 
-                    image.decoding =
-                        'async';
+                    let flip =
+                        item.direction === "left"
+                            ? "scaleX(-1)"
+                            : "scaleX(1)";
 
-
-                    /*
-                     * Direction.
-                     */
-
-                    let imageTransform =
-                        item.direction === 'left'
-                            ? 'scaleX(-1)'
-                            : 'scaleX(1)';
-
-
-                    /*
-                     * Shark SVG has opposite
-                     * natural orientation.
-                     */
 
                     if (
-                        item.type === 'shark'
+                        item.type === "shark"
                     ) {
 
-                        imageTransform =
-                            item.direction === 'left'
-                                ? 'scaleX(1)'
-                                : 'scaleX(-1)';
+                        flip =
+                            item.direction === "left"
+                                ? "scaleX(1)"
+                                : "scaleX(-1)";
                     }
 
 
                     image.style.transform =
-                        imageTransform;
+                        flip;
 
 
-                    element.appendChild(
+                    creature.appendChild(
                         image
                     );
 
-
-                    element.style.width =
-                        item.size + 'px';
-
-
-                    element.style.height =
-                        item.size + 'px';
+                    layer.appendChild(
+                        creature
+                    );
 
 
-                    element.style.top =
-                        item.lane + 'vh';
-
-
-                    /*
-                     * Different starting points
-                     * for natural movement.
-                     */
-
-                    const startPercent =
+                    const stagger =
                         5 +
                         ((index * 19) % 88);
 
 
                     if (
-                        item.direction === 'right'
+                        item.direction === "right"
                     ) {
 
-                        element.style.left =
-                            `calc(${startPercent}vw - ${item.size}px)`;
+                        creature.style.left =
+                            `${stagger}vw`;
 
                     } else {
 
-                        element.style.left =
-                            `calc(${100 - startPercent}vw)`;
+                        creature.style.left =
+                            `${100 - stagger}vw`;
                     }
 
 
-                    container.appendChild(
-                        element
-                    );
-
-
-                    /*
-                     * GPU-friendly transform animation.
-                     */
-
-                    const distance =
-                        viewportWidth +
-                        item.size +
-                        160;
-
-
                     const travel =
-                        item.direction === 'right'
+                        item.direction === "right"
                             ? distance
                             : -distance;
 
 
-                    element.animate(
+                    creature.animate(
 
                         [
                             {
                                 transform:
-                                    'translate3d(0,0,0)'
+                                    "translate3d(0,0,0)"
                             },
 
                             {
                                 transform:
-                                    `translate3d(${travel}px,0,0)`
+                                    `translate3d(
+                                        ${travel}px,
+                                        0,
+                                        0
+                                    )`
                             }
                         ],
 
@@ -2974,20 +2975,22 @@ html, body, a, button, select, input, textarea, [role="button"] {
                                 Infinity,
 
                             easing:
-                                'linear',
+                                "linear",
 
                             fill:
-                                'both'
+                                "both"
                         }
+
                     );
 
                 }
             );
 
+
         })();
 
-    </script>
+    
+</script>
 
 </body>
-
 </html>
