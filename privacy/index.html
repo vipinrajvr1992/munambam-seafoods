@@ -5,6 +5,12 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<!-- SECURITY HARDENING -->
+<meta http-equiv="X-Content-Type-Options" content="nosniff"/>
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin"/>
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN"/>
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), accelerometer=(), gyroscope=(), magnetometer=()"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; media-src 'self'; upgrade-insecure-requests; block-all-mixed-content;"/>
 <title>Privacy Policy | Munambam Seafoods</title>
 <meta content="Read the Privacy Policy of Munambam Seafoods and learn how we collect, use, protect, and handle personal information." name="description"/>
 <meta content="Munambam Seafoods, about Munambam Seafoods, Munambam Harbour, Kerala seafood, seafood founders, premium seafood" name="keywords"/>
@@ -411,6 +417,11 @@
         .nav-links a.active {
             color:
                 var(--blue);
+        }
+
+        /* Privacy Policy — active navigation item */
+        .nav-links a.active[href="/privacy/"] {
+            color: var(--light-blue);
         }
 
         .nav-links a:hover::after,
@@ -2233,6 +2244,11 @@
             transmission or electronic storage system can be guaranteed to be
             completely secure.
         </p>
+<ul>
+<li>We apply website security controls intended to reduce unauthorized access, misuse, malicious framing, unsafe content execution, and unnecessary browser permissions.</li>
+<li>We use appropriate access and technical safeguards for information handled through our website and business communications.</li>
+<li>Security measures may be reviewed and updated when our website, services, technology, or applicable requirements change.</li>
+</ul>
 </section>
 <section class="about-block">
 <h2>Data Retention</h2>
