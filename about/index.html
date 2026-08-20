@@ -8,18 +8,50 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>About Us | Munambam Seafoods - Our Story &amp; Vision</title>
+    <!-- SECURITY HARDENING: static-page security policies -->
+    <meta
+        http-equiv="Content-Security-Policy"
+        content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'none'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+    >
 
-    <meta name="description" content="Learn about Munambam Seafoods, our founders, coastal roots in Munambam, quality philosophy, and global vision.">
+    <meta
+        http-equiv="Referrer-Policy"
+        content="strict-origin-when-cross-origin"
+    >
 
-    <meta name="keywords" content="Munambam Seafoods, about Munambam Seafoods, Munambam Harbour, Kerala seafood, seafood founders, premium seafood">
+    <meta
+        http-equiv="X-Content-Type-Options"
+        content="nosniff"
+    >
+
+    <meta
+        http-equiv="Permissions-Policy"
+        content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), accelerometer=(), gyroscope=(), magnetometer=()"
+    >
+
+    <title>
+        Contact Us | Munambam Seafoods | Premium Coastal Provisions
+    </title>
+
+    <meta
+        name="description"
+        content="Get in touch with Munambam Seafoods from Munambam Harbour, Kerala. Contact us for product enquiries, orders and coastal provisions."
+    >
+
+    <meta
+        name="keywords"
+        content="Munambam Seafoods, seafood, coastal provisions, dried seafood, dried prawns, Munambam Harbour, Kerala seafood"
+    >
 
     <meta
         name="robots"
         content="index, follow, max-image-preview:large"
     >
 
-    <link rel="canonical" href="https://www.munambamseafoods.online/about/">
+    <link
+        rel="canonical"
+        href="https://www.munambamseafoods.online/contact/"
+    >
 
     <!-- OPEN GRAPH -->
     <meta
@@ -29,17 +61,17 @@
 
     <meta
         property="og:url"
-        content="https://www.munambamseafoods.online/about/"
+        content="https://www.munambamseafoods.online/contact/"
     >
 
     <meta
         property="og:title"
-        content="About Us | Munambam Seafoods - Our Story & Vision"
+        content="Contact Us | Munambam Seafoods"
     >
 
     <meta
         property="og:description"
-        content="Learn about Munambam Seafoods, our founders, coastal roots, quality philosophy and global vision."
+        content="Get in touch with Munambam Seafoods for product enquiries, orders and coastal provisions."
     >
 
     <meta
@@ -208,23 +240,10 @@
             width: 44px;
             height: 27px;
 
-            /* Stronger 3D shadow so the fish stays visible on cream/light backgrounds */
             filter:
                 drop-shadow(
-                    0 1px 0
-                    rgba(18,24,32,.95)
-                )
-                drop-shadow(
-                    0 2px 2px
-                    rgba(18,24,32,.72)
-                )
-                drop-shadow(
-                    0 5px 6px
-                    rgba(0,0,0,.42)
-                )
-                drop-shadow(
-                    0 9px 10px
-                    rgba(0,0,0,.20)
+                    0 2px 4px
+                    rgba(0,0,0,.35)
                 );
         }
 
@@ -719,7 +738,7 @@
                 rgba(255,255,255,.06);
 
             color:
-                var(--cream);
+                var(--navy);
 
             border:
                 1px solid
@@ -1512,29 +1531,6 @@
 
 
         /* =========================================================
-           DIGITAL EXPERIENCE CREDIT
-        ========================================================= */
-
-        .studio-credit {
-            margin: 7px 0 0;
-            color: #71869c;
-            font-size: 11px;
-            line-height: 1.5;
-            text-align: center;
-        }
-
-        .studio-credit a {
-            color: var(--white);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .studio-credit a:hover {
-            color: var(--white);
-        }
-
-
-        /* =========================================================
            FOCUS
         ========================================================= */
 
@@ -1610,7 +1606,7 @@
 
             .quality-strip {
                 grid-template-columns:
-                    repeat(2,1fr);
+                    repeat(4,1fr);
 
                 margin-top:
                     -25px;
@@ -1618,13 +1614,13 @@
 
             .quality-item:nth-child(2) {
                 border-right:
-                    none;
+                    1px solid
+                    rgba(198,154,58,.20);
             }
 
             .quality-item:nth-child(-n+2) {
                 border-bottom:
-                    1px solid
-                    rgba(198,154,58,.20);
+                    none;
             }
         }
 
@@ -1739,17 +1735,32 @@
 
             .quality-item {
                 padding:
-                    18px 8px;
+                    16px 5px;
+                min-width:
+                    0;
             }
 
             .quality-number {
                 font-size:
-                    .86rem;
+                    .76rem;
             }
 
             .quality-label {
                 font-size:
-                    .60rem;
+                    .52rem;
+                letter-spacing:
+                    .5px;
+                white-space:
+                    nowrap;
+            }
+
+            .quality-strip {
+                width:
+                    calc(100% - 18px);
+                grid-template-columns:
+                    repeat(4,1fr);
+                overflow:
+                    hidden;
             }
 
             .section {
@@ -1864,253 +1875,392 @@
             }
         }
 
+
+        /* =========================================================
+           CONTACT PAGE — SAME MUNAMBAM SEA THEME
+        ========================================================= */
+
+        .contact-page {
+            position: relative;
+            z-index: 2;
+            width: min(calc(100% - 32px), 1180px);
+            margin: 18px auto 0;
+            padding: 72px 20px 100px;
+        }
+
+        .contact-hero {
+            text-align: center;
+            max-width: 820px;
+            margin: 0 auto 48px;
+        }
+
+        .contact-eyebrow {
+            display: inline-block;
+            margin-bottom: 12px;
+            color: var(--gold-light);
+            font-size: .74rem;
+            font-weight: 850;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .contact-title {
+            margin: 0;
+            color: var(--cream);
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            line-height: 1.03;
+            letter-spacing: -1.7px;
+            font-weight: 800;
+            text-shadow: 0 5px 18px rgba(0,0,0,.24);
+        }
+
+        .contact-title span {
+            color: var(--light-blue);
+        }
+
+        .contact-intro-brand {
+            color: var(--light-blue);
+            font-weight: 700;
+        }
+
+        .contact-intro {
+            max-width: 720px;
+            margin: 18px auto 0;
+            color: #c8d9e8;
+            font-size: .98rem;
+            line-height: 1.8;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: .9fr 1.1fr;
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        .contact-card,
+        .contact-form-card {
+            position: relative;
+            background: linear-gradient(
+                135deg,
+                rgba(255,250,240,.86),
+                rgba(247,240,223,.62)
+            );
+            border: 1px solid rgba(255,255,255,.62);
+            backdrop-filter: blur(18px) saturate(115%);
+            -webkit-backdrop-filter: blur(18px) saturate(115%);
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .contact-card {
+            padding: 36px 34px;
+        }
+
+        .contact-card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(
+                180deg,
+                var(--gold),
+                var(--light-blue)
+            );
+        }
+
+        .contact-card h2,
+        .contact-form-card h2 {
+            margin: 0;
+            color: var(--navy);
+            font-size: 1.45rem;
+            line-height: 1.2;
+            font-weight: 800;
+        }
+
+        .contact-card > p {
+            margin: 12px 0 25px;
+            color: #52677f;
+            font-size: .9rem;
+            line-height: 1.75;
+        }
+
+        .contact-details {
+            display: grid;
+            gap: 13px;
+        }
+
+        .contact-detail {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 15px;
+            border-radius: 17px;
+            background: rgba(255,255,255,.42);
+            border: 1px solid rgba(198,154,58,.15);
+            text-decoration: none;
+            transition: transform .2s ease, background .2s ease, border-color .2s ease;
+        }
+
+        .contact-detail:hover {
+            transform: translate3d(0,-2px,0);
+            background: rgba(255,255,255,.66);
+            border-color: rgba(22,141,204,.24);
+        }
+
+        .contact-detail-icon {
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: var(--gold);
+            color: var(--cream);
+            font-size: .95rem;
+        }
+
+        .contact-detail-icon svg {
+            width: 21px;
+            height: 21px;
+            display: block;
+            fill: currentColor;
+        }
+
+        .contact-detail strong {
+            display: block;
+            color: var(--navy);
+            font-size: .84rem;
+            font-weight: 800;
+        }
+
+        .contact-detail span {
+            display: block;
+            margin-top: 3px;
+            color: #52677f;
+            font-size: .8rem;
+            line-height: 1.45;
+        }
+
+        .contact-quick {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .contact-quick .btn {
+            min-height: 44px;
+            padding: 0 18px;
+            font-size: .78rem;
+        }
+
+        .contact-form-card {
+            padding: 36px 34px;
+        }
+
+        .contact-form-card h2 {
+            margin-bottom: 8px;
+        }
+
+        .form-note {
+            margin: 0 0 23px;
+            color: #52677f;
+            font-size: .82rem;
+            line-height: 1.6;
+        }
+
+        .contact-form {
+            display: grid;
+            gap: 15px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-field {
+            display: grid;
+            gap: 7px;
+        }
+
+        .form-field label {
+            color: var(--navy);
+            font-size: .76rem;
+            font-weight: 800;
+        }
+
+        .form-field input,
+        .form-field textarea {
+            width: 100%;
+            border: 1px solid rgba(6,27,58,.14);
+            border-radius: 14px;
+            background: rgba(255,255,255,.72);
+            color: var(--navy);
+            padding: 12px 14px;
+            outline: none;
+            font: inherit;
+            font-size: .84rem;
+            transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+        }
+
+        .form-field textarea {
+            min-height: 135px;
+            resize: vertical;
+        }
+
+        .form-field input:focus,
+        .form-field textarea:focus {
+            border-color: var(--blue);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(22,141,204,.10);
+        }
+
+        .contact-submit {
+            width: fit-content;
+            border: 0;
+            margin-top: 3px;
+            min-height: 48px;
+            padding: 0 24px;
+            border-radius: 50px;
+            background: var(--gold);
+            color: var(--navy);
+            font: inherit;
+            font-size: .82rem;
+            font-weight: 850;
+            box-shadow: 0 12px 28px rgba(198,154,58,.20);
+            transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+        }
+
+        .contact-submit:hover {
+            transform: translate3d(0,-3px,0);
+            background: var(--gold-light);
+            box-shadow: 0 16px 32px rgba(198,154,58,.26);
+        }
+
+        .contact-status {
+            min-height: 20px;
+            margin: 0;
+            color: var(--navy);
+            font-size: .78rem;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .contact-bottom {
+            max-width: 850px;
+            margin: 28px auto 0;
+            padding: 23px 26px;
+            text-align: center;
+            border-radius: 22px;
+            background: rgba(255,255,255,.055);
+            border: 1px solid rgba(142,216,245,.18);
+        }
+
+        .contact-bottom p {
+            margin: 0;
+            color: #c8d9e8;
+            font-size: .86rem;
+            line-height: 1.7;
+        }
+
+        .contact-bottom strong {
+            color: var(--light-blue);
+        }
+
+        
+/* Contact detail icons — precise centering */
+.contact-detail-icon {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    flex: 0 0 42px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    place-items: center !important;
+    align-self: center !important;
+    line-height: 0 !important;
+    text-align: center !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.contact-detail-icon svg {
+    display: block !important;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 0 !important;
+    flex: 0 0 20px !important;
+}
+
+.contact-detail-icon svg * {
+    vector-effect: non-scaling-stroke;
+}
+
+.contact-detail > span:last-child {
+    min-width: 0;
+}
+
+        @media (max-width: 850px) {
+            .contact-page {
+                width: calc(100% - 20px);
+                padding: 58px 10px 75px;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .contact-page {
+                margin-top: 10px;
+                padding: 50px 5px 60px;
+            }
+
+            .contact-title {
+                font-size: 2rem;
+            }
+
+            .contact-intro {
+                font-size: .87rem;
+            }
+
+            .contact-card,
+            .contact-form-card {
+                padding: 27px 22px;
+                border-radius: 23px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .contact-submit {
+                width: 100%;
+            }
+        }
+
     </style>
-<style>
-/* =========================================================
-   ABOUT PAGE
-   Same Home theme, same ocean background, same typography.
-========================================================= */
-
-.about-main {
-    position: relative;
-    z-index: 2;
-    width: min(calc(100% - 32px), var(--max));
-    margin: 0 auto;
-    padding: 78px 20px 90px;
-}
-
-.about-intro {
-    max-width: 850px;
-    margin: 0 auto 42px;
-    text-align: center;
-}
-
-.about-intro h1 {
-    margin: 0;
-    color: var(--cream);
-    font-size: clamp(2.15rem, 5vw, 3.45rem);
-    line-height: 1.08;
-    letter-spacing: -1.5px;
-    font-weight: 800;
-    text-shadow: 0 5px 18px rgba(0,0,0,.26);
-}
-
-.about-intro p {
-    max-width: 760px;
-    margin: 18px auto 0;
-    color: #c8d9e8;
-    font-size: 1rem;
-    line-height: 1.8;
-}
-
-.about-container {
-    width: min(100%, 960px);
-    margin: 0 auto;
-    padding: 48px 44px;
-    background: linear-gradient(
-        135deg,
-        rgba(255,250,240,.80),
-        rgba(247,240,223,.56)
-    );
-    border: 1px solid rgba(255,255,255,.60);
-    backdrop-filter: blur(20px) saturate(120%);
-    -webkit-backdrop-filter: blur(20px) saturate(120%);
-    border-radius: 32px;
-    box-shadow: var(--shadow);
-    color: var(--black);
-}
-
-.about-block {
-    padding: 0 0 36px;
-    margin: 0 0 36px;
-    border-bottom: 1px solid rgba(198,154,58,.20);
-}
-
-.about-block:last-child {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: 0;
-}
-
-.about-block h2 {
-    margin: 0 0 17px;
-    color: var(--navy-2);
-    font-size: clamp(1.45rem, 3vw, 2rem);
-    line-height: 1.2;
-    letter-spacing: -.5px;
-    font-weight: 800;
-}
-
-.about-block p {
-    margin: 0 0 17px;
-    color: #182638;
-    font-size: .96rem;
-    line-height: 1.82;
-}
-
-.about-block p:last-child {
-    margin-bottom: 0;
-}
-
-.about-block strong {
-    color: var(--navy);
-}
-
-.founder-card {
-    margin-top: 24px;
-    padding: 28px 28px 22px;
-    background: rgba(255,255,255,.28);
-    border: 1px solid rgba(198,154,58,.20);
-    border-radius: 22px;
-    box-shadow: 0 14px 35px rgba(0,0,0,.10);
-}
-
-.founder-card h3 {
-    margin: 0 0 6px;
-    color: var(--navy);
-    font-size: 1.35rem;
-    line-height: 1.25;
-    font-weight: 800;
-}
-
-.founder-role {
-    margin-bottom: 17px !important;
-    color: var(--navy-3) !important;
-    font-size: .82rem !important;
-    line-height: 1.55 !important;
-}
-
-.about-block ul {
-    list-style: none;
-    margin: 18px 0 0;
-    padding: 0;
-}
-
-.about-block ul li {
-    position: relative;
-    margin: 0 0 12px;
-    padding-left: 28px;
-    color: #182638;
-    font-size: .94rem;
-    line-height: 1.76;
-}
-
-.about-block ul li::before {
-    content: "✓";
-    position: absolute;
-    left: 0;
-    top: 0;
-    color: var(--gold);
-    font-weight: 900;
-}
-
-.principles {
-    list-style: none;
-    counter-reset: principle;
-    margin: 18px 0 22px;
-    padding: 0;
-}
-
-.principles li {
-    position: relative;
-    counter-increment: principle;
-    margin: 0 0 12px;
-    padding: 14px 16px 14px 55px;
-    background: rgba(255,255,255,.27);
-    border: 1px solid rgba(198,154,58,.14);
-    border-radius: 14px;
-    color: #182638;
-    font-size: .94rem;
-    line-height: 1.7;
-}
-
-.principles li::before {
-    content: counter(principle);
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 27px;
-    height: 27px;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: var(--navy);
-    color: var(--gold-light);
-    font-size: .75rem;
-    font-weight: 900;
-}
-
-.about-block blockquote {
-    margin: 25px 0;
-    padding: 18px 22px;
-    border-left: 4px solid var(--gold);
-    border-radius: 0 14px 14px 0;
-    background: rgba(6,27,58,.055);
-    color: var(--navy);
-    font-family: Georgia, serif;
-    font-size: 1.08rem;
-    line-height: 1.65;
-}
-
-.about-signoff {
-    margin-top: 28px !important;
-    padding-top: 25px;
-    border-top: 1px solid rgba(198,154,58,.25);
-    text-align: center;
-    color: var(--navy) !important;
-    font-family: var(--font-heading);
-    font-size: 1.08rem !important;
-}
-
-@media (max-width: 768px) {
-    .about-main {
-        padding: 55px 8px 70px;
-    }
-
-    .about-container {
-        padding: 32px 22px;
-        border-radius: 24px;
-    }
-
-    .founder-card {
-        padding: 22px 18px 18px;
-        border-radius: 18px;
-    }
-
-    .about-block p,
-    .about-block ul li,
-    .principles li {
-        font-size: .90rem;
-        line-height: 1.75;
-    }
-}
-
-@media (max-width: 520px) {
-    .about-main {
-        width: calc(100% - 16px);
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-    .about-container {
-        padding: 28px 18px;
-        border-radius: 20px;
-    }
-
-    .about-block h2 {
-        font-size: 1.35rem;
-    }
-
-    .principles li {
-        padding-left: 49px;
-    }
-}
-</style>
 </head>
+
+
 <body>
 
-<!-- =========================================================
+
+    <!-- =========================================================
          CUSTOM CURSOR
     ========================================================= -->
 
@@ -2155,7 +2305,8 @@
 
     </div>
 
-<!-- =========================================================
+
+    <!-- =========================================================
          MOVING OCEAN OBJECTS
     ========================================================= -->
 
@@ -2191,7 +2342,12 @@
 
     </div>
 
-<nav
+
+    <!-- =========================================================
+         NAVIGATION
+    ========================================================= -->
+
+    <nav
         class="site-nav"
         aria-label="Main navigation"
     >
@@ -2228,15 +2384,11 @@
                 Products
             </a>
 
-            <a
-                href="/about/"
-                class="active"
-                aria-current="page"
-            >
+            <a href="/about/">
                 About Us
             </a>
 
-            <a href="/contact/">
+            <a href="/contact/" class="active" aria-current="page">
                 Contact
             </a>
 
@@ -2254,169 +2406,242 @@
 
 
     <!-- =========================================================
-         ABOUT CONTENT
-         Same visual system as the Home page.
-    ========================================================== -->
+         MAIN
+    ========================================================= -->
 
-    <main class="about-main">
+    
+    <main>
 
-        <section class="about-intro">
-            <span class="eyebrow">OUR STORY &amp; VISION</span>
-            <h1>About Munambam Seafoods</h1>
-            <p>
-                From Munambam Harbour to the world — built on coastal roots,
-                technical knowledge, modern technology, and a commitment to quality.
-            </p>
+        <section class="contact-page" aria-labelledby="contact-title">
+
+            <div class="contact-hero">
+                <span class="contact-eyebrow">GET IN TOUCH</span>
+
+                <h1 class="contact-title" id="contact-title">
+                    Let's Talk <span>Together.</span>
+                </h1>
+
+                <p class="contact-intro">
+                    Have a question about our products, want to place an order,
+                    or simply want to connect with <span class="contact-intro-brand">Munambam</span> Seafoods?
+                    We would be happy to hear from you.
+                </p>
+            </div>
+
+
+            <div class="contact-grid">
+
+                <section class="contact-card" aria-labelledby="contact-info-title">
+
+                    <h2 id="contact-info-title">
+                        Contact Munambam Seafoods
+                    </h2>
+
+                    <p>
+                        Reach us directly through WhatsApp, email or our social
+                        channels. We are rooted in Munambam Harbour and focused
+                        on bringing quality coastal provisions to a wider world.
+                    </p>
+
+                    <div class="contact-details">
+
+                        <!-- WhatsApp -->
+                        <a class="contact-detail"
+                           href="https://wa.me/917907804747"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           aria-label="WhatsApp"
+                           title="WhatsApp">
+                            <span class="contact-detail-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.15 1.6 5.96L.05 24l6.3-1.65a11.87 11.87 0 0 0 5.71 1.46h.01c6.56 0 11.9-5.34 11.9-11.9 0-3.18-1.24-6.16-3.45-8.43ZM12.07 21.8h-.01a9.88 9.88 0 0 1-5.04-1.38l-.36-.21-3.74.98 1-3.65-.23-.37a9.86 9.86 0 1 1 8.38 4.63Zm5.42-7.39c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.74-1.64-2.04-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.49 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.21 5.09 4.5.71.31 1.27.49 1.7.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.28.17-1.41-.07-.12-.27-.2-.57-.35Z"/>
+                                </svg>
+                            </span>
+                            <span>
+                                <strong>WhatsApp</strong>
+                                <span>Chat with us directly</span>
+                            </span>
+                        </a>
+
+                        <!-- Email -->
+                        <a class="contact-detail"
+                           href="mailto:connect.munambamseafoods@gmail.com"
+                           aria-label="Email"
+                           title="Email">
+                            <span class="contact-detail-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M2 5.5A3.5 3.5 0 0 1 5.5 2h13A3.5 3.5 0 0 1 22 5.5v13a3.5 3.5 0 0 1-3.5 3.5h-13A3.5 3.5 0 0 1 2 18.5v-13ZM5.5 4a1.5 1.5 0 0 0-1.5 1.5v.2l8 6.05 8-6.05v-.2A1.5 1.5 0 0 0 18.5 4h-13ZM20 8.2l-7.4 5.6a1 1 0 0 1-1.2 0L4 8.2v10.3A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V8.2Z"/>
+                                </svg>
+                            </span>
+                            <span>
+                                <strong>Email</strong>
+                                <span>connect.munambamseafoods@gmail.com</span>
+                            </span>
+                        </a>
+
+                        <!-- Location -->
+                        <div class="contact-detail">
+                            <span class="contact-detail-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M12 22s8-7.18 8-13A8 8 0 1 0 4 9c0 5.82 8 13 8 13Zm0-11.2A2.8 2.8 0 1 1 12 5.2a2.8 2.8 0 0 1 0 5.6Z"/>
+                                </svg>
+                            </span>
+                            <span>
+                                <strong>Location</strong>
+                                <span>Munambam Harbour, Pallipuram, Ernakulam, Kerala</span>
+                            </span>
+                        </div>
+
+                        <!-- Instagram -->
+                        <a class="contact-detail"
+                           href="https://www.instagram.com/munambamseafoods"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           aria-label="Instagram"
+                           title="Instagram">
+                            <span class="contact-detail-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5ZM17.75 6a1.25 1.25 0 1 1-1.25 1.25A1.25 1.25 0 0 1 17.75 6Z"/>
+                                </svg>
+                            </span>
+                            <span>
+                                <strong>Instagram</strong>
+                                <span>@munambamseafoods</span>
+                            </span>
+                        </a>
+
+                        <!-- Facebook -->
+                        <a class="contact-detail"
+                           href="https://www.facebook.com/officialmunambamseafoods"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           aria-label="Facebook"
+                           title="Facebook">
+                            <span class="contact-detail-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M13.5 21v-8h2.75l.4-3h-3.15V8.08c0-.87.24-1.46 1.5-1.46h1.78V3.94c-.31-.04-1.38-.14-2.62-.14-2.6 0-4.38 1.59-4.38 4.51V10H7v3h2.78v8h3.72Z"/>
+                                </svg>
+                            </span>
+                            <span>
+                                <strong>Facebook</strong>
+                                <span>Munambam Seafoods</span>
+                            </span>
+                        </a>
+
+                    </div>
+
+
+
+                </section>
+
+
+                <section class="contact-form-card" aria-labelledby="enquiry-title">
+
+                    <h2 id="enquiry-title">
+                        Send an Enquiry
+                    </h2>
+
+                    <p class="form-note">
+                        Send your enquiry directly to us on WhatsApp.
+                    </p>
+
+                    <form class="contact-form" id="contactForm">
+
+                        <div class="form-row">
+
+                            <div class="form-field">
+                                <label for="contactName">Name</label>
+                                <input
+                                    id="contactName"
+                                    name="name"
+                                    type="text"
+                                    autocomplete="name"
+                                    placeholder="Your name"
+                                    maxlength="100"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-field">
+                                <label for="contactEmail">Email</label>
+                                <input
+                                    id="contactEmail"
+                                    name="email"
+                                    type="email"
+                                    autocomplete="email"
+                                    placeholder="you@example.com"
+                                    maxlength="254"
+                                    required
+                                >
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-field">
+                            <label for="contactPhone">Phone / WhatsApp</label>
+                            <input
+                                id="contactPhone"
+                                name="phone"
+                                type="tel"
+                                autocomplete="tel"
+                                placeholder="Your contact number"
+                                maxlength="30"
+                            >
+                        </div>
+
+
+                        <div class="form-field">
+                            <label for="contactMessage">Message</label>
+                            <textarea
+                                id="contactMessage"
+                                name="message"
+                                placeholder="Tell us how we can help..."
+                                maxlength="2000"
+                                required
+                            ></textarea>
+                        </div>
+
+
+                        <!-- Anti-spam honeypot: must remain empty. -->
+                        <div aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
+                            <label for="website">Website</label>
+                            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" value="">
+                        </div>
+                        <input id="formStartedAt" name="formStartedAt" type="hidden" value="">
+
+                        <button class="contact-submit" type="submit">
+                            Send Enquiry
+                        </button>
+
+                        <p id="contactStatus" class="contact-status" role="status" aria-live="polite"></p>
+
+                    </form>
+
+                </section>
+
+            </div>
+
+
+            <div class="contact-bottom">
+                <p>
+                    Prefer a quick conversation?
+                    <strong>WhatsApp us directly</strong> and our team can help
+                    with product and order enquiries.
+                </p>
+            </div>
+
         </section>
 
-        <div class="about-container">
-
-            <section class="about-block">
-                <h2>Our Story &amp; Vision</h2>
-
-                <p><strong>Munambam Seafoods</strong> was born from a shared vision between two founders who believe that seafood from Kerala deserves a strong, recognized place in the premium global market.</p>
-
-                <p>Founded by <strong>Vipinraj V R</strong> and <strong>Krishna Prasoon N P</strong>, Munambam Seafoods brings together two complementary strengths — fish processing technology, digital product design, technology, marketing, and communications on one side, and industrial fisheries expertise, practical field experience, business development, and market strategy on the other.</p>
-
-                <p>Our connection to seafood is not simply a business decision. We are based close to <strong>Kodungallur and the historic Muziris region</strong>, deeply connected with the coastal environment, fishing communities, and harbour ecosystem that have been part of this region’s identity for generations.</p>
-
-                <p>Being close to the coast gives us a direct connection to the world behind the product — the people, the fishing environment, the seafood, and the realities of handling and processing it.</p>
-
-                <p><strong>That connection is at the heart of Munambam Seafoods.</strong></p>
-            </section>
-
-            <section class="about-block">
-                <h2>The People Behind Munambam</h2>
-
-                <div class="founder-card">
-                    <h3>Vipinraj V R</h3>
-                    <p class="founder-role"><strong>Co-Founder · Fish Processing · Design &amp; Technology · Business &amp; Marketing</strong></p>
-
-                    <ul>
-                        <li><strong>Technical Foundation:</strong> Holds a foundational background in Fish Processing Technology (VHSE), providing a practical understanding of seafood preservation, hygiene, and handling standards.</li>
-                        <li><strong>Brand &amp; Marketing Execution:</strong> Possesses strong capabilities in strategic marketing, brand communication, and digital growth, ensuring the brand's identity is clearly articulated.</li>
-                        <li><strong>Digital &amp; Experience Architecture:</strong> Focuses on building and managing core digital technology, application workflows, UI/UX, and end-to-end customer interaction.</li>
-                        <li><strong>Business Leadership:</strong> Brings hands-on experience as an independent business founder and builder, directing commercial strategy, brand positioning, and execution.</li>
-                        <li><strong>The Vision:</strong> Driven to build Munambam Seafoods as a modern, technology-backed seafood enterprise capable of representing Kerala on an international platform.</li>
-                    </ul>
-                </div>
-
-                <div class="founder-card">
-                    <h3>Krishna Prasoon N P</h3>
-                    <p class="founder-role"><strong>Co-Founder · Industrial Fisheries Professional · Marketing &amp; Communications</strong></p>
-
-                    <ul>
-                        <li><strong>Advanced Academic Qualification:</strong> Holds a Master of Science (M.Sc.) degree in Industrial Fisheries from Cochin University of Science and Technology (CUSAT) and a Bachelor’s degree (B.Sc.) in Aquaculture.</li>
-                        <li><strong>Field &amp; Industry Expertise:</strong> Brings practical experience in fisheries research, commercial aquaculture operations, B2B sales, corporate consulting, and business development.</li>
-                        <li><strong>Commercial Strategy:</strong> Combines technical domain expertise with strong skills in marketing, corporate client acquisition, communication, and relationship management.</li>
-                        <li><strong>Market Integration:</strong> Continuously aligns technical fisheries knowledge with evolving market dynamics and client requirements.</li>
-                        <li><strong>Sourcing &amp; Quality Foundation:</strong> Provides Munambam Seafoods with deep product insight, sustainable harbour sourcing practices, and operational rigor.</li>
-                    </ul>
-                </div>
-            </section>
-
-            <section class="about-block">
-                <h2>Two Different Strengths. One Common Goal.</h2>
-
-                <p>The foundation of Munambam Seafoods comes from the balance of our individual strengths:</p>
-
-                <ul>
-                    <li><strong>Vipinraj</strong> brings fish processing knowledge, digital product design, web technology, strategic marketing, and business execution.</li>
-                    <li><strong>Prasoon</strong> brings industrial fisheries expertise, practical industry experience, corporate sales, communication, and a deep understanding of the seafood ecosystem.</li>
-                </ul>
-
-                <p>Together, these complementary skills allow us to look at seafood from every angle — from the raw catch at the harbour to the technology that processes it, the design that presents it, and the trust that sustains it.</p>
-
-                <p>This is not simply about selling seafood. It is about building a venture we stand behind with complete confidence.</p>
-            </section>
-
-            <section class="about-block">
-                <h2>Why We Started</h2>
-
-                <p>We believe seafood should be much more than a generic commodity. It can be clean, carefully handled, thoughtfully processed, nutritious, and presented to a premium standard.</p>
-
-                <p>Our product philosophy rests on six non-negotiable principles:</p>
-
-                <ol class="principles">
-                    <li><strong>Natural:</strong> 100% pure coastal produce with no artificial fillers.</li>
-                    <li><strong>Hygienic:</strong> Processed under strict sanitation and clean environmental standards.</li>
-                    <li><strong>Protein-Rich:</strong> Nutrient-dense seafood sourced straight from prime fishing grounds.</li>
-                    <li><strong>Mindful of Sodium:</strong> Balanced and controlled salt levels tailored for healthy consumption.</li>
-                    <li><strong>Chemical-Free:</strong> Zero harmful preservatives or chemical treatments.</li>
-                    <li><strong>Uncompromising Quality:</strong> Consistent high standards maintained across every single batch.</li>
-                </ol>
-
-                <p>We are not building a high-volume label; we are building a trusted brand anchored in transparency, origin, and standard.</p>
-
-                <blockquote><strong>"Would we confidently put our own names behind this product?"</strong></blockquote>
-
-                <p>If the answer is not an absolute yes, it does not carry the Munambam name.</p>
-            </section>
-
-            <section class="about-block">
-                <h2>Rooted in Munambam</h2>
-
-                <p>Living close to <strong>Kodungallur and Muziris</strong> places us at the epicenter of Kerala’s maritime legacy.</p>
-
-                <p>The harbour, the fishing fleets, and the coastal communities are not marketing concepts to us — they form our local environment. This proximity enables direct oversight at the harbour level, allowing us to build a brand rooted in genuine coastal authenticity.</p>
-
-                <p><strong>Munambam</strong> is more than our name; it is where our origin and accountability reside.</p>
-            </section>
-
-            <section class="about-block">
-                <h2>From the Coast to the World</h2>
-
-                <p>While our roots are local, our outlook is global.</p>
-
-                <p>Munambam Seafoods is engineered with an international orientation from day one. Our long-term vision focuses on meeting global market standards, targeting opportunities across the <strong>Middle East (GCC) and Europe</strong>, and establishing export-compliant quality systems.</p>
-
-                <p>We aim to take Kerala’s coastal heritage and deliver it globally through a modern, reliable, and premium brand.</p>
-
-                <p>Our objective is not merely exporting a commodity — it is exporting the <strong>identity, quality, and trust of Munambam</strong>.</p>
-            </section>
-
-            <section class="about-block">
-                <h2>Quality Without Compromise</h2>
-
-                <p>For us, 'premium' goes beyond elegant packaging or pricing. It defines the integrity of the catch, the discipline of processing, the reliability of packaging, and the accountability behind the label.</p>
-
-                <p>Quality is not an added feature at Munambam Seafoods — <strong>Quality is the foundation.</strong></p>
-
-                <p>Every unit carrying our name reflects our commitment to:</p>
-
-                <ul>
-                    <li>Precise Harbour Sourcing</li>
-                    <li>Hygienic &amp; Sanitary Handling</li>
-                    <li>Responsible Processing</li>
-                    <li>Natural Product Integrity</li>
-                    <li>Secure, Protective Packaging</li>
-                    <li>Absolute Consistency</li>
-                </ul>
-            </section>
-
-            <section class="about-block">
-                <h2>Our Vision</h2>
-
-                <p>To build Munambam Seafoods into a globally recognized, trusted premium seafood brand from Kerala — where coastal tradition meets modern technology, industrial fisheries science meets market insight, and local identity meets global ambition.</p>
-            </section>
-
-            <section class="about-block">
-                <h2>Our Promise</h2>
-
-                <p>We build Munambam Seafoods one batch, one customer, and one standard at a time.</p>
-
-                <p>Our vision extends far beyond the shoreline of Munambam Harbour. We want our customers to know exactly where their seafood originates, understand the professionals behind the brand, and enjoy complete confidence in what they consume.</p>
-
-                <p>Brands are built on products, but lasting institutions are built on <strong>trust</strong>. That is the trust we earn with every pack.</p>
-
-                <p class="about-signoff"><strong>From Munambam Harbour. Built with Purpose. Made for the World.</strong></p>
-            </section>
-
-        </div>
     </main>
 
 
-<footer class="footer">
+
+    <!-- =========================================================
+         PREMIUM WAVY FOOTER
+    ========================================================= -->
+
+    <footer class="footer">
 
 
         <!-- EXACT SUPPLIED FOOTER REFERENCE -->
@@ -2466,6 +2691,10 @@
 
                 <a href="/about/">
                     About Us
+                </a>
+
+                <a href="/contact/">
+                    Contact
                 </a>
 
                 <a href="/privacy/">
@@ -2535,26 +2764,129 @@
                 All Rights Reserved.
             </p>
 
-            <p class="studio-credit">
-                Digital Experience by
-                <a href="https://www.thegypsycartel.com"
-                   target="_blank"
-                   rel="noopener noreferrer">
-                    www.thegypsycartel.com
-                </a>
-            </p>
-
         </div>
 
     </footer>
 
 
-<script>
 
+    <script>
+        (() => {
+            "use strict";
+
+            const form = document.getElementById("contactForm");
+            if (!form) return;
+
+            const nameField = document.getElementById("contactName");
+            const emailField = document.getElementById("contactEmail");
+            const phoneField = document.getElementById("contactPhone");
+            const messageField = document.getElementById("contactMessage");
+            const honeypot = document.getElementById("website");
+            const startedAt = document.getElementById("formStartedAt");
+            const status = document.getElementById("contactStatus");
+            const submitButton = form.querySelector(".contact-submit");
+
+            const now = Date.now();
+            if (startedAt) startedAt.value = String(now);
+
+            const clean = (value, max) =>
+                String(value || "").replace(/\u0000/g, "").trim().slice(0, max);
+
+            const validEmail = (value) =>
+                value.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
+
+            const recentSubmit = () => {
+                try {
+                    const last = Number(sessionStorage.getItem("munambam_contact_last_submit") || 0);
+                    return Number.isFinite(last) && (Date.now() - last) < 15000;
+                } catch (_) {
+                    return false;
+                }
+            };
+
+            const markSubmit = () => {
+                try {
+                    sessionStorage.setItem("munambam_contact_last_submit", String(Date.now()));
+                } catch (_) {}
+            };
+
+            form.addEventListener("submit", (event) => {
+                event.preventDefault();
+
+                if (honeypot && honeypot.value.trim() !== "") return;
+
+                const name = clean(nameField.value, 100);
+                const email = clean(emailField.value, 254);
+                const phone = clean(phoneField.value, 30);
+                const message = clean(messageField.value, 2000);
+                const elapsed = startedAt ? Date.now() - Number(startedAt.value || Date.now()) : 0;
+
+                if (!name || name.length < 2 || !validEmail(email) || !message || message.length < 2) {
+                    status.textContent = "Please check the required fields and try again.";
+                    return;
+                }
+
+                if (elapsed >= 0 && elapsed < 1200) {
+                    status.textContent = "Please take a moment and try again.";
+                    return;
+                }
+
+                if (recentSubmit()) {
+                    status.textContent = "Please wait a few seconds before sending another enquiry.";
+                    return;
+                }
+
+                markSubmit();
+                submitButton.disabled = true;
+                submitButton.textContent = "Sent";
+
+                const body =
+                    `Name: ${name}\n` +
+                    `Email: ${email}\n` +
+                    `Phone / WhatsApp: ${phone || "Not provided"}\n\n` +
+                    `Message:\n${message}`;
+
+                const whatsappMessage =
+                    `Hello Munambam Seafoods, I have a website enquiry.\n\n${body}`;
+
+                const whatsappUrl =
+                    `https://wa.me/917907804747?text=${encodeURIComponent(whatsappMessage)}`;
+
+                window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+
+                status.textContent =
+                    "Your enquiry has been sent to Munambam Seafoods on WhatsApp.";
+                form.reset();
+                if (startedAt) startedAt.value = String(Date.now());
+
+                setTimeout(() => {
+                    submitButton.disabled = false;
+                    submitButton.textContent = "Send Enquiry";
+                    status.textContent = "";
+                }, 4500);
+            });
+        })();
+    </script>
+
+    <!-- =========================================================
+         FAST JAVASCRIPT
+    ========================================================= -->
+
+    <script>
 
         (() => {
 
             "use strict";
+
+            /* Clickjacking defense-in-depth for browsers that ignore frame-ancestors meta. */
+            if (window.top !== window.self) {
+                try {
+                    window.top.location = window.self.location.href;
+                } catch (_) {
+                    document.documentElement.style.display = "none";
+                }
+                return;
+            }
 
 
             /* =====================================================
@@ -2916,8 +3248,7 @@
 
         })();
 
-    
-</script>
+    </script>
 
 </body>
 </html>
