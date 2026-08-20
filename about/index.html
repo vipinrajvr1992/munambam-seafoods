@@ -19,6 +19,15 @@
         content="index, follow, max-image-preview:large"
     >
 
+    <!-- SECURITY HARDENING
+         Keep security controls in the page itself; no public Security tab is required.
+         Server-level HTTP headers should still be configured in production where supported. -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; media-src 'self'; worker-src 'self' blob:; upgrade-insecure-requests;">
+    <meta http-equiv="Permissions-Policy"
+          content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), fullscreen=(self)">
+
     <link rel="canonical" href="https://www.munambamseafoods.online/about/">
 
     <!-- OPEN GRAPH -->
@@ -2252,10 +2261,6 @@
                 Terms
             </a>
 
-            <a href="/security/">
-                Security
-            </a>
-
         </div>
 
     </nav>
@@ -2482,10 +2487,6 @@
 
                 <a href="/terms/">
                     Terms
-                </a>
-
-                <a href="/security/">
-                    Security
                 </a>
 
             </div>
