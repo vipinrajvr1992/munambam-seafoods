@@ -10,6 +10,18 @@
         content="width=device-width, initial-scale=1.0"
     >
 
+
+    <!-- =========================================================
+         PAGE-LEVEL SECURITY CONTROLS
+         Security is implemented at page/code level — not as a
+         separate navigation page.
+    ========================================================== -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://wa.me; upgrade-insecure-requests;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy"
+          content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), accelerometer=(), gyroscope=(), magnetometer=()">
+
     <title>
         All Products | Munambam Seafoods | Buy Fresh & Premium Seafood Online
     </title>
@@ -2444,10 +2456,6 @@ footer p{
                 Terms
             </a>
 
-            <a href="/security/">
-                Security
-            </a>
-
         </div>
 
     </nav>
@@ -2938,10 +2946,6 @@ footer p{
 
                 <a href="/terms/">
                     Terms
-                </a>
-
-                <a href="/security/">
-                    Security
                 </a>
 
             </div>
