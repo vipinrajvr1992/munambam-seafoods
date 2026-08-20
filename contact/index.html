@@ -8,6 +8,12 @@
         content="width=device-width, initial-scale=1.0"
     >
 
+    <!-- SECURITY HARDENING — static-site safe policies -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; img-src 'self' data:; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self'; form-action 'self'; upgrade-insecure-requests">
+
     <title>
         Contact Us | Munambam Seafoods | Premium Coastal Provisions
     </title>
@@ -2649,6 +2655,7 @@
                                     type="text"
                                     autocomplete="name"
                                     placeholder="Your name"
+                                    maxlength="100"
                                     required
                                 >
                             </div>
@@ -2661,6 +2668,7 @@
                                     type="email"
                                     autocomplete="email"
                                     placeholder="you@example.com"
+                                    maxlength="254"
                                     required
                                 >
                             </div>
@@ -2676,6 +2684,7 @@
                                 type="tel"
                                 autocomplete="tel"
                                 placeholder="Your contact number"
+                                maxlength="30"
                             >
                         </div>
 
@@ -2686,6 +2695,7 @@
                                 id="contactMessage"
                                 name="message"
                                 placeholder="Tell us how we can help..."
+                                maxlength="2000"
                                 required
                             ></textarea>
                         </div>
@@ -2882,66 +2892,110 @@
 
     <script>
         (() => {
-            const form = document.getElementById("contactForm");
+            "use strict";
 
+            const form = document.getElementById("contactForm");
             if (!form) return;
 
             const consent = document.getElementById("contactConsent");
             const submitButton = form.querySelector(".contact-submit");
             const status = document.getElementById("contactStatus");
+            const nameField = document.getElementById("contactName");
+            const emailField = document.getElementById("contactEmail");
+            const phoneField = document.getElementById("contactPhone");
+            const messageField = document.getElementById("contactMessage");
 
-            if (!consent || !submitButton) return;
+            if (!consent || !submitButton || !status || !nameField || !emailField || !phoneField || !messageField) return;
+
+            /* Invisible honeypot: genuine visitors never fill this. */
+            const honeypot = document.createElement("input");
+            honeypot.type = "text";
+            honeypot.name = "website";
+            honeypot.tabIndex = -1;
+            honeypot.autocomplete = "off";
+            honeypot.setAttribute("aria-hidden", "true");
+            honeypot.style.position = "absolute";
+            honeypot.style.left = "-10000px";
+            honeypot.style.width = "1px";
+            honeypot.style.height = "1px";
+            honeypot.style.opacity = "0";
+            form.prepend(honeypot);
+
+            /* Client-side limits reduce abuse and oversized payloads. */
+            nameField.maxLength = 100;
+            emailField.maxLength = 254;
+            phoneField.maxLength = 30;
+            messageField.maxLength = 2000;
+
+            let lockedUntil = 0;
+
+            const cleanText = (value, max) =>
+                value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "").trim().slice(0, max);
 
             const updateSubmitState = () => {
-                submitButton.disabled = !consent.checked;
+                submitButton.disabled = !consent.checked || Date.now() < lockedUntil;
             };
 
             consent.addEventListener("change", updateSubmitState);
-
             updateSubmitState();
 
-            form.addEventListener("submit", async (event) => {
+            form.addEventListener("submit", (event) => {
                 event.preventDefault();
 
+                if (honeypot.value.trim() !== "") return;
+
                 if (!consent.checked) {
-                    status.textContent =
-                        "Please agree to the Privacy Policy before sending your enquiry.";
+                    status.textContent = "Please agree to the Privacy Policy before sending your enquiry.";
                     return;
                 }
 
-                const name = document.getElementById("contactName").value.trim();
-                const email = document.getElementById("contactEmail").value.trim();
-                const phone = document.getElementById("contactPhone").value.trim();
-                const message = document.getElementById("contactMessage").value.trim();
+                if (Date.now() < lockedUntil) return;
 
-                const subject = `Website Enquiry — ${name}`;
+                const name = cleanText(nameField.value, 100);
+                const email = cleanText(emailField.value, 254);
+                const phone = cleanText(phoneField.value, 30);
+                const message = cleanText(messageField.value, 2000);
+
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+                if (name.length < 2 || !emailPattern.test(email) || message.length < 3) {
+                    status.textContent = "Please enter valid enquiry details.";
+                    return;
+                }
+
+                /* Short local cooldown prevents rapid repeated submissions. */
+                lockedUntil = Date.now() + 10000;
+                submitButton.disabled = true;
+
                 const body =
                     `Name: ${name}\n` +
                     `Email: ${email}\n` +
                     `Phone / WhatsApp: ${phone || "Not provided"}\n\n` +
                     `Message:\n${message}`;
 
-                /* Open WhatsApp only after the user has given consent. */
                 const whatsappMessage =
-                    `Hello Munambam Seafoods, I have a website enquiry.\n\n` +
-                    `${body}`;
+                    `Hello Munambam Seafoods, I have a website enquiry.\n\n${body}`;
+
+                /* Fixed, trusted destination — never constructed from user input. */
                 const whatsappUrl =
                     `https://wa.me/917907804747?text=${encodeURIComponent(whatsappMessage)}`;
-                window.open(whatsappUrl, "_blank", "noopener,noreferrer");
 
-                /* WhatsApp is the only enquiry channel. */
-                submitButton.disabled = true;
-                submitButton.textContent = "Sent";
-                status.textContent =
-                    "Your enquiry has been sent to Munambam Seafoods on WhatsApp.";
-
-                form.reset();
-
-                setTimeout(() => {
-                    submitButton.textContent = "Send Enquiry";
-                    status.textContent = "";
+                const popup = window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+                if (!popup) {
+                    status.textContent = "Please allow pop-ups to continue to WhatsApp.";
+                    lockedUntil = 0;
                     updateSubmitState();
-                }, 4500);
+                    return;
+                }
+
+                status.textContent = "Your enquiry has been sent to Munambam Seafoods on WhatsApp.";
+                form.reset();
+                consent.checked = false;
+
+                window.setTimeout(() => {
+                    status.textContent = "";
+                    lockedUntil = 0;
+                    updateSubmitState();
+                }, 10000);
             });
         })();
     </script>
