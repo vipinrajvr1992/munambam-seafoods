@@ -748,7 +748,7 @@ nav{
             <div class="price-box">
                 <div class="price-label">Price</div>
                 <div class="price" id="price">₹ —</div>
-                <div class="price-note" id="priceNote">Pack pricing will be added once final selling prices are confirmed.</div>
+                <div class="price-note" id="priceNote">Select a pack size to view its selling price. Applicable taxes will be shown at checkout.</div>
             </div>
 
             <div class="option-label">
@@ -875,7 +875,7 @@ nav{
             category: "Prawns",
             tagline: "100% Meat Weight, Low Sodium & Chemical Free",
             description: "Premium cleaned dried prawns prepared with careful handling and hygienic drying. Final product details, pack specifications and serving information can be updated here.",
-            price: null
+            prices: {"250g": 499, "500g": 899, "1kg": 1699}
         },
         "whole-dried-prawns": {
             name: "Whole Dried Prawns",
@@ -883,7 +883,7 @@ nav{
             category: "Prawns",
             tagline: "Hygienically Dried Direct From Harbour",
             description: "Whole dried prawns with an authentic coastal character. Final product details, pack specifications and serving information can be updated here.",
-            price: null
+            prices: {"250g": 299, "500g": 549, "1kg": 999}
         },
         "prawn-chammanthi-podi": {
             name: "Prawn Chammanthi Podi",
@@ -891,7 +891,7 @@ nav{
             category: "Podi / Blends",
             tagline: "Authentic Kerala Homemade Blend",
             description: "An authentic Kerala-style prawn chammanthi podi. Final ingredients, pack specifications and serving information can be updated here.",
-            price: null
+            prices: {"250g": 199, "500g": 349, "1kg": 649}
         },
         "premium-dried-shark": {
             name: "Premium Dried Shark",
@@ -899,7 +899,7 @@ nav{
             category: "Dried Fish",
             tagline: "Traditional Coastal Delicacy",
             description: "A traditional coastal dried-fish selection from Munambam Seafoods. Final product details, pack specifications and preparation information can be updated here.",
-            price: null
+            prices: {"250g": 349, "500g": 649, "1kg": 1199}
         },
         "premium-dried-tuna": {
             name: "Premium Dried Tuna",
@@ -907,7 +907,7 @@ nav{
             category: "Dried Fish",
             tagline: "Rich in Flavor, Clean & Hygienic",
             description: "Premium dried tuna selected for rich coastal flavour and hygienic preparation. Final product details and pack specifications can be updated here.",
-            price: null
+            prices: {"250g": 299, "500g": 549, "1kg": 999}
         },
         "premium-dried-mackerel": {
             name: "Premium Dried Mackerel",
@@ -915,7 +915,7 @@ nav{
             category: "Dried Fish",
             tagline: "Premium Coastal Selection",
             description: "Premium dried mackerel prepared for authentic coastal cooking. Final product details and pack specifications can be updated here.",
-            price: null
+            prices: {"250g": 249, "500g": 449, "1kg": 799}
         }
     };
 
@@ -934,7 +934,28 @@ nav{
     $("detailCategory").textContent = product.category;
     $("mainImage").src = product.image;
     $("mainImage").alt = product.name;
-    $("price").textContent = product.price === null ? "₹ —" : `₹${product.price.toLocaleString("en-IN")}`;
+
+    function money(value) {
+        return `₹${Number(value).toLocaleString("en-IN")}`;
+    }
+
+    function getSelectedPrice() {
+        const pack = $("packSize").value;
+        return product.prices && product.prices[pack] ? product.prices[pack] : null;
+    }
+
+    function updatePriceDisplay() {
+        const pack = $("packSize").value;
+        const selectedPrice = getSelectedPrice();
+
+        $("price").textContent = selectedPrice === null ? "₹ —" : money(selectedPrice);
+
+        if (selectedPrice !== null) {
+            $("priceNote").textContent = `${pack} selling price. Applicable taxes will be shown at checkout.`;
+        } else {
+            $("priceNote").textContent = "Select a pack size to view its selling price. Applicable taxes will be shown at checkout.";
+        }
+    }
 
     document.title = `${product.name} | Munambam Seafoods`;
 
@@ -944,6 +965,8 @@ nav{
         thumb.dataset.image = product.image;
         thumb.querySelector("img").src = product.image;
     });
+
+    updatePriceDisplay();
 
     document.querySelectorAll(".thumb").forEach((thumb) => {
         thumb.addEventListener("click", () => {
@@ -971,6 +994,7 @@ nav{
     $("packSize").addEventListener("change", () => {
         $("detailWeight").textContent =
             $("packSize").value === "default" ? "Select pack" : $("packSize").value;
+        updatePriceDisplay();
     });
 
     function readCart() {
@@ -1007,13 +1031,15 @@ nav{
         const cart = readCart();
         const existing = cart.find(item => item.id === id && item.pack === pack);
 
+        const itemPrice = getSelectedPrice();
+
         const item = {
             id,
             name: product.name,
             image: product.image,
             pack,
             quantity,
-            price: product.price
+            price: itemPrice
         };
 
         if (existing) {
