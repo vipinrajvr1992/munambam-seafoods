@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta http-equiv="Content-Security-Policy"
+content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://wa.me; upgrade-insecure-requests;">
+
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="permissions-policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
+
+<title>Checkout | Munambam Seafoods</title>
+<meta name="description" content="Secure checkout for Munambam Seafoods orders.">
+
+<link rel="icon" type="image/x-icon" href="/assets/icon/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root{
+    --navy:#061b3a;
+    --navy-2:#09274d;
+    --blue:#168dcc;
+    --light-blue:#8ed8f5;
+    --gold:#c69a3a;
+    --gold-light:#e0bc68;
+    --cream:#fffaf0;
+    --cream-2:#f7f0df;
+    --white:#fff;
+    --text:#142943;
+    --muted:#687d95;
+    --max:1180px;
+    --shadow:0 24px 60px rgba(0,0,0,.18);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:"Plus Jakarta Sans","Segoe UI",Arial,sans-serif;
+    color:var(--text);
+    background:var(--navy);
+    overflow-x:hidden;
+    cursor:none;
+}
+a,button,input,select,textarea{cursor:none!important}
+button,input,select,textarea{font:inherit}
+
+#fish-cursor{
+    position:fixed;left:0;top:0;width:44px;height:27px;pointer-events:none;
+    z-index:99999;transform:translate3d(-6px,-14px,0);
+}
+#fish-cursor svg{width:44px;height:27px;display:block;filter:drop-shadow(0 2px 3px rgba(0,0,0,.55))}
+
+.ocean-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.wave-decoration{position:absolute;left:0;top:0;width:100%;height:180px;opacity:.12}
+.wave-decoration svg{width:100%;height:100%;display:block}
+.wave-decoration path{fill:var(--light-blue)}
+.creature{
+    position:absolute;opacity:.20;pointer-events:none;
+    filter:brightness(0) saturate(100%) invert(82%) sepia(10%) saturate(750%) hue-rotate(158deg) brightness(105%) contrast(96%);
+}
+.creature img{width:100%;height:100%;object-fit:contain}
+
+nav{
+    position:sticky;top:16px;z-index:5000;width:min(calc(100% - 32px),1240px);
+    margin:16px auto 0;min-height:72px;padding:10px 18px 10px 22px;
+    display:flex;align-items:center;justify-content:space-between;gap:20px;
+    background:rgba(255,250,240,.97);border:1px solid rgba(255,255,255,.86);
+    border-radius:50px;box-shadow:0 15px 40px rgba(0,0,0,.20);backdrop-filter:blur(14px);
+}
+.logo-container{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0}
+.logo-container img{width:48px;height:48px;object-fit:contain;filter:drop-shadow(0 5px 8px rgba(0,0,0,.12))}
+.brand-name{
+    color:var(--navy);font-family:"Space Grotesk","Segoe UI",sans-serif;
+    font-size:1.08rem;font-weight:700;letter-spacing:-.4px;white-space:nowrap;
+}
+.nav-right{display:flex;align-items:center;gap:24px;min-width:0}
+.nav-links{display:flex;align-items:center;gap:25px;flex-wrap:nowrap;white-space:nowrap}
+.nav-links a{
+    position:relative;color:var(--navy);text-decoration:none;font-size:.88rem;
+    font-weight:700;padding:10px 0;white-space:nowrap;
+}
+.nav-links a::after{
+    content:"";position:absolute;left:0;bottom:3px;width:0;height:2px;
+    background:var(--gold);transition:width .2s ease;
+}
+.nav-links a:hover,.nav-links a.active{color:var(--blue)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.cart-link{
+    position:relative;width:46px;height:46px;border-radius:50%;display:inline-flex;
+    align-items:center;justify-content:center;color:var(--navy);
+    background:rgba(6,27,58,.06);border:1px solid rgba(198,154,58,.22);
+    text-decoration:none;transition:.2s ease;flex:0 0 auto;
+}
+.cart-link:hover{background:var(--gold);transform:translateY(-2px)}
+.cart-count{
+    position:absolute;top:-3px;right:-3px;min-width:20px;height:20px;padding:0 5px;
+    display:grid;place-items:center;border-radius:20px;background:var(--blue);color:#fff;
+    font-size:.64rem;font-weight:800;border:2px solid var(--cream);
+}
+
+.page{
+    position:relative;z-index:2;width:min(calc(100% - 32px),var(--max));
+    margin:0 auto;padding:55px 0 90px;
+}
+.breadcrumbs{
+    display:flex;align-items:center;gap:9px;color:#a9bfd3;
+    font-size:.76rem;font-weight:650;margin:0 0 24px;
+}
+.breadcrumbs a{color:var(--light-blue);text-decoration:none}
+.breadcrumbs i{font-size:.62rem;color:#68829b}
+.page-heading{margin-bottom:28px}
+.eyebrow{
+    color:var(--light-blue);font-size:.68rem;font-weight:800;
+    letter-spacing:2.3px;text-transform:uppercase;margin-bottom:9px;
+}
+h1{
+    margin:0;color:#fff;font-family:"Space Grotesk","Segoe UI",sans-serif;
+    font-size:clamp(2.2rem,5vw,3.7rem);line-height:1.03;letter-spacing:-1.8px;
+}
+.heading-subtitle{margin:12px 0 0;color:#a9bfd3;font-size:.86rem;line-height:1.7}
+
+.checkout-layout{
+    display:grid;grid-template-columns:minmax(0,1.12fr) minmax(330px,.68fr);
+    gap:24px;align-items:start;
+}
+.panel{
+    background:linear-gradient(135deg,rgba(255,250,240,.98),rgba(247,240,223,.94));
+    border:1px solid rgba(255,255,255,.65);border-radius:28px;box-shadow:var(--shadow);
+}
+.form-panel{padding:30px}
+.summary-panel{padding:28px;position:sticky;top:108px}
+
+.section-title{
+    margin:0 0 20px;color:var(--navy);
+    font-family:"Space Grotesk","Segoe UI",sans-serif;font-size:1.32rem;
+}
+.form-section + .form-section{
+    margin-top:30px;padding-top:28px;border-top:1px solid rgba(6,27,58,.09);
+}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+.field label{
+    color:var(--navy);font-size:.7rem;font-weight:800;
+}
+.field label span{color:#a06d55;font-weight:700}
+.field input,.field select,.field textarea{
+    width:100%;border:1px solid rgba(6,27,58,.14);border-radius:13px;
+    padding:13px 14px;background:#fffdf7;color:var(--navy);outline:none;
+    font-size:.76rem;
+}
+.field textarea{min-height:100px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{
+    border-color:var(--gold);box-shadow:0 0 0 3px rgba(198,154,58,.12);
+}
+.helper{margin:0;color:#7a8c9e;font-size:.64rem;line-height:1.55}
+
+.payment-placeholder{
+    display:flex;gap:12px;align-items:flex-start;padding:15px;border-radius:16px;
+    background:rgba(22,141,204,.06);border:1px solid rgba(22,141,204,.12);
+}
+.payment-placeholder i{color:var(--blue);margin-top:2px}
+.payment-placeholder strong{display:block;color:var(--navy);font-size:.72rem;margin-bottom:4px}
+.payment-placeholder span{display:block;color:#718398;font-size:.63rem;line-height:1.55}
+
+.order-items{display:grid;gap:0;margin-bottom:13px}
+.order-item{
+    display:grid;grid-template-columns:58px minmax(0,1fr) auto;gap:11px;
+    align-items:center;padding:12px 0;border-bottom:1px solid rgba(6,27,58,.08);
+}
+.order-item:last-child{border-bottom:0}
+.order-thumb{
+    width:58px;height:58px;border-radius:13px;background:#eaf3f6;
+    border:1px solid rgba(198,154,58,.16);overflow:hidden;
+}
+.order-thumb img{width:100%;height:100%;object-fit:contain}
+.order-name{margin:0;color:var(--navy);font-size:.72rem;font-weight:800;line-height:1.3}
+.order-meta{margin:4px 0 0;color:#8190a0;font-size:.6rem}
+.order-price{color:var(--navy);font-family:"Space Grotesk","Segoe UI",sans-serif;font-size:.78rem;font-weight:700;text-align:right;white-space:nowrap}
+
+.summary-line{
+    display:flex;justify-content:space-between;gap:15px;padding:10px 0;
+    color:#65798e;font-size:.72rem;
+}
+.summary-line strong{color:var(--navy)}
+.summary-total{
+    display:flex;justify-content:space-between;align-items:end;gap:15px;
+    margin-top:9px;padding-top:17px;border-top:1px solid rgba(6,27,58,.12);
+}
+.summary-total span{color:#687d95;font-size:.73rem;font-weight:750}
+.summary-total strong{color:var(--navy);font-family:"Space Grotesk","Segoe UI",sans-serif;font-size:1.65rem}
+.checkout-btn{
+    width:100%;min-height:54px;margin-top:20px;border:0;border-radius:50px;
+    background:var(--gold);color:var(--navy);font-size:.76rem;font-weight:800;
+    display:flex;align-items:center;justify-content:center;gap:9px;transition:.22s ease;
+}
+.checkout-btn:hover{background:var(--gold-light);transform:translateY(-2px)}
+.checkout-btn:disabled{opacity:.5;pointer-events:none}
+.security-note{
+    display:flex;gap:9px;align-items:flex-start;margin-top:15px;padding:12px 13px;
+    border-radius:14px;background:rgba(6,27,58,.045);color:#718398;
+    font-size:.61rem;line-height:1.55;
+}
+.security-note i{color:var(--gold);margin-top:2px}
+.back-link{
+    display:inline-flex;align-items:center;gap:8px;margin-top:16px;
+    color:#5d7288;text-decoration:none;font-size:.69rem;font-weight:750;
+}
+.back-link:hover{color:var(--blue)}
+
+.empty-state{display:none;text-align:center;padding:55px 20px}
+.empty-state.show{display:block}
+.empty-icon{
+    width:70px;height:70px;margin:0 auto 16px;border-radius:50%;
+    display:grid;place-items:center;background:rgba(22,141,204,.09);
+    color:var(--blue);font-size:1.5rem;
+}
+.empty-state h2{margin:0;color:var(--navy);font-family:"Space Grotesk","Segoe UI",sans-serif}
+.empty-state p{color:#718398;font-size:.78rem;line-height:1.7}
+.btn-products{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    min-height:46px;padding:11px 17px;border-radius:50px;background:var(--navy);
+    color:#fff;text-decoration:none;font-size:.72rem;font-weight:800;
+}
+.btn-products:hover{background:var(--blue)}
+
+.footer{
+    position:relative;z-index:3;background:#072244;color:#fff;padding:100px 20px 32px;
+    text-align:center;overflow:hidden;
+}
+.footer-wave{position:absolute;top:0;left:0;width:100%;height:100px}
+.footer-wave svg{width:100%;height:100%;display:block}
+.footer-content{position:relative;z-index:2;max-width:850px;margin:auto}
+.footer-logo{width:76px;height:76px;object-fit:contain;filter:drop-shadow(0 8px 16px rgba(0,0,0,.25))}
+.footer h3{margin:12px 0 0;color:var(--gold-light);font-size:1.45rem}
+.footer p{max-width:700px;margin:9px auto 0;color:#aebfd2;font-size:.84rem;line-height:1.7}
+.footer-links{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;margin:23px 0}
+.footer-links a{color:#e2edf6;text-decoration:none;font-size:.82rem;font-weight:650}
+.footer-links a:hover{color:var(--gold-light)}
+.copyright{
+    margin-top:25px!important;padding-top:17px;border-top:1px solid rgba(255,255,255,.08);
+    color:#71869c!important;font-size:.72rem!important;
+}
+
+.toast{
+    position:fixed;left:50%;bottom:24px;z-index:10000;transform:translate(-50%,20px);
+    opacity:0;pointer-events:none;padding:13px 18px;border-radius:50px;background:var(--navy);
+    color:#fff;box-shadow:0 15px 40px rgba(0,0,0,.28);font-size:.74rem;font-weight:750;transition:.25s ease;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media(max-width:1000px){
+    .nav-right{gap:13px}.nav-links{gap:15px}
+    .checkout-layout{grid-template-columns:1fr}
+    .summary-panel{position:relative;top:auto}
+}
+@media(max-width:700px){
+    body{cursor:auto}
+    a,button,input,select,textarea{cursor:pointer!important}
+    #fish-cursor{display:none}
+    nav{
+        width:calc(100% - 20px);top:10px;margin-top:10px;min-height:62px;
+        padding:8px 12px 8px 14px;border-radius:28px;
+    }
+    .logo-container img{width:42px;height:42px}
+    .brand-name{font-size:.88rem}
+    .nav-links{display:none}
+    .page{width:calc(100% - 24px);padding:35px 0 65px}
+    .form-panel,.summary-panel{padding:22px 19px}
+    .field-grid{grid-template-columns:1fr}
+    .field.full{grid-column:auto}
+}
+@media(max-width:430px){
+    .brand-name{font-size:.78rem}
+    .cart-link{width:42px;height:42px}
+    .breadcrumbs{font-size:.68rem}
+}
+@media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{transition-duration:.01ms!important}
+}
+</style>
+</head>
+
+<body>
+
+<div id="fish-cursor" aria-hidden="true">
+    <svg viewBox="0 0 50 30" fill="none" stroke="#e0bc68" stroke-width="2" stroke-linecap="round">
+        <path d="M 5,15 Q 25,-5 45,25 M 5,15 Q 25,35 45,5"/>
+        <path d="M 15,8.5 Q 18,15 15,21.5"/>
+        <circle cx="10" cy="14.5" r="1.5" fill="#e0bc68" stroke="none"/>
+    </svg>
+</div>
+
+<div class="ocean-layer" id="oceanLayer" aria-hidden="true">
+    <div class="wave-decoration">
+        <svg viewBox="0 0 1440 180" preserveAspectRatio="none">
+            <path d="M0 95 C180 20 300 165 480 95 S780 20 960 95 S1260 165 1440 95 V0 H0 Z"/>
+        </svg>
+    </div>
+</div>
+
+<nav aria-label="Main navigation">
+    <a href="/" class="logo-container" aria-label="Munambam Seafoods Home">
+        <img src="/assets/MUNAMBAM_Seafood_Logo_HQ.png" alt="Munambam Seafoods Logo" width="44" height="44">
+        <span class="brand-name">MUNAMBAM SEAFOODS</span>
+    </a>
+
+    <div class="nav-right">
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/products/">Products</a>
+            <a href="/about/">About Us</a>
+            <a href="/contact/">Contact</a>
+            <a href="/privacy/">Privacy Policy</a>
+            <a href="/terms/">Terms</a>
+        </div>
+        <a href="./cart.html" class="cart-link" aria-label="Shopping cart">
+            <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+            <span class="cart-count" id="cartCount">0</span>
+        </a>
+    </div>
+</nav>
+
+<main class="page">
+    <div class="breadcrumbs">
+        <a href="./cart.html">Cart</a>
+        <i class="fa-solid fa-chevron-right"></i>
+        <span>Checkout</span>
+    </div>
+
+    <header class="page-heading">
+        <div class="eyebrow">Secure Order Details</div>
+        <h1>Checkout</h1>
+        <p class="heading-subtitle">Enter your delivery details and review your order before payment.</p>
+    </header>
+
+    <div class="checkout-layout">
+
+        <section class="panel form-panel" id="checkoutFormPanel">
+
+            <div class="form-section">
+                <h2 class="section-title">Customer Details</h2>
+
+                <div class="field-grid">
+                    <div class="field">
+                        <label for="fullName">Full Name <span>*</span></label>
+                        <input id="fullName" name="fullName" type="text" autocomplete="name" required maxlength="80" placeholder="Enter your full name">
+                    </div>
+
+                    <div class="field">
+                        <label for="phone">Mobile Number <span>*</span></label>
+                        <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required maxlength="15" placeholder="10-digit mobile number">
+                    </div>
+
+                    <div class="field">
+                        <label for="email">Email Address</label>
+                        <input id="email" name="email" type="email" autocomplete="email" maxlength="120" placeholder="you@example.com">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Delivery Address</h2>
+
+                <div class="field-grid">
+                    <div class="field full">
+                        <label for="address">Address <span>*</span></label>
+                        <textarea id="address" name="address" autocomplete="street-address" required maxlength="300" placeholder="House / building, street, locality"></textarea>
+                    </div>
+
+                    <div class="field">
+                        <label for="city">City / Town <span>*</span></label>
+                        <input id="city" name="city" type="text" autocomplete="address-level2" required maxlength="80" placeholder="City or town">
+                    </div>
+
+                    <div class="field">
+                        <label for="state">State <span>*</span></label>
+                        <select id="state" name="state" autocomplete="address-level1" required>
+                            <option value="">Select state</option>
+                            <option>Andhra Pradesh</option>
+                            <option>Arunachal Pradesh</option>
+                            <option>Assam</option>
+                            <option>Bihar</option>
+                            <option>Chhattisgarh</option>
+                            <option>Goa</option>
+                            <option>Gujarat</option>
+                            <option>Haryana</option>
+                            <option>Himachal Pradesh</option>
+                            <option>Jharkhand</option>
+                            <option>Karnataka</option>
+                            <option>Kerala</option>
+                            <option>Madhya Pradesh</option>
+                            <option>Maharashtra</option>
+                            <option>Manipur</option>
+                            <option>Meghalaya</option>
+                            <option>Mizoram</option>
+                            <option>Nagaland</option>
+                            <option>Odisha</option>
+                            <option>Punjab</option>
+                            <option>Rajasthan</option>
+                            <option>Sikkim</option>
+                            <option>Tamil Nadu</option>
+                            <option>Telangana</option>
+                            <option>Tripura</option>
+                            <option>Uttar Pradesh</option>
+                            <option>Uttarakhand</option>
+                            <option>West Bengal</option>
+                            <option>Andaman and Nicobar Islands</option>
+                            <option>Chandigarh</option>
+                            <option>Dadra and Nagar Haveli and Daman and Diu</option>
+                            <option>Delhi</option>
+                            <option>Jammu and Kashmir</option>
+                            <option>Ladakh</option>
+                            <option>Lakshadweep</option>
+                            <option>Puducherry</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="pincode">PIN Code <span>*</span></label>
+                        <input id="pincode" name="pincode" type="text" autocomplete="postal-code" inputmode="numeric" required maxlength="6" placeholder="6-digit PIN code">
+                    </div>
+
+                    <div class="field">
+                        <label for="landmark">Landmark</label>
+                        <input id="landmark" name="landmark" type="text" maxlength="120" placeholder="Nearby landmark (optional)">
+                    </div>
+
+                    <div class="field full">
+                        <p class="helper">Please provide an accurate delivery address so the order can be processed correctly.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Payment</h2>
+
+                <div class="payment-placeholder">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <div>
+                        <strong>Secure online payment</strong>
+                        <span>Razorpay payment will be connected after the secure backend and live order-verification stage is completed. No payment is processed on this page yet.</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <aside class="panel summary-panel">
+
+            <h2 class="section-title">Order Summary</h2>
+
+            <div id="orderItems" class="order-items"></div>
+
+            <div class="empty-state" id="emptyState">
+                <div class="empty-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+                <h2>No products</h2>
+                <p>Your cart is empty. Add a product before checkout.</p>
+                <a href="/products/" class="btn-products">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Browse Products
+                </a>
+            </div>
+
+            <div id="summaryContent">
+                <div class="summary-line">
+                    <span>Items</span>
+                    <strong id="summaryItems">0</strong>
+                </div>
+
+                <div class="summary-line">
+                    <span>Subtotal</span>
+                    <strong id="subtotal">₹ —</strong>
+                </div>
+
+                <div class="summary-line">
+                    <span>Delivery</span>
+                    <strong id="delivery">Calculated at checkout</strong>
+                </div>
+
+                <div class="summary-total">
+                    <span>Estimated Total</span>
+                    <strong id="total">₹ —</strong>
+                </div>
+
+                <button type="button" class="checkout-btn" id="payBtn">
+                    Continue to Secure Payment
+                    <i class="fa-solid fa-lock"></i>
+                </button>
+
+                <div class="security-note">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Your payment will only be initiated after Razorpay and the secure backend are connected. This button is intentionally not processing a live payment yet.</span>
+                </div>
+
+                <a href="./cart.html" class="back-link">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back to Cart
+                </a>
+            </div>
+        </aside>
+
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="footer-wave" aria-hidden="true">
+        <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+            <path d="M0 75 C180 15 310 125 510 72 S850 15 1050 72 S1260 125 1440 60 V120 H0 Z" fill="#061b3a"/>
+            <path d="M0 92 C200 35 330 145 530 88 S860 35 1080 88 S1270 140 1440 76 V120 H0 Z" fill="#168dcc" opacity=".55"/>
+        </svg>
+    </div>
+
+    <div class="footer-content">
+        <img class="footer-logo" src="/assets/MUNAMBAM_Seafood_Logo_HQ.png" alt="Munambam Seafoods">
+        <h3>Munambam Seafoods</h3>
+        <p>Premium coastal provisions, carefully sourced and prepared from the Munambam harbour region.</p>
+
+        <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="/products/">Products</a>
+            <a href="/about/">About Us</a>
+            <a href="/contact/">Contact</a>
+            <a href="/privacy/">Privacy Policy</a>
+            <a href="/terms/">Terms</a>
+        </div>
+
+        <p class="copyright">© 2026 Munambam Seafoods. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+    "use strict";
+
+    const CART_KEY = "munambam_cart";
+    const $ = (id) => document.getElementById(id);
+
+    function readCart() {
+        try {
+            const data = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+            return Array.isArray(data) ? data : [];
+        } catch {
+            return [];
+        }
+    }
+
+    function money(value) {
+        if (typeof value !== "number" || !Number.isFinite(value)) return "₹ —";
+        return `₹${value.toLocaleString("en-IN")}`;
+    }
+
+    function updateCartCount(cart) {
+        const count = cart.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+        $("cartCount").textContent = count > 99 ? "99+" : String(count);
+    }
+
+    function renderOrder() {
+        const cart = readCart();
+        updateCartCount(cart);
+
+        $("orderItems").innerHTML = "";
+
+        if (!cart.length) {
+            $("emptyState").classList.add("show");
+            $("summaryContent").style.display = "none";
+            return;
+        }
+
+        $("emptyState").classList.remove("show");
+        $("summaryContent").style.display = "block";
+
+        let count = 0;
+        let subtotal = 0;
+        let knownPrice = true;
+
+        cart.forEach((item) => {
+            const quantity = Math.max(1, Number(item.quantity || 1));
+            count += quantity;
+
+            if (typeof item.price === "number" && Number.isFinite(item.price)) {
+                subtotal += item.price * quantity;
+            } else {
+                knownPrice = false;
+            }
+
+            const row = document.createElement("div");
+            row.className = "order-item";
+
+            const thumb = document.createElement("div");
+            thumb.className = "order-thumb";
+
+            const img = document.createElement("img");
+            img.src = item.image || "./PRODUCT_1.webp";
+            img.alt = item.name || "Product";
+            thumb.appendChild(img);
+
+            const info = document.createElement("div");
+
+            const name = document.createElement("p");
+            name.className = "order-name";
+            name.textContent = item.name || "Munambam Product";
+
+            const meta = document.createElement("p");
+            meta.className = "order-meta";
+            meta.textContent = `${item.pack || "Pack"} × ${quantity}`;
+
+            info.append(name, meta);
+
+            const price = document.createElement("div");
+            price.className = "order-price";
+            price.textContent =
+                typeof item.price === "number" && Number.isFinite(item.price)
+                    ? money(item.price * quantity)
+                    : "₹ —";
+
+            row.append(thumb, info, price);
+            $("orderItems").appendChild(row);
+        });
+
+        $("summaryItems").textContent = count;
+        $("subtotal").textContent = knownPrice ? money(subtotal) : "₹ —";
+        $("total").textContent = knownPrice ? money(subtotal) : "₹ —";
+    }
+
+    // Frontend validation only. Final validation must happen server-side.
+    function validateForm() {
+        const fields = [
+            ["fullName", "Please enter your full name."],
+            ["phone", "Please enter your mobile number."],
+            ["address", "Please enter your delivery address."],
+            ["city", "Please enter your city or town."],
+            ["state", "Please select your state."],
+            ["pincode", "Please enter your 6-digit PIN code."]
+        ];
+
+        for (const [id, message] of fields) {
+            const field = $(id);
+            if (!field.value.trim()) {
+                field.focus();
+                showToast(message);
+                return false;
+            }
+        }
+
+        const phone = $("phone").value.replace(/\D/g, "");
+        if (phone.length !== 10) {
+            $("phone").focus();
+            showToast("Please enter a valid 10-digit mobile number.");
+            return false;
+        }
+
+        const pincode = $("pincode").value.replace(/\D/g, "");
+        if (pincode.length !== 6) {
+            $("pincode").focus();
+            showToast("Please enter a valid 6-digit PIN code.");
+            return false;
+        }
+
+        return true;
+    }
+
+    $("payBtn").addEventListener("click", () => {
+        if (!readCart().length) {
+            showToast("Your cart is empty.");
+            return;
+        }
+
+        if (!validateForm()) return;
+
+        showToast("Secure payment will be connected next.");
+    });
+
+    $("phone").addEventListener("input", (event) => {
+        event.target.value = event.target.value.replace(/\D/g, "").slice(0, 10);
+    });
+
+    $("pincode").addEventListener("input", (event) => {
+        event.target.value = event.target.value.replace(/\D/g, "").slice(0, 6);
+    });
+
+    function showToast(message) {
+        $("toast").textContent = message;
+        $("toast").classList.add("show");
+        clearTimeout(window.__munambamToast);
+        window.__munambamToast = setTimeout(() => {
+            $("toast").classList.remove("show");
+        }, 2500);
+    }
+
+    // Same custom fish cursor.
+    const cursor = $("fish-cursor");
+    const mouseDevice = window.matchMedia("(hover:hover) and (pointer:fine)").matches;
+
+    if (cursor && mouseDevice) {
+        let x = 0, y = 0, frame = false;
+        document.addEventListener("mousemove", (event) => {
+            x = event.clientX;
+            y = event.clientY;
+            if (frame) return;
+            frame = true;
+            requestAnimationFrame(() => {
+                cursor.style.transform = `translate3d(${x - 6}px,${y - 14}px,0)`;
+                frame = false;
+            });
+        }, { passive:true });
+    }
+
+    // Same subtle ocean visual language.
+    const ocean = $("oceanLayer");
+    const creatureData = [
+        ["shark",110,17,46000,-9000,"/assets/icon/icon-shark.svg"],
+        ["fish",38,27,33000,-15000,"/assets/icon/icon-fish.svg"],
+        ["prawn",32,36,37000,-6000,"/assets/icon/icon-prawn.svg"],
+        ["octopus",58,46,41000,-19000,"/assets/icon/icon-octopus.svg"]
+    ];
+
+    if (ocean && !window.matchMedia("(prefers-reduced-motion:reduce)").matches) {
+        creatureData.forEach((item, index) => {
+            const el = document.createElement("div");
+            el.className = "creature";
+            el.style.width = `${item[1]}px`;
+            el.style.height = `${item[1]}px`;
+            el.style.top = `${item[2]}vh`;
+            el.style.left = item[0] === "shark" ? "110%" : "-120px";
+            el.style.animation = `swim${index} ${item[3]}ms linear ${item[4]}ms infinite`;
+            el.innerHTML = `<img src="${item[5]}" alt="">`;
+            ocean.appendChild(el);
+
+            const style = document.createElement("style");
+            const to = item[0] === "shark" ? "translateX(-125vw)" : "translateX(125vw)";
+            style.textContent = `@keyframes swim${index}{from{transform:translateX(0)}to{transform:${to}}}`;
+            document.head.appendChild(style);
+        });
+    }
+
+    renderOrder();
+})();
+</script>
+
+</body>
+</html>
