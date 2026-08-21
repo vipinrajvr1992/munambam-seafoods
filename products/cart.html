@@ -409,6 +409,11 @@ h1{
             </div>
 
             <div class="summary-line">
+                <span>GST</span>
+                <strong id="gst">Calculated at checkout</strong>
+            </div>
+
+            <div class="summary-line">
                 <span>Delivery</span>
                 <strong id="delivery">Calculated at checkout</strong>
             </div>
@@ -425,7 +430,7 @@ h1{
 
             <div class="note">
                 <i class="fa-solid fa-circle-info"></i>
-                <span>Live payment and delivery calculation will be connected during the secure checkout/backend stage.</span>
+                <span>GST and delivery will be calculated during secure checkout after the applicable rate and delivery rules are confirmed.</span>
             </div>
         </aside>
     </div>
@@ -501,6 +506,8 @@ h1{
             $("checkoutBtn").style.pointerEvents = "none";
             $("summaryItems").textContent = "0";
             $("subtotal").textContent = "₹ —";
+            $("gst").textContent = "Calculated at checkout";
+            $("delivery").textContent = "Calculated at checkout";
             $("total").textContent = "₹ —";
             return;
         }
@@ -609,7 +616,13 @@ h1{
         writeCart(cart);
 
         $("summaryItems").textContent = itemCount;
+
+        // GST rate is intentionally not hard-coded until the business's exact
+        // GST classification/rate is confirmed. Delivery is also calculated
+        // during checkout rather than guessed on the cart page.
         $("subtotal").textContent = hasKnownPrice ? money(subtotal) : "₹ —";
+        $("gst").textContent = "Calculated at checkout";
+        $("delivery").textContent = "Calculated at checkout";
         $("total").textContent = hasKnownPrice ? money(subtotal) : "₹ —";
     }
 
