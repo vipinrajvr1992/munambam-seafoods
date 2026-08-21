@@ -444,7 +444,7 @@ h1{
                     <i class="fa-solid fa-shield-halved"></i>
                     <div>
                         <strong>Secure online payment</strong>
-                        <span>Razorpay payment will be connected after the secure backend and live order-verification stage is completed. No payment is processed on this page yet.</span>
+                        <span>Razorpay payment will be connected after the secure backend and live order-verification stage is completed. GST and delivery will be calculated using the confirmed applicable rules. No payment is processed on this page yet.</span>
                     </div>
                 </div>
             </div>
@@ -479,6 +479,11 @@ h1{
                 </div>
 
                 <div class="summary-line">
+                    <span>GST</span>
+                    <strong id="gst">Calculated at checkout</strong>
+                </div>
+
+                <div class="summary-line">
                     <span>Delivery</span>
                     <strong id="delivery">Calculated at checkout</strong>
                 </div>
@@ -495,7 +500,7 @@ h1{
 
                 <div class="security-note">
                     <i class="fa-solid fa-circle-info"></i>
-                    <span>Your payment will only be initiated after Razorpay and the secure backend are connected. This button is intentionally not processing a live payment yet.</span>
+                    <span>Your payment will only be initiated after Razorpay and the secure backend are connected. GST and delivery will be calculated before the final payment amount is created. This button is intentionally not processing a live payment yet.</span>
                 </div>
 
                 <a href="./cart.html" class="back-link">
@@ -571,6 +576,7 @@ h1{
         if (!cart.length) {
             $("emptyState").classList.add("show");
             $("summaryContent").style.display = "none";
+            $("gst").textContent = "Calculated at checkout";
             return;
         }
 
@@ -627,6 +633,8 @@ h1{
 
         $("summaryItems").textContent = count;
         $("subtotal").textContent = knownPrice ? money(subtotal) : "₹ —";
+        $("gst").textContent = "Calculated at checkout";
+        $("delivery").textContent = "Calculated at checkout";
         $("total").textContent = knownPrice ? money(subtotal) : "₹ —";
     }
 
