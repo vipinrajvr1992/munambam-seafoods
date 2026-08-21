@@ -482,6 +482,24 @@
             box-shadow: 0 0 0 3px rgba(198,154,58,.12);
         }
 
+        /* PREMIUM PRODUCT SEARCH */
+        .product-search-row{position:relative;z-index:3;width:min(calc(100% - 40px),1180px);margin:22px auto 0;display:flex;align-items:center;gap:12px}
+        .product-search{display:flex;align-items:center;gap:10px;min-height:54px;padding:0 16px;border-radius:18px;background:rgba(255,250,240,.98);border:1px solid rgba(198,154,58,.28);box-shadow:0 16px 38px rgba(0,0,0,.14)}
+        .product-search i{color:var(--gold);font-size:.95rem;flex:0 0 auto}
+        .product-search input{width:100%;border:0;outline:0;background:transparent;color:var(--navy);font:600 .82rem var(--body);padding:14px 0}
+        .product-search input::placeholder{color:#8190a0}
+        .search-clear{display:none;width:32px;height:32px;border:0;border-radius:50%;background:rgba(6,27,58,.07);color:var(--navy);font-size:.75rem}
+        .search-clear.show{display:grid;place-items:center}
+        .search-meta{margin-top:8px;color:#9fb4c8;font-size:.68rem;font-weight:650;text-align:left}
+        .search-meta strong{color:var(--gold-light)}
+        .no-results{display:none;text-align:center;padding:55px 20px;color:#b9cada}
+        .no-results.show{display:block}
+        .no-results i{font-size:2rem;color:var(--gold);margin-bottom:12px}
+        .no-results h2{margin:0 0 8px;color:var(--cream);font:800 1.2rem var(--heading)}
+        .no-results p{margin:0;font-size:.75rem;line-height:1.7}
+        .card-price{display:inline-flex;align-items:center;justify-content:center;gap:6px;margin:-3px 0 15px;color:var(--navy);font-size:.72rem;font-weight:800}
+        .card-price small{color:#8392a3;font-weight:650}
+
         /* PRODUCTS */
         .products-section {
             position: relative;
@@ -2569,6 +2587,17 @@ footer p{
     </div>
 
 
+    <div class="product-search-row" role="search" aria-label="Search products">
+        <div style="width:100%">
+            <div class="product-search">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <input id="productSearch" type="search" autocomplete="off" spellcheck="false" placeholder="Search products, prawns, dried fish, podi..." aria-label="Search products">
+                <button type="button" class="search-clear" id="searchClear" aria-label="Clear search"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            </div>
+            <div class="search-meta" id="searchMeta" aria-live="polite">Showing <strong>6</strong> products</div>
+        </div>
+    </div>
+
     <!-- =========================================================
          PRODUCTS
     ========================================================== -->
@@ -2629,6 +2658,8 @@ footer p{
                         100% Meat Weight, Low Sodium &amp; Chemical Free
                     </p>
 
+                    <div class="card-price">From ₹499 <small>+ applicable GST</small></div>
+
                 </div>
 
 
@@ -2669,6 +2700,8 @@ footer p{
                     <p>
                         Hygienically Dried Direct From Harbour
                     </p>
+
+                    <div class="card-price">From ₹299 <small>+ applicable GST</small></div>
 
                 </div>
 
@@ -2711,6 +2744,8 @@ footer p{
                         Authentic Kerala Homemade Blend
                     </p>
 
+                    <div class="card-price">From ₹199 <small>+ applicable GST</small></div>
+
                 </div>
 
 
@@ -2750,6 +2785,8 @@ footer p{
 
                     <p>
                         Traditional Coastal Delicacy                    </p>
+
+                    <div class="card-price">From ₹349 <small>+ applicable GST</small></div>
 
                 </div>
 
@@ -2792,6 +2829,8 @@ footer p{
                         Rich in Flavor, Clean &amp; Hygienic
                     </p>
 
+                    <div class="card-price">From ₹299 <small>+ applicable GST</small></div>
+
                 </div>
 
 
@@ -2833,6 +2872,8 @@ footer p{
                         Authentic Coastal Staple
                     </p>
 
+                    <div class="card-price">From ₹249 <small>+ applicable GST</small></div>
+
                 </div>
 
 
@@ -2844,6 +2885,12 @@ footer p{
             </article>
 
 
+        </div>
+
+        <div class="no-results" id="noResults" aria-live="polite">
+            <i class="fa-solid fa-magnifying-glass-minus" aria-hidden="true"></i>
+            <h2>No products found</h2>
+            <p>Try a different product name, category or keyword.</p>
         </div>
 
     </section>
@@ -3075,103 +3122,47 @@ footer p{
 
 
             /* =====================================================
-               PRODUCT FILTER / SORT
-               Works independently of the custom cursor and ocean
-               animation. The cursor code below is left untouched.
+               PRODUCT SEARCH / FILTER / SORT
             ===================================================== */
-            const productGrid = document.getElementById("productGrid");
-            const filterButtons = Array.from(
-                document.querySelectorAll(".filter-btn")
-            );
-            const sortSelect = document.getElementById("sortSelect");
+            const productGrid=document.getElementById("productGrid");
+            const filterButtons=Array.from(document.querySelectorAll(".filter-btn"));
+            const sortSelect=document.getElementById("sortSelect");
+            const searchInput=document.getElementById("productSearch");
+            const searchClear=document.getElementById("searchClear");
+            const searchMeta=document.getElementById("searchMeta");
+            const noResults=document.getElementById("noResults");
 
-            if (productGrid && filterButtons.length) {
-                const productCards = Array.from(
-                    productGrid.querySelectorAll(".card")
-                );
-
-                productCards.forEach((card, index) => {
-                    card.dataset.featuredIndex = String(index);
+            if(productGrid){
+                const productCards=Array.from(productGrid.querySelectorAll(".card"));
+                productCards.forEach((card,index)=>{
+                    card.dataset.featuredIndex=String(index);
+                    card.dataset.searchText=[card.dataset.name||"",card.dataset.category||"",card.querySelector("p")?.textContent||""].join(" ").toLowerCase();
                 });
-
-                let activeFilter = "all";
-                let activeSort = "default";
-
-                const renderProducts = () => {
-                    const cards = Array.from(
-                        productGrid.querySelectorAll(".card")
-                    );
-
-                    const filtered = cards.filter((card) => {
-                        const category =
-                            (card.dataset.category || "").trim().toLowerCase();
-                        return activeFilter === "all" || category === activeFilter;
+                let activeFilter="all",activeSort="default",searchTerm="";
+                const escapeSearch=value=>String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[ch]));
+                const renderProducts=()=>{
+                    const cards=Array.from(productGrid.querySelectorAll(".card"));
+                    const filtered=cards.filter(card=>{
+                        const category=(card.dataset.category||"").trim().toLowerCase();
+                        return (activeFilter==="all"||category===activeFilter)&&(!searchTerm||(card.dataset.searchText||"").includes(searchTerm));
                     });
-
-                    cards.forEach((card) => {
-                        card.hidden = !filtered.includes(card);
-                    });
-
-                    const ordered = [...cards];
-
-                    if (activeSort === "az") {
-                        ordered.sort((a,b) =>
-                            (a.dataset.name || "").trim().localeCompare(
-                                (b.dataset.name || "").trim(),
-                                undefined,
-                                { sensitivity: "base" }
-                            )
-                        );
-                    } else if (activeSort === "za") {
-                        ordered.sort((a,b) =>
-                            (b.dataset.name || "").trim().localeCompare(
-                                (a.dataset.name || "").trim(),
-                                undefined,
-                                { sensitivity: "base" }
-                            )
-                        );
-                    } else {
-                        ordered.sort(
-                            (a,b) =>
-                                Number(a.dataset.featuredIndex) -
-                                Number(b.dataset.featuredIndex)
-                        );
-                    }
-
-                    ordered.forEach((card) => productGrid.appendChild(card));
+                    const ordered=[...cards];
+                    if(activeSort==="az")ordered.sort((a,b)=>(a.dataset.name||"").localeCompare(b.dataset.name||"",undefined,{sensitivity:"base"}));
+                    else if(activeSort==="za")ordered.sort((a,b)=>(b.dataset.name||"").localeCompare(a.dataset.name||"",undefined,{sensitivity:"base"}));
+                    else ordered.sort((a,b)=>Number(a.dataset.featuredIndex)-Number(b.dataset.featuredIndex));
+                    ordered.forEach(card=>{card.hidden=!filtered.includes(card);productGrid.appendChild(card);});
+                    noResults?.classList.toggle("show",filtered.length===0);
+                    if(searchMeta){searchMeta.innerHTML=`Showing <strong>${filtered.length}</strong> of <strong>${cards.length}</strong> products${searchTerm?` for “${escapeSearch(searchTerm)}”`:""}`;}
+                    searchClear?.classList.toggle("show",Boolean(searchTerm));
                 };
-
-                filterButtons.forEach((button) => {
-                    button.setAttribute(
-                        "aria-pressed",
-                        button.classList.contains("active") ? "true" : "false"
-                    );
-
-                    button.addEventListener("click", () => {
-                        activeFilter = (
-                            button.dataset.filter || "all"
-                        ).trim().toLowerCase();
-
-                        filterButtons.forEach((item) => {
-                            const isActive = item === button;
-                            item.classList.toggle("active", isActive);
-                            item.setAttribute(
-                                "aria-pressed",
-                                isActive ? "true" : "false"
-                            );
-                        });
-
-                        renderProducts();
-                    });
-                });
-
-                if (sortSelect) {
-                    sortSelect.addEventListener("change", () => {
-                        activeSort = sortSelect.value || "default";
-                        renderProducts();
-                    });
-                }
-
+                filterButtons.forEach(button=>button.addEventListener("click",()=>{
+                    activeFilter=(button.dataset.filter||"all").trim().toLowerCase();
+                    filterButtons.forEach(item=>{const active=item===button;item.classList.toggle("active",active);item.setAttribute("aria-pressed",active?"true":"false");});renderProducts();
+                }));
+                sortSelect?.addEventListener("change",()=>{activeSort=sortSelect.value||"default";renderProducts();});
+                searchInput?.addEventListener("input",()=>{searchTerm=searchInput.value.trim().toLowerCase();renderProducts();});
+                searchClear?.addEventListener("click",()=>{searchInput.value="";searchTerm="";searchInput.focus();renderProducts();});
+                document.addEventListener("keydown",event=>{if(event.key==="/"&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName)){event.preventDefault();searchInput?.focus();}if(event.key==="Escape"&&document.activeElement===searchInput&&searchTerm)searchClear?.click();});
                 renderProducts();
             }
 
