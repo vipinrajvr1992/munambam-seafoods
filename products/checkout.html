@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <meta http-equiv="Content-Security-Policy"
-content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://wa.me; upgrade-insecure-requests;">
+content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self' https://api.postalpincode.in; object-src 'none'; base-uri 'self'; form-action 'self' https://wa.me; upgrade-insecure-requests;">
 
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="permissions-policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
@@ -207,6 +207,8 @@ h1{
     font-size:.61rem;line-height:1.55;
 }
 .security-note i{color:var(--gold);margin-top:2px}
+
+.pin-status{margin-top:7px;color:#718398;font-size:.62rem;line-height:1.55;min-height:17px}.pin-status strong{color:var(--navy)}
 .back-link{
     display:inline-flex;align-items:center;gap:8px;margin-top:16px;
     color:#5d7288;text-decoration:none;font-size:.69rem;font-weight:750;
@@ -433,6 +435,7 @@ h1{
 
                     <div class="field full">
                         <p class="helper">Please provide an accurate delivery address so the order can be processed correctly.</p>
+                        <p class="pin-status" id="pinStatus" aria-live="polite">Enter a valid PIN to verify the delivery zone and estimated charge.</p>
                     </div>
                 </div>
             </div>
@@ -480,12 +483,12 @@ h1{
 
                 <div class="summary-line">
                     <span>GST</span>
-                    <strong id="gst">Calculated at checkout</strong>
+                    <strong id="gst">₹ —</strong>
                 </div>
 
                 <div class="summary-line">
                     <span>Delivery</span>
-                    <strong id="delivery">Calculated at checkout</strong>
+                    <strong id="delivery">Enter PIN</strong>
                 </div>
 
                 <div class="summary-total">
@@ -544,211 +547,101 @@ h1{
 <script>
 (() => {
     "use strict";
+    const CART_KEY="munambam_cart";
+    const $=id=>document.getElementById(id);
 
-    const CART_KEY = "munambam_cart";
-    const $ = (id) => document.getElementById(id);
+    const STORE_PIN = "683515";
+    const STORE_DISTRICT = "Ernakulam";
+    const STORE_STATE = "Kerala";
+    const DELIVERY_RULES = {
+        samePin:{base:49,step:25,eta:"1–2 working days",label:"Local delivery"},
+        sameDistrict:{base:69,step:30,eta:"1–3 working days",label:"Same district"},
+        sameState:{base:89,step:40,eta:"2–4 working days",label:"Within Kerala"},
+        otherState:{base:129,step:50,eta:"4–8 working days",label:"Other state"},
+        remote:{base:179,step:70,eta:"6–10 working days",label:"Remote / special zone"}
+    };
+    const REMOTE_STATES = new Set(["Jammu and Kashmir","Ladakh","Arunachal Pradesh","Assam","Manipur","Meghalaya","Mizoram","Nagaland","Tripura","Andaman and Nicobar Islands","Lakshadweep"]);
 
-    function readCart() {
-        try {
-            const data = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
-            return Array.isArray(data) ? data : [];
-        } catch {
-            return [];
-        }
+    function packWeightGrams(pack){
+        const value=String(pack||"").toLowerCase();
+        if(value.includes("1kg")||value.includes("1000g")) return 1000;
+        if(value.includes("500g")) return 500;
+        if(value.includes("250g")) return 250;
+        return 0;
     }
-
-    function money(value) {
-        if (typeof value !== "number" || !Number.isFinite(value)) return "₹ —";
-        return `₹${value.toLocaleString("en-IN")}`;
+    function chargeableWeightGrams(cart){
+        const net=cart.reduce((sum,item)=>sum+(Number(item.weightGrams)||packWeightGrams(item.pack))*Math.max(1,Number(item.quantity)||1),0);
+        const packaging=Math.max(100,Math.ceil(net/1000)*100);
+        return Math.max(500,Math.ceil((net+packaging)/500)*500);
     }
-
-    function updateCartCount(cart) {
-        const count = cart.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
-        $("cartCount").textContent = count > 99 ? "99+" : String(count);
+    function getDeliveryRule(info){
+        if(!info) return null;
+        const state=String(info.state||"").trim();
+        const district=String(info.district||"").trim();
+        const pin=String(info.pin||"").trim();
+        if(pin===STORE_PIN) return DELIVERY_RULES.samePin;
+        if(REMOTE_STATES.has(state)) return DELIVERY_RULES.remote;
+        if(state===STORE_STATE && district.toLowerCase()===STORE_DISTRICT.toLowerCase()) return DELIVERY_RULES.sameDistrict;
+        if(state===STORE_STATE) return DELIVERY_RULES.sameState;
+        return DELIVERY_RULES.otherState;
     }
-
-    function renderOrder() {
-        const cart = readCart();
-        updateCartCount(cart);
-
-        $("orderItems").innerHTML = "";
-
-        if (!cart.length) {
-            $("emptyState").classList.add("show");
-            $("summaryContent").style.display = "none";
-            $("gst").textContent = "Calculated at checkout";
-            return;
-        }
-
-        $("emptyState").classList.remove("show");
-        $("summaryContent").style.display = "block";
-
-        let count = 0;
-        let subtotal = 0;
-        let knownPrice = true;
-
-        cart.forEach((item) => {
-            const quantity = Math.max(1, Number(item.quantity || 1));
-            count += quantity;
-
-            if (typeof item.price === "number" && Number.isFinite(item.price)) {
-                subtotal += item.price * quantity;
-            } else {
-                knownPrice = false;
-            }
-
-            const row = document.createElement("div");
-            row.className = "order-item";
-
-            const thumb = document.createElement("div");
-            thumb.className = "order-thumb";
-
-            const img = document.createElement("img");
-            img.src = item.image || "./PRODUCT_1.webp";
-            img.alt = item.name || "Product";
-            thumb.appendChild(img);
-
-            const info = document.createElement("div");
-
-            const name = document.createElement("p");
-            name.className = "order-name";
-            name.textContent = item.name || "Munambam Product";
-
-            const meta = document.createElement("p");
-            meta.className = "order-meta";
-            meta.textContent = `${item.pack || "Pack"} × ${quantity}`;
-
-            info.append(name, meta);
-
-            const price = document.createElement("div");
-            price.className = "order-price";
-            price.textContent =
-                typeof item.price === "number" && Number.isFinite(item.price)
-                    ? money(item.price * quantity)
-                    : "₹ —";
-
-            row.append(thumb, info, price);
-            $("orderItems").appendChild(row);
+    function calculateDelivery(cart,info){
+        const rule=getDeliveryRule(info);
+        if(!rule) return null;
+        const weight=chargeableWeightGrams(cart);
+        const slabs=Math.max(1,Math.ceil(weight/500));
+        return {amount:rule.base+(slabs-1)*rule.step,weight,eta:rule.eta,label:rule.label};
+    }
+    async function lookupPincode(pin){
+        const clean=String(pin||"").replace(/\D/g,"").slice(0,6);
+        if(clean.length!==6) return null;
+        const response=await fetch(`https://api.postalpincode.in/pincode/${clean}`,{headers:{Accept:"application/json"}});
+        if(!response.ok) throw new Error("PIN lookup failed");
+        const data=await response.json();
+        const post=data?.[0]?.PostOffice?.[0];
+        if(!post) throw new Error("PIN not found");
+        return {pin:clean,state:post.State||"",district:post.District||"",city:post.District||post.Name||""};
+    }
+    function gstBreakdown(cart){
+        let subtotal=0,gst=0;
+        cart.forEach(item=>{
+            const qty=Math.max(1,Number(item.quantity)||1);
+            const line=Number(item.price)||0;
+            const rate=Number.isFinite(Number(item.gstRate))?Number(item.gstRate):5;
+            subtotal+=line*qty;
+            gst+=line*qty*rate/100;
         });
-
-        $("summaryItems").textContent = count;
-        $("subtotal").textContent = knownPrice ? money(subtotal) : "₹ —";
-        $("gst").textContent = "Calculated at checkout";
-        $("delivery").textContent = "Calculated at checkout";
-        $("total").textContent = knownPrice ? money(subtotal) : "₹ —";
+        return {subtotal,gst,totalBeforeDelivery:subtotal+gst};
     }
-
-    // Frontend validation only. Final validation must happen server-side.
-    function validateForm() {
-        const fields = [
-            ["fullName", "Please enter your full name."],
-            ["phone", "Please enter your mobile number."],
-            ["address", "Please enter your delivery address."],
-            ["city", "Please enter your city or town."],
-            ["state", "Please select your state."],
-            ["pincode", "Please enter your 6-digit PIN code."]
-        ];
-
-        for (const [id, message] of fields) {
-            const field = $(id);
-            if (!field.value.trim()) {
-                field.focus();
-                showToast(message);
-                return false;
-            }
-        }
-
-        const phone = $("phone").value.replace(/\D/g, "");
-        if (phone.length !== 10) {
-            $("phone").focus();
-            showToast("Please enter a valid 10-digit mobile number.");
-            return false;
-        }
-
-        const pincode = $("pincode").value.replace(/\D/g, "");
-        if (pincode.length !== 6) {
-            $("pincode").focus();
-            showToast("Please enter a valid 6-digit PIN code.");
-            return false;
-        }
-
-        return true;
+    const fallbackMeta={
+        "cleaned-dried-prawns":{gstRate:5,hsn:"0306"},"whole-dried-prawns":{gstRate:5,hsn:"0306"},"prawn-chammanthi-podi":{gstRate:5,hsn:"2106 90 99"},
+        "premium-dried-shark":{gstRate:5,hsn:"0305"},"premium-dried-tuna":{gstRate:5,hsn:"0305"},"premium-dried-mackerel":{gstRate:5,hsn:"0305"}
+    };
+    function readCart(){try{const d=JSON.parse(localStorage.getItem(CART_KEY)||"[]");return Array.isArray(d)?d:[]}catch{return[]}}
+    function money(v){return typeof v!=="number"||!Number.isFinite(v)?"₹ —":`₹${v.toLocaleString("en-IN",{maximumFractionDigits:2})}`;}
+    function updateCartCount(cart){const count=cart.reduce((s,i)=>s+Math.max(1,Number(i.quantity)||1),0);$("cartCount").textContent=count>99?"99+":String(count);}
+    function updateSummary(cart,quote){const {subtotal,gst,totalBeforeDelivery}=gstBreakdown(cart);$("summaryItems").textContent=cart.reduce((s,i)=>s+Math.max(1,Number(i.quantity)||1),0);$("subtotal").textContent=money(subtotal);$("gst").textContent=money(gst);$("delivery").textContent=quote?money(quote.amount):"Enter PIN";$("total").textContent=money(totalBeforeDelivery+(quote?.amount||0));}
+    async function verifyPincode(){
+        const pin=$("pincode").value.replace(/\D/g,"").slice(0,6);
+        if(pin.length!==6){$("pinStatus").textContent="Enter a valid 6-digit PIN to verify delivery.";updateSummary(readCart(),null);return;}
+        $("pinStatus").textContent="Checking PIN serviceability…";
+        try{const info=await lookupPincode(pin);if(info.state)$("state").value=info.state;if(info.city&&!$("city").value.trim())$("city").value=info.city;const quote=calculateDelivery(readCart(),info);localStorage.setItem("munambam_delivery_info",JSON.stringify(info));localStorage.setItem("munambam_delivery_quote",JSON.stringify(quote));$("pinStatus").innerHTML=`<strong>${quote.label}</strong> • ${info.city}, ${info.state} • Estimated delivery ${quote.eta} • Chargeable weight ${quote.weight/1000} kg`;updateSummary(readCart(),quote);}
+        catch{$("pinStatus").textContent="We could not verify this PIN right now. Please check the PIN and try again.";localStorage.removeItem("munambam_delivery_quote");updateSummary(readCart(),null);}
     }
-
-    $("payBtn").addEventListener("click", () => {
-        if (!readCart().length) {
-            showToast("Your cart is empty.");
-            return;
-        }
-
-        if (!validateForm()) return;
-
-        showToast("Secure payment will be connected next.");
-    });
-
-    $("phone").addEventListener("input", (event) => {
-        event.target.value = event.target.value.replace(/\D/g, "").slice(0, 10);
-    });
-
-    $("pincode").addEventListener("input", (event) => {
-        event.target.value = event.target.value.replace(/\D/g, "").slice(0, 6);
-    });
-
-    function showToast(message) {
-        $("toast").textContent = message;
-        $("toast").classList.add("show");
-        clearTimeout(window.__munambamToast);
-        window.__munambamToast = setTimeout(() => {
-            $("toast").classList.remove("show");
-        }, 2500);
+    function renderOrder(){
+        const cart=readCart();updateCartCount(cart);$("orderItems").innerHTML="";
+        if(!cart.length){$("emptyState").classList.add("show");$("summaryContent").style.display="none";return;}
+        $("emptyState").classList.remove("show");$("summaryContent").style.display="block";
+        cart.forEach(item=>{const quantity=Math.max(1,Number(item.quantity)||1);const meta=fallbackMeta[item.id]||{gstRate:5,hsn:""};item.gstRate=Number.isFinite(Number(item.gstRate))?Number(item.gstRate):meta.gstRate;const row=document.createElement("div");row.className="order-item";const thumb=document.createElement("div");thumb.className="order-thumb";const img=document.createElement("img");img.src=item.image||"./PRODUCT_1.webp";img.alt=item.name||"Product";thumb.appendChild(img);const info=document.createElement("div");const name=document.createElement("p");name.className="order-name";name.textContent=item.name||"Munambam Product";const metaEl=document.createElement("p");metaEl.className="order-meta";metaEl.textContent=`${item.pack||"Pack"} × ${quantity} • GST ${item.gstRate}%`;info.append(name,metaEl);const price=document.createElement("div");price.className="order-price";price.textContent=money((Number(item.price)||0)*quantity);row.append(thumb,info,price);$("orderItems").appendChild(row);});
+        const saved=JSON.parse(localStorage.getItem("munambam_delivery_info")||"null");if(saved&&saved.pin){$("pincode").value=saved.pin;$("state").value=saved.state||"";if(!$("city").value.trim())$("city").value=saved.city||"";}const quote=saved?calculateDelivery(cart,saved):null;updateSummary(cart,quote);if(saved)verifyPincode();
     }
-
-    // Same custom fish cursor.
-    const cursor = $("fish-cursor");
-    const mouseDevice = window.matchMedia("(hover:hover) and (pointer:fine)").matches;
-
-    if (cursor && mouseDevice) {
-        let x = 0, y = 0, frame = false;
-        document.addEventListener("mousemove", (event) => {
-            x = event.clientX;
-            y = event.clientY;
-            if (frame) return;
-            frame = true;
-            requestAnimationFrame(() => {
-                cursor.style.transform = `translate3d(${x - 6}px,${y - 14}px,0)`;
-                frame = false;
-            });
-        }, { passive:true });
-    }
-
-    // Same subtle ocean visual language.
-    const ocean = $("oceanLayer");
-    const creatureData = [
-        ["shark",110,17,46000,-9000,"/assets/icon/icon-shark.svg"],
-        ["fish",38,27,33000,-15000,"/assets/icon/icon-fish.svg"],
-        ["prawn",32,36,37000,-6000,"/assets/icon/icon-prawn.svg"],
-        ["octopus",58,46,41000,-19000,"/assets/icon/icon-octopus.svg"]
-    ];
-
-    if (ocean && !window.matchMedia("(prefers-reduced-motion:reduce)").matches) {
-        creatureData.forEach((item, index) => {
-            const el = document.createElement("div");
-            el.className = "creature";
-            el.style.width = `${item[1]}px`;
-            el.style.height = `${item[1]}px`;
-            el.style.top = `${item[2]}vh`;
-            el.style.left = item[0] === "shark" ? "110%" : "-120px";
-            el.style.animation = `swim${index} ${item[3]}ms linear ${item[4]}ms infinite`;
-            el.innerHTML = `<img src="${item[5]}" alt="">`;
-            ocean.appendChild(el);
-
-            const style = document.createElement("style");
-            const to = item[0] === "shark" ? "translateX(-125vw)" : "translateX(125vw)";
-            style.textContent = `@keyframes swim${index}{from{transform:translateX(0)}to{transform:${to}}}`;
-            document.head.appendChild(style);
-        });
-    }
-
+    function validateForm(){const fields=[["fullName","Please enter your full name."],["phone","Please enter your mobile number."],["address","Please enter your delivery address."],["city","Please enter your city or town."],["state","Please select your state."],["pincode","Please enter your 6-digit PIN code."]];for(const [id,msg] of fields){const field=$(id);if(!field.value.trim()){field.focus();showToast(msg);return false;}}if($("phone").value.replace(/\D/g,"").length!==10){$("phone").focus();showToast("Please enter a valid 10-digit mobile number.");return false;}if($("pincode").value.replace(/\D/g,"").length!==6){$("pincode").focus();showToast("Please enter a valid 6-digit PIN code.");return false;}if(!localStorage.getItem("munambam_delivery_quote")){showToast("Please verify your PIN before payment.");verifyPincode();return false;}return true;}
+    $("payBtn").addEventListener("click",()=>{if(!readCart().length){showToast("Your cart is empty.");return;}if(!validateForm())return;showToast("Secure payment will be connected next.");});
+    $("phone").addEventListener("input",e=>e.target.value=e.target.value.replace(/\D/g,"").slice(0,10));
+    $("pincode").addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,6);if(e.target.value.length===6)verifyPincode();else{localStorage.removeItem("munambam_delivery_quote");updateSummary(readCart(),null);$("pinStatus").textContent="Enter a valid 6-digit PIN to verify delivery.";}});
+    function showToast(message){$("toast").textContent=message;$("toast").classList.add("show");clearTimeout(window.__munambamToast);window.__munambamToast=setTimeout(()=>$("toast").classList.remove("show"),2500);}
+    const cursor=$("fish-cursor"),mouseDevice=window.matchMedia("(hover:hover) and (pointer:fine)").matches;if(cursor&&mouseDevice){let x=0,y=0,frame=false;document.addEventListener("mousemove",e=>{x=e.clientX;y=e.clientY;if(frame)return;frame=true;requestAnimationFrame(()=>{cursor.style.transform=`translate3d(${x-6}px,${y-14}px,0)`;frame=false;});},{passive:true});}
+    const ocean=$("oceanLayer"),creatureData=[["shark",110,17,46000,-9000,"/assets/icon/icon-shark.svg"],["fish",38,27,33000,-15000,"/assets/icon/icon-fish.svg"],["prawn",32,36,37000,-6000,"/assets/icon/icon-prawn.svg"],["octopus",58,46,41000,-19000,"/assets/icon/icon-octopus.svg"]];if(ocean&&!window.matchMedia("(prefers-reduced-motion:reduce)").matches){creatureData.forEach((item,index)=>{const el=document.createElement("div");el.className="creature";el.style.width=`${item[1]}px`;el.style.height=`${item[1]}px`;el.style.top=`${item[2]}vh`;el.style.left=item[0]==="shark"?"110%":"-120px";el.style.animation=`swim${index} ${item[3]}ms linear ${item[4]}ms infinite`;el.innerHTML=`<img src="${item[5]}" alt="">`;ocean.appendChild(el);const style=document.createElement("style"),to=item[0]==="shark"?"translateX(-125vw)":"translateX(125vw)";style.textContent=`@keyframes swim${index}{from{transform:translateX(0)}to{transform:${to}}}`;document.head.appendChild(style);});}
     renderOrder();
 })();
 </script>
