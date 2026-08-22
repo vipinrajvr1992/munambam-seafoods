@@ -151,6 +151,38 @@
 
     <style>
 
+/* Hide system cursor everywhere — only custom fish cursor is visible */
+html, body, * {
+    cursor: none !important;
+}
+html, body {
+    cursor: none !important;
+}
+a, button, input, select, textarea, label, summary,
+[role="button"], [onclick], .btn, .filter-btn, .offer-btn {
+    cursor: none !important;
+}
+#fish-cursor {
+    position: fixed !important;
+    left: 0; top: 0;
+    width: 44px; height: 27px;
+    pointer-events: none !important;
+    z-index: 2147483647 !important;
+    transform: translate3d(-6px, -14px, 0);
+    will-change: transform;
+}
+#fish-cursor svg {
+    display: block;
+    width: 44px; height: 27px;
+    filter:
+        drop-shadow(0 1px 0 rgba(18,24,32,.95))
+        drop-shadow(0 2px 2px rgba(18,24,32,.72))
+        drop-shadow(0 5px 6px rgba(0,0,0,.42))
+        drop-shadow(0 9px 10px rgba(0,0,0,.20));
+}
+
+
+
         :root {
             --navy: #061b3a;
             --navy-2: #09274d;
@@ -206,51 +238,7 @@
         }
 
         /* CUSTOM CURSOR */
-        #fish-cursor {
-            position: fixed;
-
-            left: 0;
-            top: 0;
-
-            width: 44px;
-            height: 27px;
-
-            pointer-events: none;
-
-            z-index: 99999;
-
-            transform:
-                translate3d(-6px,-14px,0);
-
-            will-change:
-                transform;
-        }
-
-        #fish-cursor svg {
-            display: block;
-
-            width: 44px;
-            height: 27px;
-
-            /* Stronger 3D shadow so the fish stays visible on cream/light backgrounds */
-            filter:
-                drop-shadow(
-                    0 1px 0
-                    rgba(18,24,32,.95)
-                )
-                drop-shadow(
-                    0 2px 2px
-                    rgba(18,24,32,.72)
-                )
-                drop-shadow(
-                    0 5px 6px
-                    rgba(0,0,0,.42)
-                )
-                drop-shadow(
-                    0 9px 10px
-                    rgba(0,0,0,.20)
-                );
-        }
+        
 
         /* =========================================================
            MOVING OCEAN OBJECTS
@@ -2391,38 +2379,7 @@ footer p{
          CUSTOM CURSOR
     ========================================================== -->
 
-    <div
-        id="fish-cursor"
-        aria-hidden="true"
-    >
-
-        <svg
-            viewBox="0 0 50 30"
-            fill="none"
-            stroke="#e0bc68"
-            stroke-width="2"
-            stroke-linecap="round"
-        >
-
-            <path
-                d="M 5,15 Q 25,-5 45,25 M 5,15 Q 25,35 45,5"
-            />
-
-            <path
-                d="M 15,8.5 Q 18,15 15,21.5"
-            />
-
-            <circle
-                cx="10"
-                cy="14.5"
-                r="1.5"
-                fill="#e0bc68"
-                stroke="none"
-            />
-
-        </svg>
-
-    </div>
+    <div id="fish-cursor" aria-hidden="true"><svg viewBox="0 0 50 30" fill="none" stroke="#e0bc68" stroke-width="2" stroke-linecap="round"><path d="M 5,15 Q 25,-5 45,25 M 5,15 Q 25,35 45,5"/><path d="M 15,8.5 Q 18,15 15,21.5"/><circle cx="10" cy="14.5" r="1.5" fill="#e0bc68" stroke="none"/></svg></div>
 
 
     <!-- =========================================================
@@ -3532,6 +3489,23 @@ footer p{
 })();
 </script>
 
+<script>
+(function(){
+  var cursor=document.getElementById("fish-cursor");
+  if(!cursor)return;
+  var fine=window.matchMedia("(hover:hover) and (pointer:fine)").matches;
+  if(!fine){cursor.style.display="none";return;}
+  var x=0,y=0,raf=false;
+  document.addEventListener("mousemove",function(e){
+    x=e.clientX;y=e.clientY;
+    if(raf)return;raf=true;
+    requestAnimationFrame(function(){
+      cursor.style.transform="translate3d("+(x-6)+"px,"+(y-14)+"px,0)";
+      raf=false;
+    });
+  },{passive:true});
+})();
+</script>
 </body>
 
 </html>
