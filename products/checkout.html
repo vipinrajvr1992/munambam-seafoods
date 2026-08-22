@@ -1014,7 +1014,13 @@ h1{
         {code:"SAVE50",title:"₹50 Saving",description:"₹50 off purchases of ₹1,000 or more.",discount:50,minSubtotal:1000,maxRedemptions:10}
     ];
     const STORE_PIN="683515",STORE_DISTRICT="Ernakulam",STORE_STATE="Kerala";
-    const DELIVERY_RULES={samePin:{base:49,step:25,eta:"1–2 working days",label:"Local delivery"},sameDistrict:{base:69,step:30,eta:"1–3 working days",label:"Same district"},sameState:{base:89,step:40,eta:"2–4 working days",label:"Within Kerala"},otherState:{base:129,step:50,eta:"4–8 working days",label:"Other state"},remote:{base:179,step:70,eta:"6–10 working days",label:"Remote / special zone"}};
+    const DELIVERY_RULES={
+        samePin:{base:49,step:25,eta:"1–2 working days",label:"Local (same PIN)"},
+        sameDistrict:{base:59,step:30,eta:"1–3 working days",label:"Ernakulam district"},
+        sameState:{base:75,step:35,eta:"2–5 working days",label:"Within Kerala"},
+        otherState:{base:99,step:45,eta:"3–7 working days",label:"Rest of India"},
+        remote:{base:149,step:55,eta:"5–10 working days",label:"NE / J&K / Islands"}
+    };
     const REMOTE_STATES=new Set(["Jammu and Kashmir","Ladakh","Arunachal Pradesh","Assam","Manipur","Meghalaya","Mizoram","Nagaland","Tripura","Andaman and Nicobar Islands","Lakshadweep"]);
     function readCart(){try{const d=JSON.parse(localStorage.getItem(CART_KEY)||"[]");return Array.isArray(d)?d:[]}catch{return[]}}
     function money(v){return typeof v!=="number"||!Number.isFinite(v)?"₹ —":`₹${v.toLocaleString("en-IN",{maximumFractionDigits:2})}`;}
