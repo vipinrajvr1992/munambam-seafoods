@@ -423,6 +423,13 @@
             width: 100%;
         }
 
+        /* ALWAYS-VISIBLE SHOPPING CART */
+        .cart-link{position:relative;width:46px;height:46px;flex:0 0 46px;display:inline-flex;align-items:center;justify-content:center;color:var(--navy);background:rgba(6,27,58,.06);border:1px solid rgba(198,154,58,.22);border-radius:50%;text-decoration:none;transition:.2s ease}
+        .cart-link:hover{background:var(--gold);transform:translateY(-2px)}
+        .cart-count{position:absolute;top:-3px;right:-3px;min-width:20px;height:20px;padding:0 5px;display:grid;place-items:center;border-radius:20px;background:var(--blue);color:#fff;font-size:.64rem;font-weight:800;border:2px solid var(--cream)}
+        .card-rating{display:flex;align-items:center;justify-content:center;gap:6px;margin:-5px 0 10px;color:#f4b400;font-size:.76rem;letter-spacing:1px}
+        .card-rating .rating-label{color:#718398;font-size:.61rem;letter-spacing:0;font-weight:700}
+
         /* FILTER / SORT */
         .controls-container {
             position: relative;
@@ -2513,6 +2520,11 @@ footer p{
 
         </div>
 
+        <a href="/cart/" class="cart-link" aria-label="Open shopping cart" title="Shopping Cart">
+            <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+            <span class="cart-count" id="cartCount">0</span>
+        </a>
+
     </nav>
 
 
@@ -2658,7 +2670,9 @@ footer p{
                         100% Meat Weight, Low Sodium &amp; Chemical Free
                     </p>
 
-                    <div class="card-price">From ₹499 <small>+ applicable GST</small></div>
+                    <div class="card-rating" aria-label="5 star product rating"><span aria-hidden="true">★★★★★</span><span class="rating-label">5.0</span></div>
+
+                        <div class="card-price">From ₹200 <small>100g • 250g • 500g + applicable GST</small></div>
 
                 </div>
 
@@ -2701,7 +2715,9 @@ footer p{
                         Hygienically Dried Direct From Harbour
                     </p>
 
-                    <div class="card-price">From ₹299 <small>+ applicable GST</small></div>
+                    <div class="card-rating" aria-label="5 star product rating"><span aria-hidden="true">★★★★★</span><span class="rating-label">5.0</span></div>
+
+                        <div class="card-price">From ₹120 <small>100g • 250g • 500g + applicable GST</small></div>
 
                 </div>
 
@@ -2744,7 +2760,9 @@ footer p{
                         Authentic Kerala Homemade Blend
                     </p>
 
-                    <div class="card-price">From ₹199 <small>+ applicable GST</small></div>
+                    <div class="card-rating" aria-label="5 star product rating"><span aria-hidden="true">★★★★★</span><span class="rating-label">5.0</span></div>
+
+                        <div class="card-price">From ₹80 <small>100g • 250g • 500g + applicable GST</small></div>
 
                 </div>
 
@@ -2786,7 +2804,9 @@ footer p{
                     <p>
                         Traditional Coastal Delicacy                    </p>
 
-                    <div class="card-price">From ₹349 <small>+ applicable GST</small></div>
+                    <div class="card-rating" aria-label="5 star product rating"><span aria-hidden="true">★★★★★</span><span class="rating-label">5.0</span></div>
+
+                        <div class="card-price">From ₹140 <small>100g • 250g • 500g + applicable GST</small></div>
 
                 </div>
 
@@ -2829,7 +2849,9 @@ footer p{
                         Rich in Flavor, Clean &amp; Hygienic
                     </p>
 
-                    <div class="card-price">From ₹299 <small>+ applicable GST</small></div>
+                    <div class="card-rating" aria-label="5 star product rating"><span aria-hidden="true">★★★★★</span><span class="rating-label">5.0</span></div>
+
+                        <div class="card-price">From ₹120 <small>100g • 250g • 500g + applicable GST</small></div>
 
                 </div>
 
@@ -2872,7 +2894,9 @@ footer p{
                         Authentic Coastal Staple
                     </p>
 
-                    <div class="card-price">From ₹249 <small>+ applicable GST</small></div>
+                    <div class="card-rating" aria-label="5 star product rating"><span aria-hidden="true">★★★★★</span><span class="rating-label">5.0</span></div>
+
+                        <div class="card-price">From ₹100 <small>100g • 250g • 500g + applicable GST</small></div>
 
                 </div>
 
@@ -3045,6 +3069,22 @@ footer p{
         (() => {
 
             "use strict";
+
+            /* SHARED PERSISTENT CART COUNT */
+            const CART_KEY = "munambam_cart";
+            function updateCartCount(){
+                const badge=document.getElementById("cartCount");
+                if(!badge)return;
+                try{
+                    const cart=JSON.parse(localStorage.getItem(CART_KEY)||"[]");
+                    const count=Array.isArray(cart)?cart.reduce((s,i)=>s+Math.max(1,Number(i.quantity)||1),0):0;
+                    badge.textContent=count>99?"99+":String(count);
+                }catch{badge.textContent="0";}
+            }
+            updateCartCount();
+            window.addEventListener("storage",updateCartCount);
+
+
 
 
             /* =====================================================
