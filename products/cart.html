@@ -371,6 +371,121 @@ h1{
 @media(prefers-reduced-motion:reduce){
     *,*::before,*::after{transition-duration:.01ms!important}
 }
+
+/* HOME-MATCHED NAV — logo | links | cart (space-between) */
+nav, .site-nav {
+    position: sticky;
+    top: 16px;
+    z-index: 5000;
+    width: min(calc(100% - 32px), 1240px);
+    margin: 16px auto 0;
+    min-height: 72px;
+    padding: 10px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    background: rgba(255,250,240,.97);
+    border: 1px solid rgba(255,255,255,.86);
+    border-radius: 50px;
+    box-shadow: 0 15px 40px rgba(0,0,0,.20);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+.logo-container, .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+.logo-container img, .brand img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 8px rgba(0,0,0,.12));
+}
+.brand-name, .brand-text {
+    color: var(--navy);
+    font-size: 1.12rem;
+    font-weight: 800;
+    letter-spacing: -.5px;
+    white-space: nowrap;
+}
+.nav-right {
+    /* flatten: children participate in nav space-between */
+    display: contents;
+}
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+.nav-links a {
+    position: relative;
+    color: var(--navy);
+    text-decoration: none;
+    font-size: .93rem;
+    font-weight: 700;
+    padding: 10px 0;
+    white-space: nowrap;
+}
+.nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 3px;
+    width: 0;
+    height: 2px;
+    background: var(--gold, #c69a3a);
+    transition: width .2s ease;
+}
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--blue, #168dcc);
+}
+.nav-links a:hover::after,
+.nav-links a.active::after {
+    width: 100%;
+}
+.cart-link {
+    position: relative;
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--navy);
+    background: rgba(6,27,58,.06);
+    border: 1px solid rgba(198,154,58,.22);
+    border-radius: 50%;
+    text-decoration: none;
+    transition: .2s ease;
+}
+.cart-link:hover {
+    background: var(--gold, #c69a3a);
+    transform: translateY(-2px);
+}
+.cart-count {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    display: grid;
+    place-items: center;
+    border-radius: 20px;
+    background: var(--blue, #168dcc);
+    color: #fff;
+    font-size: .64rem;
+    font-weight: 800;
+    border: 2px solid var(--cream, #fffaf0);
+}
+
 </style>
 <style id="home-footer-final">
 
@@ -727,8 +842,7 @@ h1{
         <span class="brand-name">MUNAMBAM SEAFOODS</span>
     </a>
 
-    <div class="nav-right">
-        <div class="nav-links">
+    <div class="nav-links">
             <a href="/">Home</a>
             <a href="/products/">Products</a>
             <a href="/about/">About Us</a>
@@ -739,9 +853,7 @@ h1{
         <a href="/products/cart.html" class="cart-link active" aria-current="page" aria-label="Shopping cart">
             <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
             <span class="cart-count" id="cartCount">0</span>
-        </a>
-    </div>
-</nav>
+        </a></nav>
 
 <main class="page">
     <div class="breadcrumbs">
