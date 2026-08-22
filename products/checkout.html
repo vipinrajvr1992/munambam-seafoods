@@ -1009,9 +1009,8 @@ h1{
 
     const COUPON_KEY="munambam_coupon";
     const couponCatalog=[
-        {code:"FIRST100",title:"First Purchase Offer",description:"₹5–₹100 first-purchase offer. Your reward is revealed when applied.",minSubtotal:0,firstPurchase:true,maxRedemptions:10,randomFirstPurchase:true},
-        {code:"SAVE25",title:"₹25 Saving",description:"₹25 off purchases of ₹500 or more.",discount:25,minSubtotal:500,maxRedemptions:10},
-        {code:"SAVE50",title:"₹50 Saving",description:"₹50 off purchases of ₹1,000 or more.",discount:50,minSubtotal:1000,maxRedemptions:10}
+        {code:"SAVE25",title:"₹25 Saving",description:"₹25 off on orders of ₹500 or more. Available on every eligible order.",discount:25,minSubtotal:500},
+        {code:"SAVE50",title:"₹50 Saving",description:"₹50 off on orders of ₹1,000 or more. Available on every eligible order.",discount:50,minSubtotal:1000}
     ];
     const STORE_PIN="683515",STORE_DISTRICT="Ernakulam",STORE_STATE="Kerala";
     const DELIVERY_RULES={
@@ -1098,7 +1097,7 @@ h1{
             box.hidden=false;
             $("couponCode").textContent=c.code;
             $("couponDescription").textContent=c.randomFirstPurchase
-                ? `First-purchase reward revealed: ${money(discount)} off.`
+                ? `Offer applied: ${money(discount)} off.`
                 : c.description;
         }else box.hidden=true;
         updatePayState();
