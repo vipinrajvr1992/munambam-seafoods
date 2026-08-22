@@ -820,7 +820,7 @@ nav, .site-nav {
 
                     <div class="field">
                         <label for="phone">Mobile Number <span>*</span></label>
-                        <input id="phone" name="phone" type="tel" autocomplete="tel-national" inputmode="numeric" required maxlength="10" minlength="10" placeholder="10-digit mobile (without +91)" pattern="[6-9][0-9]{9}" title="Enter 10-digit Indian mobile number">
+                        <input id="phone" name="phone" type="tel" autocomplete="tel-national" inputmode="numeric" required maxlength="10" minlength="10" placeholder="10-digit mobile (without +91)" pattern="[6-9][0-9]{9}" title="10-digit Indian mobile without +91">
                     </div>
 
                     <div class="field">
@@ -1139,6 +1139,15 @@ nav, .site-nav {
 (() => {
     "use strict";
     const CART_KEY="munambam_cart";
+
+    function normalizeIndianMobile(value){
+        let d = String(value || "").replace(/\D/g, "");
+        if (d.startsWith("91") && d.length > 10) d = d.slice(2);
+        if (d.startsWith("0") && d.length === 11) d = d.slice(1);
+        if (d.length > 10) d = d.slice(-10);
+        return d.slice(0, 10);
+    }
+
     const $=id=>document.getElementById(id);
 
     const COUPON_KEY="munambam_coupon";
@@ -1309,17 +1318,32 @@ nav, .site-nav {
         return true;
     }
     $("payBtn").addEventListener("click",()=>{if(!readCart().length){showToast("Your cart is empty.");return}if(!validateForm())return;showToast("Your order details are ready to continue.")});
-    ["fullName","phone","email","address","city","district"].forEach(id=>$(id).addEventListener("input",()=>{saveCustomer();updatePayState()}));
+    ["fullName","email","address","city","district"].forEach(id=>$(id).addEventListener("input",()=>{saveCustomer();updatePayState()}));
     $("state").addEventListener("change",updatePayState);
     $("orderConsent").addEventListener("change",updatePayState);
-    $("phone").addEventListener("input",e=>{e.target.value=normalizeIndianMobile(e.target.value);updatePayState();});
-    $("phone").addEventListener("blur",e=>{e.target.value=normalizeIndianMobile(e.target.value);updatePayState();});
-    $("phone").addEventListener("change",e=>{e.target.value=normalizeIndianMobile(e.target.value);updatePayState();});
+    
+    
+    
+    
+    function applyPhoneNormalize(){
+        const el=$("phone");
+        if(!el)return;
+        const n=normalizeIndianMobile(el.value);
+        if(el.value!==n)el.value=n;
+        updatePayState();
+        saveCustomer();
+    }
+    $("phone").addEventListener("input",applyPhoneNormalize);
+    $("phone").addEventListener("blur",applyPhoneNormalize);
+    $("phone").addEventListener("change",applyPhoneNormalize);
+    $("phone").addEventListener("paste",function(){setTimeout(applyPhoneNormalize,0);});
+
     $("pincode").addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,6);if(e.target.value.length===6)verifyPincode();else{localStorage.removeItem("munambam_delivery_quote");$("pinStatus").textContent="Enter a valid 6-digit PIN to verify the delivery zone and estimated charge.";updateSummary(readCart(),null)}});
     function showToast(message){$("toast").textContent=message;$("toast").classList.add("show");clearTimeout(window.__munambamToast);window.__munambamToast=setTimeout(()=>$('toast').classList.remove("show"),2500)}
     const cursor=$("fish-cursor"),mouseDevice=window.matchMedia("(hover:hover) and (pointer:fine)").matches;if(cursor&&mouseDevice){let x=0,y=0,frame=false;document.addEventListener("mousemove",e=>{x=e.clientX;y=e.clientY;if(frame)return;frame=true;requestAnimationFrame(()=>{cursor.style.transform=`translate3d(${x-6}px,${y-14}px,0)`;frame=false;});},{passive:true});}
     const ocean=$("oceanLayer"),creatureData=[["shark",110,17,46000,-9000,"/assets/icon/icon-shark.svg"],["fish",38,27,33000,-15000,"/assets/icon/icon-fish.svg"],["prawn",32,36,37000,-6000,"/assets/icon/icon-prawn.svg"],["octopus",58,46,41000,-19000,"/assets/icon/icon-octopus.svg"]];if(ocean&&!window.matchMedia("(prefers-reduced-motion:reduce)").matches){creatureData.forEach((item,index)=>{const el=document.createElement("div");el.className="creature";el.style.width=`${item[1]}px`;el.style.height=`${item[1]}px`;el.style.top=`${item[2]}vh`;el.style.left=item[0]==="shark"?"110%":"-120px";el.style.animation=`swim${index} ${item[3]}ms linear ${item[4]}ms infinite`;el.innerHTML=`<img src="${item[5]}" alt="">`;ocean.appendChild(el);const style=document.createElement("style"),to=item[0]==="shark"?"translateX(-125vw)":"translateX(125vw)";style.textContent=`@keyframes swim${index}{from{transform:translateX(0)}to{transform:${to}}}`;document.head.appendChild(style);});}
     loadSavedCustomer();
+    applyPhoneNormalize();
     renderOrder();
     window.addEventListener("storage",event=>{
         if(event.key===CART_KEY||event.key===COUPON_KEY)renderOrder();
@@ -1329,17 +1353,7 @@ nav, .site-nav {
 
 <script>
 (function(){
-
-    function normalizeIndianMobile(value){
-        let d=String(value||"").replace(/\D/g,"");
-        /* Browser autofill often prefixes 91 or +91 */
-        if(d.length>=12 && d.startsWith("91")) d=d.slice(2);
-        if(d.length===11 && d.startsWith("0")) d=d.slice(1);
-        if(d.length>10) d=d.slice(-10);
-        return d.slice(0,10);
-    }
-
-  var cursor=document.getElementById("fish-cursor");
+var cursor=document.getElementById("fish-cursor");
   if(!cursor)return;
   var fine=window.matchMedia("(hover:hover) and (pointer:fine)").matches;
   if(!fine){cursor.style.display="none";return;}
