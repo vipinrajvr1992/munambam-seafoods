@@ -1414,6 +1414,9 @@ a, button, input, select, textarea, label, summary,
             color: #8ed8f5 !important;
         }
 
+
+        .nav-right{display:flex;align-items:center;gap:24px;min-width:0;margin-left:auto}
+
 </style>
 
 
@@ -2451,7 +2454,7 @@ footer p{
 
         <!-- Navigation -->
 
-        <div class="nav-links">
+        <div class="nav-right"><div class="nav-links">
 
             <a href="/">
                 Home
@@ -2479,13 +2482,11 @@ footer p{
                 Terms
             </a>
 
-        </div>
-
-        <a 
-            href="/cart.html"class="cart-link" aria-label="Open shopping cart" title="Shopping Cart">
+        </div><a 
+            href="/products/cart.html"class="cart-link" aria-label="Open shopping cart" title="Shopping Cart">
             <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
             <span class="cart-count" id="cartCount">0</span>
-        </a>
+        </a></div>
 
     </nav>
 
