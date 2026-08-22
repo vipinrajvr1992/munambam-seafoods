@@ -844,7 +844,7 @@ h1{
         </div>
         <div class="offer-list" id="offerList"></div>
         <div class="offers-footnote">
-            Only one offer can be applied to an order. First-purchase reward is revealed when selected.
+            Only one offer can be applied to an order.
         </div>
     </div>
 </div>
@@ -1017,24 +1017,16 @@ h1{
     */
     const couponCatalog = [
         {
-            code: "FIRST100",
-            title: "First Purchase Offer",
-            description: "₹5–₹100 first-purchase offer. Your reward is revealed when applied.",
-            minSubtotal: 0,
-            firstPurchase: true,
-            randomFirstPurchase: true
-        },
-        {
             code: "SAVE25",
             title: "₹25 Saving",
-            description: "₹25 off purchases of ₹500 or more.",
+            description: "₹25 off on orders of ₹500 or more. Available on every eligible order.",
             minSubtotal: 500,
             discount: 25
         },
         {
             code: "SAVE50",
             title: "₹50 Saving",
-            description: "₹50 off purchases of ₹1,000 or more.",
+            description: "₹50 off on orders of ₹1,000 or more. Available on every eligible order.",
             minSubtotal: 1000,
             discount: 50
         }
@@ -1323,7 +1315,7 @@ h1{
             applied.classList.add("show");
 
             const rewardText = pricing.coupon.randomFirstPurchase
-                ? `First-purchase reward revealed: <strong>${money(pricing.discount)} off</strong>.`
+                ? `Offer applied: <strong>${money(pricing.discount)} off</strong>.`
                 : `<strong>${pricing.coupon.code}</strong> applied — ${money(pricing.discount)} off.`;
 
             applied.innerHTML = rewardText;
@@ -1455,14 +1447,14 @@ h1{
             </div>
             <div style="font:700 .68rem/1.4 'Plus Jakarta Sans',sans-serif;
                         letter-spacing:2px;text-transform:uppercase;color:#168dcc">
-                Your first-purchase reward
+                Your offer reward
             </div>
             <div style="font:700 2.35rem/1.1 'Space Grotesk',sans-serif;
                         color:#061b3a;margin:9px 0">
                 ${money(reward)} OFF
             </div>
             <div style="font:.72rem/1.65 'Plus Jakarta Sans',sans-serif;color:#718398">
-                Your reward has been revealed and applied to your cart.
+                Your offer has been applied to your cart.
             </div>
         `;
 
