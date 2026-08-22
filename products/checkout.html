@@ -708,7 +708,7 @@ h1{
 
                     <div class="field">
                         <label for="phone">Mobile Number <span>*</span></label>
-                        <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required maxlength="15" placeholder="10-digit mobile number">
+                        <input id="phone" name="phone" type="tel" autocomplete="tel-national" inputmode="numeric" required maxlength="10" minlength="10" placeholder="10-digit mobile (without +91)" pattern="[6-9][0-9]{9}" title="Enter 10-digit Indian mobile number">
                     </div>
 
                     <div class="field">
@@ -1063,14 +1063,14 @@ h1{
             if(!saved)return;
             if(saved.fullName&&$("fullName"))$("fullName").value=saved.fullName;
             if(saved.email&&$("email"))$("email").value=saved.email;
-            if(saved.phone&&$("phone"))$("phone").value=saved.phone;
+            if(saved.phone&&$("phone"))$("phone").value=normalizeIndianMobile(saved.phone);
         }catch{}
     }
     function saveCustomer(){
         const data={
             fullName:$("fullName").value.trim(),
             email:$("email").value.trim(),
-            phone:$("phone").value.replace(/\D/g,"").slice(0,10)
+            phone:normalizeIndianMobile($("phone").value)
         };
         if(data.fullName||data.email||data.phone)localStorage.setItem(CUSTOMER_KEY,JSON.stringify(data));
     }
@@ -1161,7 +1161,7 @@ h1{
         }
     }
     function renderOrder(){const cart=readCart();updateCartCount(cart);$("orderItems").innerHTML="";if(!cart.length){$("emptyState").classList.add("show");$("summaryContent").style.display="none";return}$("emptyState").classList.remove("show");$("summaryContent").style.display="block";cart.forEach(item=>{const quantity=Math.max(1,Number(item.quantity)||1),meta=fallbackMeta[item.id]||{gstRate:5,hsn:""};item.gstRate=Number.isFinite(Number(item.gstRate))?Number(item.gstRate):meta.gstRate;const row=document.createElement("div");row.className="order-item";const thumb=document.createElement("div");thumb.className="order-thumb";const img=document.createElement("img");img.src=item.image||"./PRODUCT_1.webp";img.alt=item.name||"Product";thumb.appendChild(img);const info=document.createElement("div");const name=document.createElement("p");name.className="order-name";name.textContent=item.name||"Munambam Product";const metaEl=document.createElement("p");metaEl.className="order-meta";metaEl.textContent=`${item.pack||"Pack"} × ${quantity} • GST ${item.gstRate}%`;info.append(name,metaEl);const price=document.createElement("div");price.className="order-price";price.textContent=money((Number(item.price)||0)*quantity);row.append(thumb,info,price);$("orderItems").appendChild(row)});const saved=JSON.parse(localStorage.getItem("munambam_delivery_info")||"null");if(saved&&saved.pin){$("pincode").value=saved.pin;$("state").value=saved.state||"";if(!$('city').value.trim())$('city').value=saved.city||""}const quote=saved?calculateDelivery(cart,saved):null;updateSummary(cart,quote);if(saved)verifyPincode()}
-    function requiredFieldsReady(){const fields=["fullName","phone","email","address","city","district","state","pincode"];return fields.every(id=>$(id)&&$(id).value.trim())&&$("phone").value.replace(/\D/g,"").length===10&&$("pincode").value.replace(/\D/g,"").length===6&&Boolean(localStorage.getItem("munambam_delivery_quote"))&&$("orderConsent").checked}
+    function requiredFieldsReady(){const fields=["fullName","phone","email","address","city","district","state","pincode"];return fields.every(id=>$(id)&&$(id).value.trim())&&normalizeIndianMobile($("phone").value).length===10&&$("pincode").value.replace(/\D/g,"").length===6&&Boolean(localStorage.getItem("munambam_delivery_quote"))&&$("orderConsent").checked}
     function updatePayState(){const ready=requiredFieldsReady(),btn=$("payBtn");btn.disabled=!ready;$("checkoutStatus").textContent=ready?"All required checkout details are complete. You can continue to secure payment.":"Complete all required details, verify your PIN, and confirm the order details to continue."}
     function validateForm(){
         const fields=[
@@ -1181,7 +1181,7 @@ h1{
         if(!/^\S+@\S+\.\S+$/.test($("email").value.trim())){
             $("email").focus();showToast("Please enter a valid email address.");return false;
         }
-        if($("phone").value.replace(/\D/g,"").length!==10){
+        if(normalizeIndianMobile($("phone").value).length!==10){
             $("phone").focus();showToast("Please enter a valid 10-digit mobile number.");return false;
         }
         if($("pincode").value.replace(/\D/g,"").length!==6){
@@ -1200,7 +1200,9 @@ h1{
     ["fullName","phone","email","address","city","district"].forEach(id=>$(id).addEventListener("input",()=>{saveCustomer();updatePayState()}));
     $("state").addEventListener("change",updatePayState);
     $("orderConsent").addEventListener("change",updatePayState);
-    $("phone").addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,10);updatePayState()});
+    $("phone").addEventListener("input",e=>{e.target.value=normalizeIndianMobile(e.target.value);updatePayState();});
+    $("phone").addEventListener("blur",e=>{e.target.value=normalizeIndianMobile(e.target.value);updatePayState();});
+    $("phone").addEventListener("change",e=>{e.target.value=normalizeIndianMobile(e.target.value);updatePayState();});
     $("pincode").addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,6);if(e.target.value.length===6)verifyPincode();else{localStorage.removeItem("munambam_delivery_quote");$("pinStatus").textContent="Enter a valid 6-digit PIN to verify the delivery zone and estimated charge.";updateSummary(readCart(),null)}});
     function showToast(message){$("toast").textContent=message;$("toast").classList.add("show");clearTimeout(window.__munambamToast);window.__munambamToast=setTimeout(()=>$('toast').classList.remove("show"),2500)}
     const cursor=$("fish-cursor"),mouseDevice=window.matchMedia("(hover:hover) and (pointer:fine)").matches;if(cursor&&mouseDevice){let x=0,y=0,frame=false;document.addEventListener("mousemove",e=>{x=e.clientX;y=e.clientY;if(frame)return;frame=true;requestAnimationFrame(()=>{cursor.style.transform=`translate3d(${x-6}px,${y-14}px,0)`;frame=false;});},{passive:true});}
@@ -1215,6 +1217,16 @@ h1{
 
 <script>
 (function(){
+
+    function normalizeIndianMobile(value){
+        let d=String(value||"").replace(/\D/g,"");
+        /* Browser autofill often prefixes 91 or +91 */
+        if(d.length>=12 && d.startsWith("91")) d=d.slice(2);
+        if(d.length===11 && d.startsWith("0")) d=d.slice(1);
+        if(d.length>10) d=d.slice(-10);
+        return d.slice(0,10);
+    }
+
   var cursor=document.getElementById("fish-cursor");
   if(!cursor)return;
   var fine=window.matchMedia("(hover:hover) and (pointer:fine)").matches;
