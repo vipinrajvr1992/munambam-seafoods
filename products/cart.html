@@ -45,22 +45,29 @@ body{
     color:var(--text);
     background:var(--navy);
     overflow-x:hidden;
-    cursor:none;
-}
+    
+cursor:none;}
 a,button,select,input{cursor:none!important}
 button,select,input{font:inherit}
 
 #fish-cursor{
     position:fixed;
-    left:0;
-    top:0;
-    width:44px;
-    height:27px;
+    left:0;top:0;
+    width:44px;height:27px;
     pointer-events:none;
     z-index:99999;
     transform:translate3d(-6px,-14px,0);
+    will-change:transform;
 }
-#fish-cursor svg{width:44px;height:27px;display:block;filter:drop-shadow(0 2px 3px rgba(0,0,0,.55))}
+#fish-cursor svg{
+    display:block;
+    width:44px;height:27px;
+    filter:
+        drop-shadow(0 1px 0 rgba(18,24,32,.95))
+        drop-shadow(0 2px 2px rgba(18,24,32,.72))
+        drop-shadow(0 5px 6px rgba(0,0,0,.42))
+        drop-shadow(0 9px 10px rgba(0,0,0,.20));
+}
 
 .ocean-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
 .wave-decoration{position:absolute;left:0;top:0;width:100%;height:180px;opacity:.12}
@@ -690,11 +697,11 @@ h1{
 <body>
 
 <div id="fish-cursor" aria-hidden="true">
-    <svg viewBox="0 0 50 30" fill="none" stroke="#e0bc68" stroke-width="2" stroke-linecap="round">
-        <path d="M 5,15 Q 25,-5 45,25 M 5,15 Q 25,35 45,5"/>
-        <path d="M 15,8.5 Q 18,15 15,21.5"/>
-        <circle cx="10" cy="14.5" r="1.5" fill="#e0bc68" stroke="none"/>
-    </svg>
+<svg viewBox="0 0 50 30" fill="none" stroke="#e0bc68" stroke-width="2" stroke-linecap="round">
+<path d="M 5,15 Q 25,-5 45,25 M 5,15 Q 25,35 45,5"/>
+<path d="M 15,8.5 Q 18,15 15,21.5"/>
+<circle cx="10" cy="14.5" r="1.5" fill="#e0bc68" stroke="none"/>
+</svg>
 </div>
 
 <div class="ocean-layer" id="oceanLayer" aria-hidden="true">
@@ -797,7 +804,7 @@ h1{
             <div class="offers-card">
                 <div class="offers-head">
                     <strong><i class="fa-solid fa-tags"></i> Offers &amp; Coupons</strong>
-                    <span>Limited redemptions</span>
+                    <span>Available on eligible orders</span>
                 </div>
                 <button type="button" class="offer-btn" id="offersBtn">
                     <i class="fa-solid fa-ticket"></i> Check Available Offers
@@ -1031,6 +1038,15 @@ h1{
             discount: 50
         }
     ];
+
+    /* Clear legacy first-purchase coupon if still stored */
+    try{
+        const _sc=JSON.parse(localStorage.getItem(typeof COUPON_KEY!=="undefined"?COUPON_KEY:"munambam_coupon")||"null");
+        if(_sc && String(_sc.code||"").toUpperCase()==="FIRST100"){
+            localStorage.removeItem(typeof COUPON_KEY!=="undefined"?COUPON_KEY:"munambam_coupon");
+        }
+    }catch(e){}
+
 
     const $ = id => document.getElementById(id);
 
