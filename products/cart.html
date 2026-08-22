@@ -720,7 +720,7 @@ h1{
             <a href="/privacy/">Privacy Policy</a>
             <a href="/terms/">Terms</a>
         </div>
-        <a href="/cart/" class="cart-link active" aria-current="page" aria-label="Shopping cart">
+        <a href="./cart.html" class="cart-link active" aria-current="page" aria-label="Shopping cart">
             <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
             <span class="cart-count" id="cartCount">0</span>
         </a>
@@ -1107,6 +1107,20 @@ h1{
             };
         }
 
+        /* Tiered promotion:
+           ₹500–₹999 → ₹25 off
+           ₹1,000+   → ₹50 off
+        */
+        if (
+            coupon.code === "SAVE25" &&
+            subtotal >= 1000
+        ) {
+            return {
+                ok:false,
+                reason:"₹50 off applies to orders of ₹1,000 or more."
+            };
+        }
+
         return {ok:true};
     }
 
@@ -1319,12 +1333,30 @@ h1{
         const list = $("offerList");
         const cart = readCart();
         const subtotal = subtotalFor(cart);
+
+        /* Revalidate the saved coupon before showing offers so stale
+           tiered coupons are cleared automatically when cart value changes. */
+        getDiscount(cart);
+
         const current = selectedCoupon();
 
         list.innerHTML = "";
 
         couponCatalog.forEach(coupon => {
-            const check = couponEligibility(coupon, subtotal);
+            let check = couponEligibility(coupon, subtotal);
+
+            /* Only ONE offer may be active for a single purchase/order. */
+            if (
+                check.ok &&
+                current &&
+                current.code !== coupon.code
+            ) {
+                check = {
+                    ok:false,
+                    reason:"Only one offer can be applied to an order."
+                };
+            }
+
             const item = document.createElement("div");
             item.className = "offer-item";
 
@@ -1355,6 +1387,18 @@ h1{
 
             if (check.ok && !isCurrent) {
                 button.addEventListener("click", () => {
+                    const activeCoupon = selectedCoupon();
+
+                    /* Final guard: never allow a second coupon to replace
+                       an already-selected offer in the same order. */
+                    if (
+                        activeCoupon &&
+                        activeCoupon.code !== coupon.code
+                    ) {
+                        showToast("Only one offer can be applied to an order.");
+                        return;
+                    }
+
                     localStorage.setItem(
                         COUPON_KEY,
                         JSON.stringify({code:coupon.code})
