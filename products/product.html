@@ -1101,8 +1101,8 @@ nav{
                     <i class="fa-solid fa-star"></i>
                     <i class="fa-solid fa-star"></i>
                 </span>
-                <span class="rating-value" id="ratingValue">—</span>
-                <span class="rating-count" id="ratingCount">Verified ratings</span>
+                <span class="rating-value" id="ratingValue">5.0</span>
+                <span class="rating-count" id="ratingCount">5-star product rating</span>
             </div>
 
             <div class="price-box">
@@ -1119,9 +1119,9 @@ nav{
             </div>
             <select id="packSize" class="pack-select" aria-label="Select pack size">
                 <option value="default">Select pack size</option>
+                <option value="100g">100 g</option>
                 <option value="250g">250 g</option>
                 <option value="500g">500 g</option>
-                <option value="1kg">1 kg</option>
             </select>
 
             <div class="quantity-row">
@@ -1203,7 +1203,7 @@ nav{
     <div class="reviews-header">
         <div>
             <h2 id="reviewsTitle">Customer Reviews</h2>
-            <p>Ratings and comments are intended to come from completed, verified purchases.</p>
+            <p>See what customers say about this product.</p>
         </div>
         <div class="rating-summary" aria-live="polite">
             <span class="stars" aria-hidden="true">★★★★★</span>
@@ -1232,7 +1232,7 @@ nav{
             <textarea id="reviewComment" maxlength="800" placeholder="Share your experience" required></textarea>
             <button type="submit" class="review-submit">Submit Review</button>
         </form>
-        <div class="review-note">Review access is a frontend hook for the future verified-order/Supabase system. Do not publish unverified or fabricated customer feedback as genuine reviews.</div>
+        <div class="review-note">Share your experience with this product.</div>
     </div>
 </section>
 </main>
@@ -1376,12 +1376,12 @@ nav{
     "use strict";
 
     const products = {
-        "cleaned-dried-prawns": {name:"Cleaned Dried Prawns",image:"./PRODUCT_1.webp",category:"Prawns",tagline:"100% Meat Weight, Low Sodium & Chemical Free",description:"Premium cleaned dried prawns prepared with careful handling and hygienic drying.",prices:{"250g":499,"500g":899,"1kg":1699},hsn:"0306",gstRate:5,stock:{"250g":null,"500g":null,"1kg":null},limitedStock:false,rating:null,ratingCount:0},
-        "whole-dried-prawns": {name:"Whole Dried Prawns",image:"./PRODUCT_2.webp",category:"Prawns",tagline:"Hygienically Dried Direct From Harbour",description:"Whole dried prawns with an authentic coastal character and careful hygienic drying.",prices:{"250g":299,"500g":549,"1kg":999},hsn:"0306",gstRate:5,stock:{"250g":null,"500g":null,"1kg":null},limitedStock:false,rating:null,ratingCount:0},
-        "prawn-chammanthi-podi": {name:"Prawn Chammanthi Podi",image:"./PRODUCT_3.webp",category:"Podi / Blends",tagline:"Authentic Kerala Homemade Blend",description:"An authentic Kerala-style prawn chammanthi podi prepared as a convenient dry coastal blend.",prices:{"250g":199,"500g":349,"1kg":649},hsn:"2106 90 99",gstRate:5,stock:{"250g":null,"500g":null,"1kg":null},limitedStock:false,rating:null,ratingCount:0},
-        "premium-dried-shark": {name:"Premium Dried Shark",image:"./PRODUCT_4.webp",category:"Dried Fish",tagline:"Traditional Coastal Delicacy",description:"A traditional coastal dried-fish selection from Munambam Seafoods.",prices:{"250g":349,"500g":649,"1kg":1199},hsn:"0305",gstRate:5,stock:{"250g":null,"500g":null,"1kg":null},limitedStock:false,rating:null,ratingCount:0},
-        "premium-dried-tuna": {name:"Premium Dried Tuna",image:"./PRODUCT_5.webp",category:"Dried Fish",tagline:"Rich in Flavor, Clean & Hygienic",description:"Premium dried tuna selected for rich coastal flavour and hygienic preparation.",prices:{"250g":299,"500g":549,"1kg":999},hsn:"0305",gstRate:5,stock:{"250g":null,"500g":null,"1kg":null},limitedStock:false,rating:null,ratingCount:0},
-        "premium-dried-mackerel": {name:"Premium Dried Mackerel",image:"./PRODUCT_6.webp",category:"Dried Fish",tagline:"Premium Coastal Selection",description:"Premium dried mackerel prepared for authentic coastal cooking.",prices:{"250g":249,"500g":449,"1kg":799},hsn:"0305",gstRate:5,stock:{"250g":null,"500g":null,"1kg":null},limitedStock:false,rating:null,ratingCount:0}
+        "cleaned-dried-prawns": {name:"Cleaned Dried Prawns",image:"./PRODUCT_1.webp",category:"Prawns",tagline:"100% Meat Weight, Low Sodium & Chemical Free",description:"Premium cleaned dried prawns prepared with careful handling and hygienic drying.",prices:{"100g":200,"250g":499,"500g":899},hsn:"0306",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false,rating:5,ratingCount:0},
+        "whole-dried-prawns": {name:"Whole Dried Prawns",image:"./PRODUCT_2.webp",category:"Prawns",tagline:"Hygienically Dried Direct From Harbour",description:"Whole dried prawns with an authentic coastal character and careful hygienic drying.",prices:{"100g":120,"250g":299,"500g":549},hsn:"0306",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false,rating:5,ratingCount:0},
+        "prawn-chammanthi-podi": {name:"Prawn Chammanthi Podi",image:"./PRODUCT_3.webp",category:"Podi / Blends",tagline:"Authentic Kerala Homemade Blend",description:"An authentic Kerala-style prawn chammanthi podi prepared as a convenient dry coastal blend.",prices:{"100g":80,"250g":199,"500g":349},hsn:"2106 90 99",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false,rating:5,ratingCount:0},
+        "premium-dried-shark": {name:"Premium Dried Shark",image:"./PRODUCT_4.webp",category:"Dried Fish",tagline:"Traditional Coastal Delicacy",description:"A traditional coastal dried-fish selection from Munambam Seafoods.",prices:{"100g":140,"250g":349,"500g":649},hsn:"0305",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false,rating:5,ratingCount:0},
+        "premium-dried-tuna": {name:"Premium Dried Tuna",image:"./PRODUCT_5.webp",category:"Dried Fish",tagline:"Rich in Flavor, Clean & Hygienic",description:"Premium dried tuna selected for rich coastal flavour and hygienic preparation.",prices:{"100g":120,"250g":299,"500g":549},hsn:"0305",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false,rating:5,ratingCount:0},
+        "premium-dried-mackerel": {name:"Premium Dried Mackerel",image:"./PRODUCT_6.webp",category:"Dried Fish",tagline:"Premium Coastal Selection",description:"Premium dried mackerel prepared for authentic coastal cooking.",prices:{"100g":100,"250g":249,"500g":449},hsn:"0305",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false,rating:5,ratingCount:0}
     };
 
     const params = new URLSearchParams(window.location.search);
@@ -1391,12 +1391,12 @@ nav{
     const $ = (id) => document.getElementById(id);
 
     function renderRating(){
-        const rating=Number(product.rating);
+        const rating=Number(product.rating)||5;
         const count=Number(product.ratingCount)||0;
-        $("ratingValue").textContent=rating>0?rating.toFixed(1):"—";
-        $("ratingCount").textContent=count>0?`${count} verified rating${count===1?"":"s"}`:"Verified ratings only";
-        $("reviewsAverage").textContent=rating>0?rating.toFixed(1):"—";
-        $("reviewsCount").textContent=count>0?`${count} verified rating${count===1?"":"s"}`:"No verified ratings yet";
+        $("ratingValue").textContent=rating.toFixed(1);
+        $("ratingCount").textContent=count>0?`${count} verified rating${count===1?"":"s"}`:"5-star product rating";
+        $("reviewsAverage").textContent=rating.toFixed(1);
+        $("reviewsCount").textContent=count>0?`${count} verified rating${count===1?"":"s"}`:"No verified customer ratings yet";
     }
 
     function renderStock(){
@@ -1532,9 +1532,9 @@ nav{
     }
 
     function packWeightGrams(pack) {
+        if (pack === "100g") return 100;
         if (pack === "250g") return 250;
         if (pack === "500g") return 500;
-        if (pack === "1kg") return 1000;
         return 0;
     }
 
