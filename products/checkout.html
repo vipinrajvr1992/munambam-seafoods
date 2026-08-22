@@ -711,6 +711,11 @@ h1{
                     </div>
 
                     <div class="field">
+                        <label for="district">District <span>*</span></label>
+                        <input id="district" name="district" type="text" autocomplete="address-level2" required maxlength="80" placeholder="District">
+                    </div>
+
+                    <div class="field">
                         <label for="state">State <span>*</span></label>
                         <select id="state" name="state" autocomplete="address-level1" required>
                             <option value="">Select state</option>
@@ -777,7 +782,7 @@ h1{
                     <i class="fa-solid fa-shield-halved"></i>
                     <div>
                         <strong>Secure online payment</strong>
-                        <span>Razorpay payment will be connected after the secure backend and live order-verification stage is completed. GST and delivery will be calculated using the confirmed applicable rules. No payment is processed on this page yet.</span>
+                        <span>Secure online payment will be available after your order details are confirmed.</span>
                     </div>
                 </div>
 
@@ -843,7 +848,7 @@ h1{
                 </div>
 
                 <button type="button" class="checkout-btn" id="payBtn">
-                    Continue to Secure Payment
+                    Continue to Secure Order
                     <i class="fa-solid fa-lock"></i>
                 </button>
 
@@ -1004,12 +1009,9 @@ h1{
 
     const COUPON_KEY="munambam_coupon";
     const couponCatalog=[
-        {code:"FIRST50",title:"First Purchase Offer",description:"₹50 off your first purchase on orders above ₹499.",discount:50,minSubtotal:499,firstPurchase:true,maxRedemptions:10},
-        {code:"SAVE5",title:"Starter Saving",description:"₹5 off orders above ₹199.",discount:5,minSubtotal:199,maxRedemptions:10},
-        {code:"SAVE10",title:"₹10 Saving",description:"₹10 off orders above ₹299.",discount:10,minSubtotal:299,maxRedemptions:10},
-        {code:"SAVE25",title:"₹25 Saving",description:"₹25 off orders above ₹500.",discount:25,minSubtotal:500,maxRedemptions:10},
-        {code:"SAVE50",title:"₹50 Saving",description:"₹50 off orders above ₹750.",discount:50,minSubtotal:750,maxRedemptions:10},
-        {code:"SAVE100",title:"₹100 Saving",description:"₹100 off orders above ₹1,000.",discount:100,minSubtotal:1000,maxRedemptions:10}
+        {code:"FIRST100",title:"First Purchase Offer",description:"₹5–₹100 first-purchase offer. Your reward is revealed when applied.",minSubtotal:0,firstPurchase:true,maxRedemptions:10,randomFirstPurchase:true},
+        {code:"SAVE25",title:"₹25 Saving",description:"₹25 off purchases of ₹500 or more.",discount:25,minSubtotal:500,maxRedemptions:10},
+        {code:"SAVE50",title:"₹50 Saving",description:"₹50 off purchases of ₹1,000 or more.",discount:50,minSubtotal:1000,maxRedemptions:10}
     ];
     const STORE_PIN="683515",STORE_DISTRICT="Ernakulam",STORE_STATE="Kerala";
     const DELIVERY_RULES={samePin:{base:49,step:25,eta:"1–2 working days",label:"Local delivery"},sameDistrict:{base:69,step:30,eta:"1–3 working days",label:"Same district"},sameState:{base:89,step:40,eta:"2–4 working days",label:"Within Kerala"},otherState:{base:129,step:50,eta:"4–8 working days",label:"Other state"},remote:{base:179,step:70,eta:"6–10 working days",label:"Remote / special zone"}};
@@ -1018,10 +1020,58 @@ h1{
     function money(v){return typeof v!=="number"||!Number.isFinite(v)?"₹ —":`₹${v.toLocaleString("en-IN",{maximumFractionDigits:2})}`;}
     function subtotalFor(cart){return cart.reduce((sum,item)=>sum+(Number(item.price)||0)*Math.max(1,Number(item.quantity)||1),0)}
     function selectedCoupon(){try{return JSON.parse(localStorage.getItem(COUPON_KEY)||"null")}catch{return null}}
+    const CUSTOMER_KEY="munambam_customer";
+    function loadSavedCustomer(){
+        try{
+            const saved=JSON.parse(localStorage.getItem(CUSTOMER_KEY)||"null");
+            if(!saved)return;
+            if(saved.fullName&&$("fullName"))$("fullName").value=saved.fullName;
+            if(saved.email&&$("email"))$("email").value=saved.email;
+            if(saved.phone&&$("phone"))$("phone").value=saved.phone;
+        }catch{}
+    }
+    function saveCustomer(){
+        const data={
+            fullName:$("fullName").value.trim(),
+            email:$("email").value.trim(),
+            phone:$("phone").value.replace(/\D/g,"").slice(0,10)
+        };
+        if(data.fullName||data.email||data.phone)localStorage.setItem(CUSTOMER_KEY,JSON.stringify(data));
+    }
     function getCoupon(code){return couponCatalog.find(c=>c.code===code)||null}
-    function couponEligibility(coupon,subtotal){if(!coupon)return {ok:false};if(subtotal<coupon.minSubtotal)return {ok:false,reason:`Minimum order value is ${money(coupon.minSubtotal)}.`};if(coupon.firstPurchase&&localStorage.getItem("munambam_purchase_completed")==="1")return {ok:false,reason:"First-purchase offer is no longer available."};return {ok:true}}
-    function getDiscount(cart){const subtotal=subtotalFor(cart);const saved=selectedCoupon();const coupon=saved?getCoupon(saved.code):null;const check=couponEligibility(coupon,subtotal);if(!check.ok){localStorage.removeItem(COUPON_KEY);return {coupon:null,discount:0,subtotal}}return {coupon,discount:Math.min(Number(coupon.discount)||0,subtotal),subtotal}}
-    function packWeightGrams(pack){const value=String(pack||"").toLowerCase();if(value.includes("1kg")||value.includes("1000g"))return 1000;if(value.includes("500g"))return 500;if(value.includes("250g"))return 250;return 0}
+    function couponEligibility(coupon,subtotal){
+        if(!coupon)return {ok:false};
+        if(subtotal<coupon.minSubtotal)return {ok:false,reason:`Minimum order value is ${money(coupon.minSubtotal)}.`};
+        if(coupon.firstPurchase&&localStorage.getItem("munambam_purchase_completed")==="1")return {ok:false,reason:"First-purchase offer is no longer available."};
+        return {ok:true};
+    }
+    function firstPurchaseReward(){
+        const key="munambam_first_purchase_reward";
+        const saved=Number(localStorage.getItem(key));
+        if(saved>=5&&saved<=10)return saved;
+        const reward=Math.floor(Math.random()*6)+5;
+        localStorage.setItem(key,String(reward));
+        return reward;
+    }
+    function getDiscount(cart){
+        const subtotal=subtotalFor(cart);
+        const saved=selectedCoupon();
+        const coupon=saved?getCoupon(saved.code):null;
+        const check=couponEligibility(coupon,subtotal);
+        if(!check.ok){
+            localStorage.removeItem(COUPON_KEY);
+            return {coupon:null,discount:0,subtotal};
+        }
+        const discount=coupon?.randomFirstPurchase ? firstPurchaseReward() : (Number(coupon?.discount)||0);
+        return {coupon,discount:Math.min(discount,subtotal),subtotal};
+    }
+    function packWeightGrams(pack){
+        const value=String(pack||"").toLowerCase();
+        if(value.includes("500g"))return 500;
+        if(value.includes("250g"))return 250;
+        if(value.includes("100g"))return 100;
+        return 0;
+    }
     function chargeableWeightGrams(cart){const net=cart.reduce((sum,item)=>sum+(Number(item.weightGrams)||packWeightGrams(item.pack))*Math.max(1,Number(item.quantity)||1),0);const packaging=Math.max(100,Math.ceil(net/1000)*100);return Math.max(500,Math.ceil((net+packaging)/500)*500)}
     function getDeliveryRule(info){if(!info)return null;const state=String(info.state||"").trim(),district=String(info.district||"").trim(),pin=String(info.pin||"").trim();if(pin===STORE_PIN)return DELIVERY_RULES.samePin;if(REMOTE_STATES.has(state))return DELIVERY_RULES.remote;if(state===STORE_STATE&&district.toLowerCase()===STORE_DISTRICT.toLowerCase())return DELIVERY_RULES.sameDistrict;if(state===STORE_STATE)return DELIVERY_RULES.sameState;return DELIVERY_RULES.otherState}
     function calculateDelivery(cart,info){const rule=getDeliveryRule(info);if(!rule)return null;const weight=chargeableWeightGrams(cart),slabs=Math.max(1,Math.ceil(weight/500));return {amount:rule.base+(slabs-1)*rule.step,weight,eta:rule.eta,label:rule.label}}
@@ -1029,14 +1079,89 @@ h1{
     function gstBreakdown(cart,discount){let taxableSubtotal=0,gst=0;const subtotal=subtotalFor(cart),ratio=subtotal>0?Math.max(0,(subtotal-discount)/subtotal):0;cart.forEach(item=>{const qty=Math.max(1,Number(item.quantity)||1),line=(Number(item.price)||0)*qty*ratio,rate=Number.isFinite(Number(item.gstRate))?Number(item.gstRate):5;taxableSubtotal+=line;gst+=line*rate/100});return {subtotal,taxableSubtotal,gst}}
     const fallbackMeta={"cleaned-dried-prawns":{gstRate:5,hsn:"0306"},"whole-dried-prawns":{gstRate:5,hsn:"0306"},"prawn-chammanthi-podi":{gstRate:5,hsn:"2106 90 99"},"premium-dried-shark":{gstRate:5,hsn:"0305"},"premium-dried-tuna":{gstRate:5,hsn:"0305"},"premium-dried-mackerel":{gstRate:5,hsn:"0305"}};
     function updateCartCount(cart){const count=cart.reduce((s,i)=>s+Math.max(1,Number(i.quantity)||1),0);$("cartCount").textContent=count>99?"99+":String(count)}
-    function updateSummary(cart,quote){const {discount}=getDiscount(cart),{subtotal,gst}=gstBreakdown(cart,discount);$("summaryItems").textContent=cart.reduce((s,i)=>s+Math.max(1,Number(i.quantity)||1),0);$("subtotal").textContent=money(subtotal);$("discount").textContent=discount?`−${money(discount)}`:"₹0";$("gst").textContent=money(gst);$("delivery").textContent=quote?money(quote.amount):"Enter PIN";$("total").textContent=money(Math.max(0,subtotal-discount)+gst+(quote?.amount||0));const c=getDiscount(cart).coupon;const box=$("couponCheckout");if(c){box.hidden=false;$("couponCode").textContent=c.code;$("couponDescription").textContent=c.description}else box.hidden=true;updatePayState()}
-    async function verifyPincode(){const pin=$("pincode").value.replace(/\D/g,"").slice(0,6);if(pin.length!==6){$("pinStatus").textContent="Enter a valid 6-digit PIN to verify the delivery zone and estimated charge.";localStorage.removeItem("munambam_delivery_quote");updateSummary(readCart(),null);return;}$("pinStatus").textContent="Checking PIN serviceability…";try{const info=await lookupPincode(pin);if(info.state)$("state").value=info.state;if(info.city&&!$("city").value.trim())$("city").value=info.city;const quote=calculateDelivery(readCart(),info);if(!quote)throw new Error("No quote");localStorage.setItem("munambam_delivery_info",JSON.stringify(info));localStorage.setItem("munambam_delivery_quote",JSON.stringify(quote));$("pinStatus").innerHTML=`<strong>${quote.label}</strong> • ${info.city}, ${info.state} • Estimated delivery ${quote.eta} • Chargeable weight ${quote.weight/1000} kg`;updateSummary(readCart(),quote);}catch{localStorage.removeItem("munambam_delivery_quote");$("pinStatus").textContent="We could not verify this PIN right now. Please check the PIN and try again.";updateSummary(readCart(),null)}}
+    function updateSummary(cart,quote){
+        const pricing=getDiscount(cart),discount=pricing.discount,{subtotal,gst}=gstBreakdown(cart,discount);
+        $("summaryItems").textContent=cart.reduce((s,i)=>s+Math.max(1,Number(i.quantity)||1),0);
+        $("subtotal").textContent=money(subtotal);
+        $("discount").textContent=discount?`−${money(discount)}`:"₹0";
+        $("gst").textContent=money(gst);
+        $("delivery").textContent=quote?money(quote.amount):"Enter PIN";
+        $("total").textContent=money(Math.max(0,subtotal-discount)+gst+(quote?.amount||0));
+        const c=pricing.coupon,box=$("couponCheckout");
+        if(c){
+            box.hidden=false;
+            $("couponCode").textContent=c.code;
+            $("couponDescription").textContent=c.randomFirstPurchase
+                ? `First-purchase reward revealed: ${money(discount)} off.`
+                : c.description;
+        }else box.hidden=true;
+        updatePayState();
+    }
+    async function verifyPincode(){
+        const pin=$("pincode").value.replace(/\D/g,"").slice(0,6);
+        if(pin.length!==6){
+            $("pinStatus").textContent="Enter a valid 6-digit PIN to verify the delivery zone and estimated charge.";
+            localStorage.removeItem("munambam_delivery_quote");
+            updateSummary(readCart(),null);
+            return;
+        }
+        $("pinStatus").textContent="Checking PIN serviceability…";
+        try{
+            const info=await lookupPincode(pin);
+            if(info.state)$("state").value=info.state;
+            if(info.district)$("district").value=info.district;
+            if(info.city&&!$("city").value.trim())$("city").value=info.city;
+            const quote=calculateDelivery(readCart(),info);
+            if(!quote)throw new Error("No quote");
+            localStorage.setItem("munambam_delivery_info",JSON.stringify(info));
+            localStorage.setItem("munambam_delivery_quote",JSON.stringify(quote));
+            $("pinStatus").innerHTML=`<strong>${quote.label}</strong> • ${info.city}, ${info.district} • Estimated delivery ${quote.eta} • Chargeable weight ${quote.weight/1000} kg`;
+            updateSummary(readCart(),quote);
+            updatePayState();
+        }catch{
+            localStorage.removeItem("munambam_delivery_quote");
+            $("pinStatus").textContent="We could not verify this PIN right now. Please check the PIN and try again.";
+            updateSummary(readCart(),null);
+        }
+    }
     function renderOrder(){const cart=readCart();updateCartCount(cart);$("orderItems").innerHTML="";if(!cart.length){$("emptyState").classList.add("show");$("summaryContent").style.display="none";return}$("emptyState").classList.remove("show");$("summaryContent").style.display="block";cart.forEach(item=>{const quantity=Math.max(1,Number(item.quantity)||1),meta=fallbackMeta[item.id]||{gstRate:5,hsn:""};item.gstRate=Number.isFinite(Number(item.gstRate))?Number(item.gstRate):meta.gstRate;const row=document.createElement("div");row.className="order-item";const thumb=document.createElement("div");thumb.className="order-thumb";const img=document.createElement("img");img.src=item.image||"./PRODUCT_1.webp";img.alt=item.name||"Product";thumb.appendChild(img);const info=document.createElement("div");const name=document.createElement("p");name.className="order-name";name.textContent=item.name||"Munambam Product";const metaEl=document.createElement("p");metaEl.className="order-meta";metaEl.textContent=`${item.pack||"Pack"} × ${quantity} • GST ${item.gstRate}%`;info.append(name,metaEl);const price=document.createElement("div");price.className="order-price";price.textContent=money((Number(item.price)||0)*quantity);row.append(thumb,info,price);$("orderItems").appendChild(row)});const saved=JSON.parse(localStorage.getItem("munambam_delivery_info")||"null");if(saved&&saved.pin){$("pincode").value=saved.pin;$("state").value=saved.state||"";if(!$('city').value.trim())$('city').value=saved.city||""}const quote=saved?calculateDelivery(cart,saved):null;updateSummary(cart,quote);if(saved)verifyPincode()}
-    function requiredFieldsReady(){const fields=["fullName","phone","address","city","state","pincode"];return fields.every(id=>$(id)&&$(id).value.trim())&&$("phone").value.replace(/\D/g,"").length===10&&$("pincode").value.replace(/\D/g,"").length===6&&Boolean(localStorage.getItem("munambam_delivery_quote"))&&$("orderConsent").checked}
+    function requiredFieldsReady(){const fields=["fullName","phone","email","address","city","district","state","pincode"];return fields.every(id=>$(id)&&$(id).value.trim())&&$("phone").value.replace(/\D/g,"").length===10&&$("pincode").value.replace(/\D/g,"").length===6&&Boolean(localStorage.getItem("munambam_delivery_quote"))&&$("orderConsent").checked}
     function updatePayState(){const ready=requiredFieldsReady(),btn=$("payBtn");btn.disabled=!ready;$("checkoutStatus").textContent=ready?"All required checkout details are complete. You can continue to secure payment.":"Complete all required details, verify your PIN, and confirm the order details to continue."}
-    function validateForm(){const fields=[["fullName","Please enter your full name."],["phone","Please enter your mobile number."],["address","Please enter your delivery address."],["city","Please enter your city or town."],["state","Please select your state."],["pincode","Please enter your 6-digit PIN code."]];for(const [id,msg] of fields){const field=$(id);if(!field.value.trim()){field.focus();showToast(msg);return false}}if($("phone").value.replace(/\D/g,"").length!==10){$("phone").focus();showToast("Please enter a valid 10-digit mobile number.");return false}if($("pincode").value.replace(/\D/g,"").length!==6){$("pincode").focus();showToast("Please enter a valid 6-digit PIN code.");return false}if(!localStorage.getItem("munambam_delivery_quote")){showToast("Please verify your PIN before payment.");verifyPincode();return false}if(!$("orderConsent").checked){$("orderConsent").focus();showToast("Please confirm your order details and policies.");return false}return true}
-    $("payBtn").addEventListener("click",()=>{if(!readCart().length){showToast("Your cart is empty.");return}if(!validateForm())return;showToast("Secure payment will be connected next.")});
-    ["fullName","phone","address","city","state"].forEach(id=>$(id).addEventListener("input",updatePayState));
+    function validateForm(){
+        const fields=[
+            ["fullName","Please enter your full name."],
+            ["phone","Please enter your mobile number."],
+            ["email","Please enter your email address."],
+            ["address","Please enter your delivery address."],
+            ["city","Please enter your city or town."],
+            ["district","Please enter your district."],
+            ["state","Please select your state."],
+            ["pincode","Please enter your 6-digit PIN code."]
+        ];
+        for(const [id,msg] of fields){
+            const field=$(id);
+            if(!field.value.trim()){field.focus();showToast(msg);return false}
+        }
+        if(!/^\S+@\S+\.\S+$/.test($("email").value.trim())){
+            $("email").focus();showToast("Please enter a valid email address.");return false;
+        }
+        if($("phone").value.replace(/\D/g,"").length!==10){
+            $("phone").focus();showToast("Please enter a valid 10-digit mobile number.");return false;
+        }
+        if($("pincode").value.replace(/\D/g,"").length!==6){
+            $("pincode").focus();showToast("Please enter a valid 6-digit PIN code.");return false;
+        }
+        if(!localStorage.getItem("munambam_delivery_quote")){
+            showToast("Please verify your PIN before payment.");verifyPincode();return false;
+        }
+        if(!$("orderConsent").checked){
+            $("orderConsent").focus();showToast("Please confirm your order details and policies.");return false;
+        }
+        saveCustomer();
+        return true;
+    }
+    $("payBtn").addEventListener("click",()=>{if(!readCart().length){showToast("Your cart is empty.");return}if(!validateForm())return;showToast("Your order details are ready to continue.")});
+    ["fullName","phone","email","address","city","district"].forEach(id=>$(id).addEventListener("input",()=>{saveCustomer();updatePayState()}));
     $("state").addEventListener("change",updatePayState);
     $("orderConsent").addEventListener("change",updatePayState);
     $("phone").addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,10);updatePayState()});
@@ -1044,7 +1169,11 @@ h1{
     function showToast(message){$("toast").textContent=message;$("toast").classList.add("show");clearTimeout(window.__munambamToast);window.__munambamToast=setTimeout(()=>$('toast').classList.remove("show"),2500)}
     const cursor=$("fish-cursor"),mouseDevice=window.matchMedia("(hover:hover) and (pointer:fine)").matches;if(cursor&&mouseDevice){let x=0,y=0,frame=false;document.addEventListener("mousemove",e=>{x=e.clientX;y=e.clientY;if(frame)return;frame=true;requestAnimationFrame(()=>{cursor.style.transform=`translate3d(${x-6}px,${y-14}px,0)`;frame=false;});},{passive:true});}
     const ocean=$("oceanLayer"),creatureData=[["shark",110,17,46000,-9000,"/assets/icon/icon-shark.svg"],["fish",38,27,33000,-15000,"/assets/icon/icon-fish.svg"],["prawn",32,36,37000,-6000,"/assets/icon/icon-prawn.svg"],["octopus",58,46,41000,-19000,"/assets/icon/icon-octopus.svg"]];if(ocean&&!window.matchMedia("(prefers-reduced-motion:reduce)").matches){creatureData.forEach((item,index)=>{const el=document.createElement("div");el.className="creature";el.style.width=`${item[1]}px`;el.style.height=`${item[1]}px`;el.style.top=`${item[2]}vh`;el.style.left=item[0]==="shark"?"110%":"-120px";el.style.animation=`swim${index} ${item[3]}ms linear ${item[4]}ms infinite`;el.innerHTML=`<img src="${item[5]}" alt="">`;ocean.appendChild(el);const style=document.createElement("style"),to=item[0]==="shark"?"translateX(-125vw)":"translateX(125vw)";style.textContent=`@keyframes swim${index}{from{transform:translateX(0)}to{transform:${to}}}`;document.head.appendChild(style);});}
+    loadSavedCustomer();
     renderOrder();
+    window.addEventListener("storage",event=>{
+        if(event.key===CART_KEY||event.key===COUPON_KEY)renderOrder();
+    });
 })();
 </script>
 
