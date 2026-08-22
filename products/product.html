@@ -1111,7 +1111,7 @@ nav{
                 <div class="price" id="price">₹ —</div>
                 <div class="price-note" id="priceNote">Select a pack size to view its selling price.</div>
                 <div class="tax-strip"><span>Applicable GST</span><strong id="gstRateLabel">5%</strong></div>
-                <div class="stock-strip" id="stockStrip"><span class="stock-dot" aria-hidden="true"></span><span id="stockText">Stock availability will be updated.</span></div>
+                <div class="stock-strip" id="stockStrip"><span class="stock-dot" aria-hidden="true"></span><span id="stockText">In stock — ready to ship.</span></div>
             </div>
 
             <div class="option-label">
@@ -1443,19 +1443,26 @@ nav{
             ? product.stock[pack]
             : null;
 
-        /* Temporary frontend state:
-           Do not expose stock counts until Supabase/Admin inventory is live. */
+        /* Until Supabase/Admin inventory is live, treat catalog as available. */
         $("addCart").disabled=false;
         $("buyNow").disabled=false;
 
         if(value===0){
             strip.classList.add("is-out");
             text.textContent="Currently unavailable.";
+            $("addCart").disabled=true;
+            $("buyNow").disabled=true;
+            return;
+        }
+
+        if(typeof value==="number" && value>0 && value<=8){
+            strip.classList.add("is-limited");
+            text.textContent="Limited stock — order soon.";
             return;
         }
 
         strip.classList.add("is-good");
-        text.textContent="Stock availability will be updated.";
+        text.textContent="In stock — ready to ship.";
     }
 
     function verifiedPurchaseAvailable(){
@@ -1515,13 +1522,15 @@ nav{
     function updatePriceDisplay() {
         const pack = $("packSize").value;
         const selectedPrice = getSelectedPrice();
-
-        $("price").textContent = selectedPrice === null ? "₹ —" : money(selectedPrice);
+        const prices = product.prices || {};
+        const fromPrice = Math.min.apply(null, Object.keys(prices).map(function(k){ return Number(prices[k]); }).filter(function(n){ return !isNaN(n); }));
 
         if (selectedPrice !== null) {
-            $("priceNote").textContent = `${pack} selling price • ${product.gstRate}% GST calculated separately at checkout.`;
+            $("price").textContent = money(selectedPrice);
+            $("priceNote").textContent = pack + " selling price • " + product.gstRate + "% GST calculated separately at checkout.";
         } else {
-            $("priceNote").textContent = "Select a pack size to view its selling price. Applicable taxes will be shown at checkout.";
+            $("price").textContent = isFinite(fromPrice) ? ("From " + money(fromPrice)) : "₹ —";
+            $("priceNote").textContent = "Select a pack size to confirm final price. Applicable GST shown at checkout.";
         }
     }
 
