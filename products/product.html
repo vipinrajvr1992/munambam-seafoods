@@ -346,6 +346,7 @@ nav{
 .rating-row{color:var(--rating-yellow)!important}
 .rating-row .rating-value{color:var(--navy)!important;font-weight:800!important}
 .rating-row .rating-count{color:#718398!important;font-weight:650!important}
+.rating-row > span[aria-hidden="true"],.rating-row > span[aria-hidden="true"] i{color:var(--rating-yellow)!important}
 .stock-strip{align-items:flex-start;line-height:1.5}
 .stock-dot{background:var(--rating-yellow);box-shadow:0 0 0 4px rgba(244,180,0,.12)}
 .stock-strip.is-limited .stock-dot{background:#d58a2a;box-shadow:0 0 0 4px rgba(213,138,42,.12)}
@@ -1110,7 +1111,7 @@ nav{
                 <div class="price" id="price">₹ —</div>
                 <div class="price-note" id="priceNote">Select a pack size to view its selling price.</div>
                 <div class="tax-strip"><span>Applicable GST</span><strong id="gstRateLabel">5%</strong></div>
-                <div class="stock-strip" id="stockStrip"><span class="stock-dot" aria-hidden="true"></span><span id="stockText">Stock status will be updated from inventory.</span></div>
+                <div class="stock-strip" id="stockStrip"><span class="stock-dot" aria-hidden="true"></span><span id="stockText">Stock availability will be updated.</span></div>
             </div>
 
             <div class="option-label">
@@ -1162,7 +1163,7 @@ nav{
                 </div>
                 <div class="highlight">
                     <i class="fa-solid fa-anchor"></i>
-                    <strong>Harbour Direct</strong>
+                    <strong>Direct from Harbour</strong>
                     <span>Coastal sourcing</span>
                 </div>
                 <div class="highlight">
@@ -1208,12 +1209,12 @@ nav{
         <div class="rating-summary" aria-live="polite">
             <span class="stars" aria-hidden="true">★★★★★</span>
             <strong id="reviewsAverage">—</strong>
-            <small id="reviewsCount">No verified ratings yet</small>
+            <small id="reviewsCount"></small>
         </div>
     </div>
 
     <div class="review-list" id="reviewList">
-        <div class="review-empty">No verified customer reviews have been published for this product yet.</div>
+        <div class="review-empty"></div>
     </div>
 
     <div class="review-gate">
@@ -1396,22 +1397,31 @@ nav{
         $("ratingValue").textContent=rating.toFixed(1);
         $("ratingCount").textContent=count>0?`${count} verified rating${count===1?"":"s"}`:"5-star product rating";
         $("reviewsAverage").textContent=rating.toFixed(1);
-        $("reviewsCount").textContent=count>0?`${count} verified rating${count===1?"":"s"}`:"No verified customer ratings yet";
+        $("reviewsCount").textContent=count>0?`${count} verified rating${count===1?"":"s"}`:"";
     }
 
     function renderStock(){
         const pack=$("packSize").value;
         const strip=$("stockStrip"),text=$("stockText");
         strip.classList.remove("is-limited","is-out","is-good");
-        const value=product.stock&&Object.prototype.hasOwnProperty.call(product.stock,pack)?product.stock[pack]:null;
-        if(value===0){strip.classList.add("is-out");text.textContent="Out of stock for this pack.";$("addCart").disabled=true;$("buyNow").disabled=true;return;}
-        $("addCart").disabled=false;$("buyNow").disabled=false;
-        if(Number.isFinite(Number(value))){
-            const n=Number(value);
-            if(n<=10){strip.classList.add("is-limited");text.textContent=`Limited stock • Only ${n} pack${n===1?"":"s"} left.`;}
-            else{strip.classList.add("is-good");text.textContent=`In stock • ${n} packs available.`;}
-        }else if(product.limitedStock){strip.classList.add("is-limited");text.textContent="Limited stock available.";}
-        else{strip.classList.add("is-good");text.textContent="Stock status will be updated from inventory.";}
+
+        const value=product.stock&&Object.prototype.hasOwnProperty.call(product.stock,pack)
+            ? product.stock[pack]
+            : null;
+
+        /* Temporary frontend state:
+           Do not expose stock counts until Supabase/Admin inventory is live. */
+        $("addCart").disabled=false;
+        $("buyNow").disabled=false;
+
+        if(value===0){
+            strip.classList.add("is-out");
+            text.textContent="Currently unavailable.";
+            return;
+        }
+
+        strip.classList.add("is-good");
+        text.textContent="Stock availability will be updated.";
     }
 
     function verifiedPurchaseAvailable(){
@@ -1424,7 +1434,7 @@ nav{
     function renderReviews(){
         const list=$("reviewList");
         // Only verified reviews should be rendered here. The future Supabase review table will populate this list.
-        list.innerHTML='<div class="review-empty">No verified customer reviews have been published for this product yet.</div>';
+        list.innerHTML='<div class="review-empty"></div>';
         $("writeReview").disabled=!verifiedPurchaseAvailable();
         $("reviewGateText").textContent=verifiedPurchaseAvailable()?"Your completed purchase is verified. You can submit one review for this product.":"Only customers whose completed order is verified by the store can submit a rating and review.";
     }
