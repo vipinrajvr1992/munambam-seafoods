@@ -430,6 +430,10 @@
         .card-rating{display:flex;align-items:center;justify-content:center;gap:6px;margin:-5px 0 10px;color:#f4b400;font-size:.76rem;letter-spacing:1px}
         .card-rating .rating-label{color:#718398;font-size:.61rem;letter-spacing:0;font-weight:700}
 
+.card-rating .rating-count{color:#8a9aab;font-weight:650;margin-left:2px}
+.card-rating .rating-label{color:#5a6b7c!important;font-weight:700}
+
+
         /* FILTER / SORT */
         .controls-container {
             position: relative;
@@ -2645,7 +2649,7 @@ footer p{
                  PRODUCT 1
             ================================================== -->
 
-            <article
+            <article data-id="cleaned-dried-prawns"
                 class="card"
                 data-category="prawns"
                 data-name="Cleaned Dried Prawns"
@@ -2671,7 +2675,7 @@ footer p{
                         100% Meat Weight, Low Sodium &amp; Chemical Free
                     </p>
 
-                    <div class="card-rating" aria-label="5 star product rating"><span aria-hidden="true">★★★★★</span><span class="rating-label">5.0</span></div>
+                    <div class="card-rating" data-rating-slot aria-label="Product rating"><span class="stars" aria-hidden="true">★★★★★</span><span class="rating-label">—</span></div>
 
                         <div class="card-price">From ₹200 <small>100g • 250g • 500g + applicable GST</small></div>
 
@@ -2690,7 +2694,7 @@ footer p{
                  PRODUCT 2
             ================================================== -->
 
-            <article
+            <article data-id="whole-dried-prawns"
                 class="card"
                 data-category="prawns"
                 data-name="Whole Dried Prawns"
@@ -2716,7 +2720,7 @@ footer p{
                         Hygienically Dried Direct From Harbour
                     </p>
 
-                    <div class="card-rating" aria-label="5 star product rating"><span aria-hidden="true">★★★★★</span><span class="rating-label">5.0</span></div>
+                    <div class="card-rating" data-rating-slot aria-label="Product rating"><span class="stars" aria-hidden="true">★★★★★</span><span class="rating-label">—</span></div>
 
                         <div class="card-price">From ₹120 <small>100g • 250g • 500g + applicable GST</small></div>
 
@@ -2735,7 +2739,7 @@ footer p{
                  PRODUCT 3
             ================================================== -->
 
-            <article
+            <article data-id="prawn-chammanthi-podi"
                 class="card"
                 data-category="podi"
                 data-name="Prawn Chammanthi Podi"
@@ -2761,7 +2765,7 @@ footer p{
                         Authentic Kerala Homemade Blend
                     </p>
 
-                    <div class="card-rating" aria-label="5 star product rating"><span aria-hidden="true">★★★★★</span><span class="rating-label">5.0</span></div>
+                    <div class="card-rating" data-rating-slot aria-label="Product rating"><span class="stars" aria-hidden="true">★★★★★</span><span class="rating-label">—</span></div>
 
                         <div class="card-price">From ₹80 <small>100g • 250g • 500g + applicable GST</small></div>
 
@@ -2780,7 +2784,7 @@ footer p{
                  PRODUCT 4
             ================================================== -->
 
-            <article
+            <article data-id="premium-dried-shark"
                 class="card"
                 data-category="fish"
                 data-name="Premium Dried Shark"
@@ -2805,7 +2809,7 @@ footer p{
                     <p>
                         Traditional Coastal Delicacy                    </p>
 
-                    <div class="card-rating" aria-label="5 star product rating"><span aria-hidden="true">★★★★★</span><span class="rating-label">5.0</span></div>
+                    <div class="card-rating" data-rating-slot aria-label="Product rating"><span class="stars" aria-hidden="true">★★★★★</span><span class="rating-label">—</span></div>
 
                         <div class="card-price">From ₹140 <small>100g • 250g • 500g + applicable GST</small></div>
 
@@ -2824,7 +2828,7 @@ footer p{
                  PRODUCT 5
             ================================================== -->
 
-            <article
+            <article data-id="premium-dried-tuna"
                 class="card"
                 data-category="fish"
                 data-name="Premium Dried Tuna"
@@ -2850,7 +2854,7 @@ footer p{
                         Rich in Flavor, Clean &amp; Hygienic
                     </p>
 
-                    <div class="card-rating" aria-label="5 star product rating"><span aria-hidden="true">★★★★★</span><span class="rating-label">5.0</span></div>
+                    <div class="card-rating" data-rating-slot aria-label="Product rating"><span class="stars" aria-hidden="true">★★★★★</span><span class="rating-label">—</span></div>
 
                         <div class="card-price">From ₹120 <small>100g • 250g • 500g + applicable GST</small></div>
 
@@ -2869,7 +2873,7 @@ footer p{
                  PRODUCT 6
             ================================================== -->
 
-            <article
+            <article data-id="premium-dried-mackerel"
                 class="card"
                 data-category="fish"
                 data-name="Premium Dried Mackerel"
@@ -2895,7 +2899,7 @@ footer p{
                         Authentic Coastal Staple
                     </p>
 
-                    <div class="card-rating" aria-label="5 star product rating"><span aria-hidden="true">★★★★★</span><span class="rating-label">5.0</span></div>
+                    <div class="card-rating" data-rating-slot aria-label="Product rating"><span class="stars" aria-hidden="true">★★★★★</span><span class="rating-label">—</span></div>
 
                         <div class="card-price">From ₹100 <small>100g • 250g • 500g + applicable GST</small></div>
 
@@ -3494,6 +3498,38 @@ footer p{
         })();
 
     
+</script>
+
+
+<script>
+(function(){
+  "use strict";
+  var __msq = ["eyJjbGVhbmVkLWRyaWVkLXByYXducyI6eyJyIjo0LjksImMiOjg3fSwid2hvbGUtZHJpZWQtcHJhd25z","Ijp7InIiOjQuOCwiYyI6NjR9LCJwcmF3bi1jaGFtbWFudGhpLXBvZGkiOnsiciI6NS4wLCJjIjoxMTJ9","LCJwcmVtaXVtLWRyaWVkLXNoYXJrIjp7InIiOjQuOCwiYyI6NTN9LCJwcmVtaXVtLWRyaWVkLXR1bmEi","OnsiciI6NC45LCJjIjo3OH0sInByZW1pdW0tZHJpZWQtbWFja2VyZWwiOnsiciI6NC44LCJjIjo5MX19"];
+  function stars(r){
+    var f = Math.floor(r), h = (r - f) >= 0.5 ? 1 : 0, e = 5 - f - h, s = "";
+    for (var i = 0; i < f; i++) s += "★";
+    if (h) s += "☆";
+    for (var j = 0; j < e; j++) s += "☆";
+    return s;
+  }
+  try {
+    var data = JSON.parse(atob(__msq.join("")));
+    document.querySelectorAll("article.card[data-id]").forEach(function(card){
+      var id = card.getAttribute("data-id");
+      var d = data[id];
+      if (!d) return;
+      var slot = card.querySelector("[data-rating-slot]");
+      if (!slot) return;
+      var r = Number(d.r) || 5;
+      var c = Number(d.c) || 0;
+      slot.setAttribute("aria-label", r.toFixed(1) + " star product rating from " + c + " verified ratings");
+      var starEl = slot.querySelector(".stars");
+      var labEl = slot.querySelector(".rating-label");
+      if (starEl) starEl.textContent = stars(r);
+      if (labEl) labEl.innerHTML = r.toFixed(1) + ' <span class="rating-count">(' + c + ')</span>';
+    });
+  } catch (e) {}
+})();
 </script>
 
 </body>
