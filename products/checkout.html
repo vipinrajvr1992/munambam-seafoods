@@ -1012,6 +1012,59 @@ body.nav-drawer-open {
   .nav-toggle, #navToggle, .nav-drawer, .nav-drawer-backdrop { display: none !important; }
 }
 
+
+/* About-matched drawer link gaps — compact, top-aligned */
+.nav-drawer {
+  display: flex !important;
+  flex-direction: column !important;
+}
+.nav-drawer-links {
+  flex: 1 1 auto !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  padding: 12px 14px 24px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  gap: 4px !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+.nav-drawer-links a {
+  display: flex !important;
+  align-items: center !important;
+  min-height: 48px !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 12px 16px !important;
+  border-radius: 14px !important;
+  text-decoration: none !important;
+  color: var(--navy, #061b3a) !important;
+  font-size: .95rem !important;
+  font-weight: 700 !important;
+  flex: 0 0 auto !important;
+  transition: background .2s ease, color .2s ease !important;
+}
+.nav-drawer-links a.active,
+.nav-drawer-links a:hover {
+  background: rgba(198,154,58,.12) !important;
+  color: var(--navy, #061b3a) !important;
+}
+.nav-drawer-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  padding: 18px 18px 14px !important;
+  border-bottom: 1px solid rgba(198,154,58,.18) !important;
+  flex-shrink: 0 !important;
+}
+.nav-drawer-footer {
+  flex-shrink: 0 !important;
+  padding: 14px 18px 22px !important;
+  border-top: 1px solid rgba(198,154,58,.18) !important;
+}
+
 </style>
 <style id="home-footer-final">
 
