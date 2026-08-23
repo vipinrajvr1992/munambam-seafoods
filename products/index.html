@@ -732,18 +732,11 @@ a, button, input, select, textarea, label, summary,
             }
 
             .nav-links {
-                gap: 13px;
-                overflow-x: auto;
-                scrollbar-width: none;
-            }
-
-            .nav-links::-webkit-scrollbar {
                 display: none;
             }
 
-            .nav-links a {
-                font-size: .72rem;
-                white-space: nowrap;
+            .nav-toggle {
+                display: inline-flex;
             }
 
             .controls-container {
@@ -1530,6 +1523,282 @@ nav, .site-nav {
     font-size: .64rem;
     font-weight: 800;
     border: 2px solid var(--cream, #fffaf0);
+}
+
+
+/* =========================================================
+   HAMBURGER + MOBILE SIDE DRAWER
+   Same links as desktop. Visible only ≤850px.
+========================================================= */
+
+.nav-toggle {
+    display: none;
+    position: relative;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    border: 1px solid rgba(198,154,58,.22);
+    border-radius: 50%;
+    background: rgba(6,27,58,.06);
+    color: var(--navy);
+    cursor: none;
+    transition: background .2s ease, transform .2s ease, border-color .2s ease;
+    z-index: 5100;
+}
+
+.nav-toggle:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    transform: translateY(-2px);
+}
+
+.nav-toggle:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+}
+
+.nav-toggle-bars {
+    display: block;
+    width: 18px;
+    height: 14px;
+    position: relative;
+}
+
+.nav-toggle-bars span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform .28s ease, opacity .2s ease, top .28s ease;
+}
+
+.nav-toggle-bars span:nth-child(1) { top: 0; }
+.nav-toggle-bars span:nth-child(2) { top: 6px; }
+.nav-toggle-bars span:nth-child(3) { top: 12px; }
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(1) {
+    top: 6px;
+    transform: rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(3) {
+    top: 6px;
+    transform: rotate(-45deg);
+}
+
+.nav-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 6000;
+    background: rgba(6, 27, 58, .55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .28s ease, visibility .28s ease;
+}
+
+.nav-drawer-backdrop.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.nav-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 6100;
+    width: min(320px, 86vw);
+    height: 100%;
+    height: 100dvh;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(
+        165deg,
+        rgba(255,250,240,.98),
+        rgba(247,240,223,.96)
+    );
+    border-left: 1px solid rgba(255,255,255,.7);
+    box-shadow: -18px 0 50px rgba(0,0,0,.28);
+    transform: translate3d(105%, 0, 0);
+    transition: transform .32s cubic-bezier(.22, 1, .36, 1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    visibility: hidden;
+}
+
+.nav-drawer.is-open {
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+}
+
+.nav-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 18px 14px;
+    border-bottom: 1px solid rgba(198,154,58,.18);
+    flex-shrink: 0;
+}
+
+.nav-drawer-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--navy);
+    font-size: .95rem;
+    font-weight: 800;
+    letter-spacing: -.3px;
+}
+
+.nav-drawer-brand img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.nav-drawer-close {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(198,154,58,.22);
+    border-radius: 50%;
+    background: rgba(6,27,58,.06);
+    color: var(--navy);
+    cursor: none;
+    transition: background .2s ease, transform .2s ease;
+}
+
+.nav-drawer-close:hover {
+    background: var(--gold);
+    transform: translateY(-1px);
+}
+
+.nav-drawer-close:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+}
+
+.nav-drawer-close svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+.nav-drawer-links {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 12px 14px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.nav-drawer-links a {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    text-decoration: none;
+    color: var(--navy);
+    font-size: .95rem;
+    font-weight: 700;
+    transition: background .2s ease, color .2s ease;
+}
+
+.nav-drawer-links a:hover,
+.nav-drawer-links a:focus-visible {
+    background: rgba(6,27,58,.07);
+    color: var(--blue);
+    outline: none;
+}
+
+.nav-drawer-links a.active {
+    background: rgba(198,154,58,.14);
+    color: var(--navy);
+    box-shadow: inset 3px 0 0 var(--gold);
+}
+
+.nav-drawer-footer {
+    flex-shrink: 0;
+    padding: 14px 18px 22px;
+    border-top: 1px solid rgba(198,154,58,.18);
+}
+
+.nav-drawer-cart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 0 18px;
+    border-radius: 50px;
+    background: var(--gold);
+    color: var(--navy);
+    text-decoration: none;
+    font-size: .9rem;
+    font-weight: 800;
+    box-shadow: 0 10px 24px rgba(198,154,58,.22);
+    transition: background .2s ease, transform .2s ease;
+}
+
+.nav-drawer-cart:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+}
+
+.nav-drawer-cart i {
+    font-size: 1rem;
+}
+
+body.nav-drawer-open {
+    overflow: hidden;
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .nav-toggle,
+    .nav-drawer-close,
+    .nav-drawer-cart {
+        cursor: auto !important;
+    }
+}
+
+@media (min-width: 851px) {
+    .nav-toggle,
+    .nav-drawer,
+    .nav-drawer-backdrop {
+        display: none !important;
+    }
+}
+
+@media (max-width: 850px) {
+    .nav-links {
+        display: none !important;
+    }
+
+    .nav-toggle {
+        display: inline-flex !important;
+    }
 }
 
 </style>
@@ -2597,11 +2866,88 @@ footer p{
                 Terms
             </a>
 
-        </div><a 
-            href="/products/cart.html"class="cart-link" aria-label="Open shopping cart" title="Shopping Cart">
+        </div>
+        <a
+            href="/products/cart.html"
+            class="cart-link"
+            aria-label="Open shopping cart"
+            title="Shopping Cart"
+        >
             <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
             <span class="cart-count" id="cartCount">0</span>
-        </a></nav>
+        </a>
+
+        <button
+            type="button"
+            class="nav-toggle"
+            id="navToggle"
+            aria-label="Open menu"
+            aria-controls="navDrawer"
+            aria-expanded="false"
+        >
+            <span class="nav-toggle-bars" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
+        </button>
+
+</nav>
+
+    <!-- Mobile side drawer (same links as desktop) -->
+    <div
+        class="nav-drawer-backdrop"
+        id="navDrawerBackdrop"
+        hidden
+    ></div>
+
+    <aside
+        class="nav-drawer"
+        id="navDrawer"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Site menu"
+        hidden
+    >
+        <div class="nav-drawer-header">
+            <a href="/" class="nav-drawer-brand" aria-label="Munambam Seafoods Home">
+                <img
+                    src="/assets/MUNAMBAM_Seafood_Logo_HQ.png"
+                    alt=""
+                    width="40"
+                    height="40"
+                    decoding="async"
+                >
+                <span>MUNAMBAM SEAFOODS</span>
+            </a>
+            <button
+                type="button"
+                class="nav-drawer-close"
+                id="navDrawerClose"
+                aria-label="Close menu"
+            >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+                    <path d="M6 6l12 12M18 6L6 18"/>
+                </svg>
+            </button>
+        </div>
+
+        <nav class="nav-drawer-links" aria-label="Mobile navigation">
+            <a href="/">Home</a>
+            <a href="/products/" class="active" aria-current="page">Products</a>
+            <a href="/about/">About Us</a>
+            <a href="/contact/">Contact</a>
+            <a href="/privacy/">Privacy Policy</a>
+            <a href="/terms/">Terms</a>
+        </nav>
+
+        <div class="nav-drawer-footer">
+            <a href="/products/cart.html" class="nav-drawer-cart">
+                <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+                Shopping Cart
+            </a>
+        </div>
+    </aside>
 
 
     <!-- =========================================================
@@ -3618,6 +3964,77 @@ footer p{
       raf=false;
     });
   },{passive:true});
+})();
+</script>
+
+<script>
+(() => {
+    "use strict";
+
+    const navToggle = document.getElementById("navToggle");
+    const navDrawer = document.getElementById("navDrawer");
+    const navBackdrop = document.getElementById("navDrawerBackdrop");
+    const navClose = document.getElementById("navDrawerClose");
+
+    function openNavDrawer() {
+        if (!navDrawer || !navToggle) return;
+        navDrawer.hidden = false;
+        if (navBackdrop) navBackdrop.hidden = false;
+        requestAnimationFrame(() => {
+            navDrawer.classList.add("is-open");
+            if (navBackdrop) navBackdrop.classList.add("is-open");
+        });
+        navToggle.setAttribute("aria-expanded", "true");
+        navToggle.setAttribute("aria-label", "Close menu");
+        document.body.classList.add("nav-drawer-open");
+        if (navClose) navClose.focus();
+    }
+
+    function closeNavDrawer() {
+        if (!navDrawer || !navToggle) return;
+        navDrawer.classList.remove("is-open");
+        if (navBackdrop) navBackdrop.classList.remove("is-open");
+        navToggle.setAttribute("aria-expanded", "false");
+        navToggle.setAttribute("aria-label", "Open menu");
+        document.body.classList.remove("nav-drawer-open");
+        let finished = false;
+        const finish = () => {
+            if (finished) return;
+            finished = true;
+            navDrawer.hidden = true;
+            if (navBackdrop) navBackdrop.hidden = true;
+            navDrawer.removeEventListener("transitionend", onEnd);
+        };
+        const onEnd = (e) => {
+            if (e.target !== navDrawer) return;
+            finish();
+        };
+        navDrawer.addEventListener("transitionend", onEnd);
+        setTimeout(finish, 400);
+        navToggle.focus();
+    }
+
+    function toggleNavDrawer() {
+        if (navToggle.getAttribute("aria-expanded") === "true") {
+            closeNavDrawer();
+        } else {
+            openNavDrawer();
+        }
+    }
+
+    if (navToggle && navDrawer) {
+        navToggle.addEventListener("click", toggleNavDrawer);
+        if (navClose) navClose.addEventListener("click", closeNavDrawer);
+        if (navBackdrop) navBackdrop.addEventListener("click", closeNavDrawer);
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && navToggle.getAttribute("aria-expanded") === "true") {
+                closeNavDrawer();
+            }
+        });
+        navDrawer.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => closeNavDrawer());
+        });
+    }
 })();
 </script>
 </body>
