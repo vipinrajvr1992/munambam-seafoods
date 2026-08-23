@@ -2489,72 +2489,257 @@ footer p{
 
 
 <style id="mobile-nav-hamburger">
-/* Mobile hamburger navigation — Products page */
-.nav-toggle{
-    display:none;
-    width:42px;height:42px;flex:0 0 42px;
-    align-items:center;justify-content:center;
-    border:1px solid rgba(198,154,58,.28);
-    border-radius:50%;
-    background:rgba(6,27,58,.06);
-    color:var(--navy,#061b3a);
-    padding:0;margin:0;
-    z-index:5002;
-}
-.nav-toggle i{font-size:1rem;pointer-events:none}
-.nav-toggle[aria-expanded="true"]{background:var(--gold,#c69a3a);color:var(--navy,#061b3a)}
-.nav-backdrop{
-    display:none;position:fixed;inset:0;z-index:4999;
-    background:rgba(3,15,31,.45);backdrop-filter:blur(3px);
-}
-.nav-backdrop.show{display:block}
+/* =========================================================
+   HAMBURGER + MOBILE SIDE DRAWER
+   Desktop (>850px): normal nav links only
+   Mobile (≤850px): hamburger + side drawer only
+========================================================= */
 
-@media (max-width:768px){
-    nav, .site-nav{
-        position:relative;
-        overflow:visible !important;
-        gap:10px !important;
-        padding:8px 12px 8px 14px !important;
-    }
-    .nav-toggle{display:inline-flex !important}
-    .brand-name, .brand-text{font-size:.88rem !important}
-    .nav-links{
-        display:none !important;
-        position:absolute;
-        top:calc(100% + 10px);
-        left:0;right:0;
-        flex-direction:column !important;
-        align-items:stretch !important;
-        gap:0 !important;
-        padding:10px 12px !important;
-        background:rgba(255,250,240,.98);
-        border:1px solid rgba(255,255,255,.86);
-        border-radius:22px;
-        box-shadow:0 18px 40px rgba(0,0,0,.22);
-        z-index:5001;
-        max-height:min(70vh,420px);
-        overflow-y:auto;
-        white-space:normal !important;
-    }
-    .nav-links.open{
-        display:flex !important;
-    }
-    .nav-links a{
-        display:block;
-        padding:13px 14px !important;
-        font-size:.88rem !important;
-        border-radius:14px;
-        white-space:normal !important;
-    }
-    .nav-links a:hover,
-    .nav-links a.active{
-        background:rgba(22,141,204,.08);
-    }
-    .nav-links a::after{display:none !important}
-    .cart-link{margin-left:0 !important}
+.nav-toggle {
+    display: none;
+    position: relative;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    border: 1px solid rgba(198,154,58,.22);
+    border-radius: 50%;
+    background: rgba(6,27,58,.06);
+    color: var(--navy, #061b3a);
+    transition: background .2s ease, transform .2s ease, border-color .2s ease;
+    z-index: 5100;
 }
-@media (max-width:430px){
-    .brand-name, .brand-text{font-size:.78rem !important;max-width:42vw;overflow:hidden;text-overflow:ellipsis}
+
+.nav-toggle:hover {
+    background: var(--gold, #c69a3a);
+    border-color: var(--gold, #c69a3a);
+    transform: translateY(-2px);
+}
+
+.nav-toggle:focus-visible {
+    outline: 2px solid var(--gold, #c69a3a);
+    outline-offset: 3px;
+}
+
+.nav-toggle-bars {
+    display: block;
+    width: 18px;
+    height: 14px;
+    position: relative;
+}
+
+.nav-toggle-bars span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform .28s ease, opacity .2s ease, top .28s ease;
+}
+
+.nav-toggle-bars span:nth-child(1) { top: 0; }
+.nav-toggle-bars span:nth-child(2) { top: 6px; }
+.nav-toggle-bars span:nth-child(3) { top: 12px; }
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(1) {
+    top: 6px;
+    transform: rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(3) {
+    top: 6px;
+    transform: rotate(-45deg);
+}
+
+.nav-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 6000;
+    background: rgba(6, 27, 58, .55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .28s ease, visibility .28s ease;
+}
+
+.nav-drawer-backdrop.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.nav-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 6100;
+    width: min(320px, 86vw);
+    height: 100%;
+    height: 100dvh;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(165deg, rgba(255,250,240,.98), rgba(247,240,223,.96));
+    border-left: 1px solid rgba(255,255,255,.7);
+    box-shadow: -18px 0 50px rgba(0,0,0,.28);
+    transform: translate3d(105%, 0, 0);
+    transition: transform .32s cubic-bezier(.22, 1, .36, 1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    visibility: hidden;
+}
+
+.nav-drawer.is-open {
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+}
+
+.nav-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 18px 14px;
+    border-bottom: 1px solid rgba(198,154,58,.18);
+    flex-shrink: 0;
+}
+
+.nav-drawer-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--navy, #061b3a);
+    font-size: .95rem;
+    font-weight: 800;
+    letter-spacing: -.3px;
+}
+
+.nav-drawer-brand img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.nav-drawer-close {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(198,154,58,.22);
+    border-radius: 50%;
+    background: rgba(6,27,58,.06);
+    color: var(--navy, #061b3a);
+    transition: background .2s ease, transform .2s ease;
+}
+
+.nav-drawer-close:hover {
+    background: var(--gold, #c69a3a);
+    transform: translateY(-1px);
+}
+
+.nav-drawer-close svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+.nav-drawer-links {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 12px 14px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.nav-drawer-links a {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    text-decoration: none;
+    color: var(--navy, #061b3a);
+    font-size: .95rem;
+    font-weight: 700;
+    transition: background .2s ease, color .2s ease;
+}
+
+.nav-drawer-links a:hover,
+.nav-drawer-links a:focus-visible {
+    background: rgba(6,27,58,.07);
+    color: var(--blue, #168dcc);
+    outline: none;
+}
+
+.nav-drawer-links a.active {
+    background: rgba(198,154,58,.14);
+    color: var(--navy, #061b3a);
+    box-shadow: inset 3px 0 0 var(--gold, #c69a3a);
+}
+
+.nav-drawer-footer {
+    flex-shrink: 0;
+    padding: 14px 18px 22px;
+    border-top: 1px solid rgba(198,154,58,.18);
+}
+
+.nav-drawer-cart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 0 18px;
+    border-radius: 50px;
+    background: var(--gold, #c69a3a);
+    color: var(--navy, #061b3a);
+    text-decoration: none;
+    font-size: .9rem;
+    font-weight: 800;
+    box-shadow: 0 10px 24px rgba(198,154,58,.22);
+    transition: background .2s ease, transform .2s ease;
+}
+
+.nav-drawer-cart:hover {
+    background: var(--gold-light, #e0bc68);
+    transform: translateY(-2px);
+}
+
+body.nav-drawer-open {
+    overflow: hidden;
+}
+
+@media (min-width: 851px) {
+    .nav-toggle,
+    .nav-drawer,
+    .nav-drawer-backdrop {
+        display: none !important;
+    }
+}
+
+@media (max-width: 850px) {
+    .nav-links {
+        display: none !important;
+    }
+
+    .nav-toggle {
+        display: inline-flex !important;
+    }
 }
 </style>
 
@@ -2638,13 +2823,8 @@ footer p{
         </a>
 
 
-        <!-- Mobile menu toggle -->
-        <button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
-            <i class="fa-solid fa-bars" aria-hidden="true"></i>
-        </button>
-
-        <!-- Navigation -->
-        <div class="nav-links" id="navLinks">
+        <!-- Navigation (desktop) -->
+        <div class="nav-links">
 
             <a href="/">
                 Home
@@ -2672,12 +2852,81 @@ footer p{
                 Terms
             </a>
 
-        </div><a 
-            href="/products/cart.html"class="cart-link" aria-label="Open shopping cart" title="Shopping Cart">
+        </div>
+
+        <a
+            href="/products/cart.html"
+            class="cart-link"
+            aria-label="Open shopping cart"
+            title="Shopping Cart"
+        >
             <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
             <span class="cart-count" id="cartCount">0</span>
-        </a></nav>
-    <div class="nav-backdrop" id="navBackdrop" hidden></div>
+        </a>
+
+        <!-- Mobile menu toggle -->
+        <button
+            type="button"
+            class="nav-toggle"
+            id="navToggle"
+            aria-label="Open menu"
+            aria-controls="navDrawer"
+            aria-expanded="false"
+        >
+            <span class="nav-toggle-bars" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
+        </button>
+
+</nav>
+
+    <!-- Mobile side drawer -->
+    <div class="nav-drawer-backdrop" id="navDrawerBackdrop" hidden></div>
+
+    <aside
+        class="nav-drawer"
+        id="navDrawer"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Site menu"
+        hidden
+    >
+        <div class="nav-drawer-header">
+            <a href="/" class="nav-drawer-brand" aria-label="Munambam Seafoods Home">
+                <img
+                    src="/assets/MUNAMBAM_Seafood_Logo_HQ.png"
+                    alt=""
+                    width="40"
+                    height="40"
+                    decoding="async"
+                >
+                <span>MUNAMBAM SEAFOODS</span>
+            </a>
+            <button type="button" class="nav-drawer-close" id="navDrawerClose" aria-label="Close menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+                    <path d="M6 6l12 12M18 6L6 18"/>
+                </svg>
+            </button>
+        </div>
+
+        <nav class="nav-drawer-links" aria-label="Mobile navigation">
+            <a href="/">Home</a>
+            <a href="/products/" class="active" aria-current="page">Products</a>
+            <a href="/about/">About Us</a>
+            <a href="/contact/">Contact</a>
+            <a href="/privacy/">Privacy Policy</a>
+            <a href="/terms/">Terms</a>
+        </nav>
+
+        <div class="nav-drawer-footer">
+            <a href="/products/cart.html" class="nav-drawer-cart">
+                <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+                Shopping Cart
+            </a>
+        </div>
+    </aside>
 
 
     <!-- =========================================================
@@ -3698,48 +3947,73 @@ footer p{
 </script>
 
 <script id="mobile-nav-toggle">
-(function(){
-  "use strict";
-  var toggle = document.getElementById("navToggle");
-  var links = document.getElementById("navLinks");
-  var backdrop = document.getElementById("navBackdrop");
-  if(!toggle || !links) return;
+(() => {
+    "use strict";
 
-  function setOpen(open){
-    links.classList.toggle("open", open);
-    toggle.setAttribute("aria-expanded", open ? "true" : "false");
-    toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-    var icon = toggle.querySelector("i");
-    if(icon){
-      icon.className = open ? "fa-solid fa-xmark" : "fa-solid fa-bars";
+    const navToggle = document.getElementById("navToggle");
+    const navDrawer = document.getElementById("navDrawer");
+    const navBackdrop = document.getElementById("navDrawerBackdrop");
+    const navClose = document.getElementById("navDrawerClose");
+
+    function openNavDrawer() {
+        if (!navDrawer || !navToggle) return;
+        navDrawer.hidden = false;
+        if (navBackdrop) navBackdrop.hidden = false;
+        requestAnimationFrame(() => {
+            navDrawer.classList.add("is-open");
+            if (navBackdrop) navBackdrop.classList.add("is-open");
+        });
+        navToggle.setAttribute("aria-expanded", "true");
+        navToggle.setAttribute("aria-label", "Close menu");
+        document.body.classList.add("nav-drawer-open");
+        if (navClose) navClose.focus();
     }
-    if(backdrop){
-      backdrop.hidden = !open;
-      backdrop.classList.toggle("show", open);
+
+    function closeNavDrawer() {
+        if (!navDrawer || !navToggle) return;
+        navDrawer.classList.remove("is-open");
+        if (navBackdrop) navBackdrop.classList.remove("is-open");
+        navToggle.setAttribute("aria-expanded", "false");
+        navToggle.setAttribute("aria-label", "Open menu");
+        document.body.classList.remove("nav-drawer-open");
+        let finished = false;
+        const finish = () => {
+            if (finished) return;
+            finished = true;
+            navDrawer.hidden = true;
+            if (navBackdrop) navBackdrop.hidden = true;
+            navDrawer.removeEventListener("transitionend", onEnd);
+        };
+        const onEnd = (e) => {
+            if (e.target !== navDrawer) return;
+            finish();
+        };
+        navDrawer.addEventListener("transitionend", onEnd);
+        setTimeout(finish, 400);
+        navToggle.focus();
     }
-    document.body.style.overflow = open ? "hidden" : "";
-  }
 
-  toggle.addEventListener("click", function(e){
-    e.preventDefault();
-    setOpen(!links.classList.contains("open"));
-  });
+    function toggleNavDrawer() {
+        if (navToggle.getAttribute("aria-expanded") === "true") {
+            closeNavDrawer();
+        } else {
+            openNavDrawer();
+        }
+    }
 
-  if(backdrop){
-    backdrop.addEventListener("click", function(){ setOpen(false); });
-  }
-
-  links.querySelectorAll("a").forEach(function(a){
-    a.addEventListener("click", function(){ setOpen(false); });
-  });
-
-  document.addEventListener("keydown", function(e){
-    if(e.key === "Escape") setOpen(false);
-  });
-
-  window.addEventListener("resize", function(){
-    if(window.innerWidth > 768) setOpen(false);
-  });
+    if (navToggle && navDrawer) {
+        navToggle.addEventListener("click", toggleNavDrawer);
+        if (navClose) navClose.addEventListener("click", closeNavDrawer);
+        if (navBackdrop) navBackdrop.addEventListener("click", closeNavDrawer);
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && navToggle.getAttribute("aria-expanded") === "true") {
+                closeNavDrawer();
+            }
+        });
+        navDrawer.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => closeNavDrawer());
+        });
+    }
 })();
 </script>
 
