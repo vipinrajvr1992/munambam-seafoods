@@ -2087,6 +2087,22 @@ body.nav-drawer-open {
   .nav-toggle, #navToggle, .nav-drawer, .nav-drawer-backdrop { display: none !important; }
 }
 
+
+/* Mobile: hide brand text for space (same as Terms ≤620, applied at hamburger breakpoint) */
+@media (max-width: 850px) {
+  .brand-name,
+  .brand-text,
+  nav .logo-container span.brand-name,
+  .site-nav .brand-text {
+    display: none !important;
+  }
+  .logo-container img,
+  .brand img {
+    width: 44px !important;
+    height: 44px !important;
+  }
+}
+
 </style>
 
 
@@ -3131,9 +3147,7 @@ footer p{
                 Home
             </a>
 
-            <a class="active" aria-current="page"
-                href="/products/"
-            >
+            <a href="/products/" class="active" aria-current="page">
                 Products
             </a>
 
@@ -3216,7 +3230,7 @@ footer p{
             <a href="/about/">About Us</a>
             <a href="/contact/">Contact</a>
             <a href="/privacy/">Privacy Policy</a>
-            <a href="/terms/" class="active" aria-current="page">Terms</a>
+            <a href="/terms/">Terms</a>
         </nav>
 
         <div class="nav-drawer-footer">
