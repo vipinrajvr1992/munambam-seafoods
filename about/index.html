@@ -1957,6 +1957,220 @@
             }
         }
 
+
+/* =========================================================
+   MOBILE-ONLY NAVIGATION
+   Desktop navigation above remains untouched.
+========================================================= */
+.mobile-nav-toggle,
+.mobile-nav-panel {
+    display: none;
+}
+
+@media (max-width: 850px) {
+    .site-nav {
+        display: none !important;
+    }
+
+    .mobile-site-nav {
+        position: sticky;
+        top: 10px;
+        z-index: 6000;
+        width: calc(100% - 20px);
+        min-height: 62px;
+        margin: 10px auto 0;
+        padding: 8px 10px;
+        display: grid;
+        grid-template-columns: 42px minmax(0, 1fr) 42px;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255,250,240,.97);
+        border: 1px solid rgba(255,255,255,.85);
+        border-radius: 25px;
+        box-shadow: 0 15px 40px rgba(0,0,0,.20);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+    }
+
+    .mobile-nav-toggle {
+        appearance: none;
+        width: 42px;
+        height: 42px;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        color: var(--navy);
+        cursor: pointer !important;
+    }
+
+    .mobile-nav-toggle span {
+        display: block;
+        width: 21px;
+        height: 2px;
+        border-radius: 2px;
+        background: currentColor;
+        transition: transform .22s ease, opacity .22s ease;
+    }
+
+    .mobile-nav-toggle[aria-expanded="true"] span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+
+    .mobile-nav-toggle[aria-expanded="true"] span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-nav-toggle[aria-expanded="true"] span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .mobile-brand {
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: var(--navy);
+        text-decoration: none;
+        overflow: hidden;
+    }
+
+    .mobile-brand img {
+        width: 40px;
+        height: 40px;
+        flex: 0 0 40px;
+        object-fit: contain;
+        filter: drop-shadow(0 5px 8px rgba(0,0,0,.16));
+    }
+
+    .mobile-brand-text {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: .86rem;
+        font-weight: 800;
+        letter-spacing: -.3px;
+    }
+
+    .mobile-cart-link {
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--navy);
+        background: rgba(6,27,58,.06);
+        border: 1px solid rgba(198,154,58,.22);
+        border-radius: 50%;
+        text-decoration: none;
+        cursor: pointer !important;
+    }
+
+    .mobile-cart-link svg {
+        width: 19px;
+        height: 19px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .mobile-cart-count {
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        min-width: 18px;
+        height: 18px;
+        padding: 0 4px;
+        display: grid;
+        place-items: center;
+        border-radius: 20px;
+        background: var(--blue);
+        color: #fff;
+        font-size: .58rem;
+        font-weight: 800;
+        border: 2px solid var(--cream);
+        line-height: 1;
+    }
+
+    .mobile-nav-panel {
+        position: fixed;
+        top: 82px;
+        left: 10px;
+        right: 10px;
+        z-index: 5999;
+        padding: 10px;
+        background: rgba(255,250,240,.985);
+        border: 1px solid rgba(198,154,58,.22);
+        border-radius: 22px;
+        box-shadow: 0 20px 50px rgba(0,0,0,.24);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+
+    .mobile-nav-panel.is-open {
+        display: block;
+    }
+
+    .mobile-nav-panel a {
+        display: flex;
+        align-items: center;
+        min-height: 46px;
+        padding: 0 15px;
+        border-radius: 13px;
+        color: var(--navy);
+        text-decoration: none;
+        font-size: .9rem;
+        font-weight: 750;
+        cursor: pointer !important;
+    }
+
+    .mobile-nav-panel a + a {
+        margin-top: 3px;
+    }
+
+    .mobile-nav-panel a:hover,
+    .mobile-nav-panel a.active {
+        color: var(--blue);
+        background: rgba(22,141,204,.08);
+    }
+}
+
+@media (max-width: 380px) {
+    .mobile-site-nav {
+        grid-template-columns: 40px minmax(0,1fr) 40px;
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+
+    .mobile-nav-toggle,
+    .mobile-cart-link {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+    }
+
+    .mobile-brand-text {
+        font-size: .78rem;
+    }
+
+    .mobile-brand img {
+        width: 37px;
+        height: 37px;
+        flex-basis: 37px;
+    }
+}
+
 </style>
 <style>
 /* =========================================================
@@ -2364,6 +2578,54 @@
         </a>
 
 </nav>
+<!-- MOBILE-ONLY NAVIGATION
+     Desktop .site-nav remains unchanged and is hidden only on mobile. -->
+<nav class="mobile-site-nav" aria-label="Mobile navigation">
+    <button
+        type="button"
+        class="mobile-nav-toggle"
+        id="mobileNavToggle"
+        aria-expanded="false"
+        aria-controls="mobileNavPanel"
+        aria-label="Open navigation menu"
+    >
+        <span></span><span></span><span></span>
+    </button>
+
+    <a href="/" class="mobile-brand" aria-label="Munambam Seafoods Home">
+        <img
+            src="/assets/MUNAMBAM_Seafood_Logo_HQ.png"
+            alt="Munambam Seafoods"
+            width="40"
+            height="40"
+        >
+        <span class="mobile-brand-text">MUNAMBAM SEAFOODS</span>
+    </a>
+
+    <a
+        href="/products/cart.html"
+        class="mobile-cart-link"
+        aria-label="Open shopping cart"
+        title="Shopping Cart"
+    >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.4L21 8H6"></path>
+            <circle cx="10" cy="19" r="1.2"></circle>
+            <circle cx="18" cy="19" r="1.2"></circle>
+        </svg>
+        <span class="mobile-cart-count" id="mobileCartCount">0</span>
+    </a>
+</nav>
+
+<div class="mobile-nav-panel" id="mobileNavPanel" aria-hidden="true">
+    <a href="/">Home</a>
+    <a href="/products/">Products</a>
+    <a href="/about/" class="active" aria-current="page">About Us</a>
+    <a href="/contact/">Contact</a>
+    <a href="/privacy/">Privacy Policy</a>
+    <a href="/terms/">Terms</a>
+</div>
+
 
 
     <!-- =========================================================
@@ -2661,6 +2923,60 @@
 
     </footer>
 
+
+
+<script>
+(function () {
+    const toggle = document.getElementById("mobileNavToggle");
+    const panel = document.getElementById("mobileNavPanel");
+
+    if (!toggle || !panel) return;
+
+    function closeMenu() {
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-label", "Open navigation menu");
+        panel.classList.remove("is-open");
+        panel.setAttribute("aria-hidden", "true");
+    }
+
+    function openMenu() {
+        toggle.setAttribute("aria-expanded", "true");
+        toggle.setAttribute("aria-label", "Close navigation menu");
+        panel.classList.add("is-open");
+        panel.setAttribute("aria-hidden", "false");
+    }
+
+    toggle.addEventListener("click", function () {
+        if (toggle.getAttribute("aria-expanded") === "true") {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+
+    panel.querySelectorAll("a").forEach(function (link) {
+        link.addEventListener("click", closeMenu);
+    });
+
+    document.addEventListener("click", function (event) {
+        if (
+            panel.classList.contains("is-open") &&
+            !panel.contains(event.target) &&
+            !toggle.contains(event.target)
+        ) {
+            closeMenu();
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") closeMenu();
+    });
+
+    window.addEventListener("resize", function () {
+        if (window.innerWidth > 850) closeMenu();
+    });
+})();
+</script>
 
 <script>
 
