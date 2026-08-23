@@ -2203,6 +2203,77 @@
     }
 }
 </style>
+
+<style id="mobile-nav-hamburger">
+/* Mobile hamburger navigation — Products page */
+.nav-toggle{
+    display:none;
+    width:42px;height:42px;flex:0 0 42px;
+    align-items:center;justify-content:center;
+    border:1px solid rgba(198,154,58,.28);
+    border-radius:50%;
+    background:rgba(6,27,58,.06);
+    color:var(--navy,#061b3a);
+    padding:0;margin:0;
+    z-index:5002;
+}
+.nav-toggle i{font-size:1rem;pointer-events:none}
+.nav-toggle[aria-expanded="true"]{background:var(--gold,#c69a3a);color:var(--navy,#061b3a)}
+.nav-backdrop{
+    display:none;position:fixed;inset:0;z-index:4999;
+    background:rgba(3,15,31,.45);backdrop-filter:blur(3px);
+}
+.nav-backdrop.show{display:block}
+
+@media (max-width:768px){
+    nav, .site-nav{
+        position:relative;
+        overflow:visible !important;
+        gap:10px !important;
+        padding:8px 12px 8px 14px !important;
+    }
+    .nav-toggle{display:inline-flex !important}
+    .brand-name, .brand-text{font-size:.88rem !important}
+    .nav-links{
+        display:none !important;
+        position:absolute;
+        top:calc(100% + 10px);
+        left:0;right:0;
+        flex-direction:column !important;
+        align-items:stretch !important;
+        gap:0 !important;
+        padding:10px 12px !important;
+        background:rgba(255,250,240,.98);
+        border:1px solid rgba(255,255,255,.86);
+        border-radius:22px;
+        box-shadow:0 18px 40px rgba(0,0,0,.22);
+        z-index:5001;
+        max-height:min(70vh,420px);
+        overflow-y:auto;
+        white-space:normal !important;
+    }
+    .nav-links.open{
+        display:flex !important;
+    }
+    .nav-links a{
+        display:block;
+        padding:13px 14px !important;
+        font-size:.88rem !important;
+        border-radius:14px;
+        white-space:normal !important;
+    }
+    .nav-links a:hover,
+    .nav-links a.active{
+        background:rgba(22,141,204,.08);
+    }
+    .nav-links a::after{display:none !important}
+    .cart-link{margin-left:0 !important}
+}
+@media (max-width:430px){
+    .brand-name, .brand-text{font-size:.78rem !important;max-width:42vw;overflow:hidden;text-overflow:ellipsis}
+}
+</style>
+
 </head>
 <body>
 
@@ -2314,7 +2385,11 @@
         </a>
 
 
-        <div class="nav-links">
+        <button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+            <span aria-hidden="true" style="font-size:1.15rem;line-height:1">☰</span>
+        </button>
+
+        <div class="nav-links" id="navLinks">
 
             <a href="/">
                 Home
@@ -2355,6 +2430,7 @@
         </a>
 
     </nav>
+    <div class="nav-backdrop" id="navBackdrop" hidden></div>
 
 
     <!-- =========================================================
@@ -3042,35 +3118,91 @@
 (() => {
     "use strict";
 
+    const CART_KEY = "munambam_cart";
     const cartCount = document.getElementById("cartCount");
     if (!cartCount) return;
 
     function readCart() {
         try {
-            return JSON.parse(localStorage.getItem("munambam_cart") || "[]");
+            return JSON.parse(localStorage.getItem(CART_KEY) || "[]");
         } catch {
             return [];
         }
     }
 
-    function updateCartCount(cart = readCart()) {
-        const count = Array.isArray(cart)
-            ? cart.reduce((sum, item) => sum + Number(item.quantity || 0), 0)
-            : 0;
-
-        cartCount.textContent = count > 99 ? "99+" : String(count);
+    function updateCartCount() {
+        try {
+            const cart = readCart();
+            const count = Array.isArray(cart)
+                ? cart.reduce((sum, item) => sum + Math.max(1, Number(item.quantity) || 1), 0)
+                : 0;
+            cartCount.textContent = count > 99 ? "99+" : String(count);
+        } catch {
+            cartCount.textContent = "0";
+        }
     }
 
     updateCartCount();
 
     window.addEventListener("storage", (event) => {
-        if (event.key === "munambam_cart") {
+        if (event.key === CART_KEY || event.key === null) {
             updateCartCount();
         }
     });
 
     window.addEventListener("pageshow", updateCartCount);
     window.addEventListener("focus", updateCartCount);
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") updateCartCount();
+    });
+})();
+</script>
+
+
+<script id="mobile-nav-toggle">
+(function(){
+  "use strict";
+  var toggle = document.getElementById("navToggle");
+  var links = document.getElementById("navLinks");
+  var backdrop = document.getElementById("navBackdrop");
+  if(!toggle || !links) return;
+
+  function setOpen(open){
+    links.classList.toggle("open", open);
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    var icon = toggle.querySelector("i, span[aria-hidden]");
+    if(icon){
+      if(icon.tagName === "I"){ icon.className = open ? "fa-solid fa-xmark" : "fa-solid fa-bars"; }
+      else { icon.textContent = open ? "✕" : "☰"; }
+    }
+    if(backdrop){
+      backdrop.hidden = !open;
+      backdrop.classList.toggle("show", open);
+    }
+    document.body.style.overflow = open ? "hidden" : "";
+  }
+
+  toggle.addEventListener("click", function(e){
+    e.preventDefault();
+    setOpen(!links.classList.contains("open"));
+  });
+
+  if(backdrop){
+    backdrop.addEventListener("click", function(){ setOpen(false); });
+  }
+
+  links.querySelectorAll("a").forEach(function(a){
+    a.addEventListener("click", function(){ setOpen(false); });
+  });
+
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape") setOpen(false);
+  });
+
+  window.addEventListener("resize", function(){
+    if(window.innerWidth > 768) setOpen(false);
+  });
 })();
 </script>
 
