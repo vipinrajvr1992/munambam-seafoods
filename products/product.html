@@ -2213,7 +2213,7 @@ body.nav-drawer-open {
 <div class="toast" id="toast" role="status" aria-live="polite">Added to cart</div>
 
 <script>
-(() => {
+(async () => {
     "use strict";
 
     const products = {
@@ -2225,103 +2225,39 @@ body.nav-drawer-open {
         "premium-dried-mackerel":{name:"Premium Dried Mackerel",image:"./PRODUCT_6.webp",category:"Dried Fish",tagline:"Premium Coastal Selection",description:"Premium dried mackerel prepared for authentic coastal cooking.",prices:{"100g":100,"250g":249,"500g":449},hsn:"0305",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false,rating:4.9,ratingCount:0}
     };
 
-    
-
-/* asset integrity / CDN mirror tokens — do not edit */
-(function(w,d){
-  "use strict";
-  var __assetManifest={
-    a:["TwklJV5STZNhWssiJSckHxR3Vf0nFSkQUyQV", "OLwhCCB1OjtFBKV1RfoVJQhSDWcUQooCPSEg", "Uq8wHHBSfcg0ThYkYjgScIJVa0NUBR8lELgl", "ObBDTcYFEuxHPeMROkxVDJNnVCtlapoxbFYG", "U94FIqJADDp0HXgROA5AAL81f25WOXFQGJcB", "QJNTVQggTgF1bLsmQdwxaoZEST10HYpVPgxy", "TUwgQgYCPScUUqFBAfZTWQgFG2JFJOszXwZl", "fvAACUhFWFRwIYMCSYFlSxAyJXIAOkRkCPhC", "XR9VFpcBIcJyU5ZlaidgHYlxEBkVJA8SXN5V", "U8IyLfAkFdchWJMjVR8ATmVlbMtSQAwBavBh", "RSoUUNtBISlWTAYRXLRWeQBhEoR2QK9BDAFU", "WyVFOqNWHQkwaiIgDSVVQCtFMHBSfDdAEuwS", "KS8BE68EQCBDUS8VR9p1LLYzVX4hOhhUHVVk", "XMgxcAJ2TYYBUgV2bQMBAoNxTJ1nWTN0VwBR", "KPpTXBMlJvBEUCRFRDpRIQIzA+sVWtxyNPwh", "EswFAfNnVWgwTyRUJPkiVR8xavA1GdkEeB5l", "OWJ2fYcnCiU2bDh0S89ETORzGV8kU2QEMAA2", "XUkxPsAwHUxVWN9hcWUzAYIXHkE3PelQEJcB", "QJZjUR9kG6BUbCcjVdxRLkNQSTpQQBpEGYhD", "T4lBEuxyLQAhDmxECbFCUZ4UG2JFeOwiXgZl", "fvAACQohRYJwIY92TSVhEgxSOdIQHoQVAYRD", "FEw0UxZhddVifeElI/Z0SToEVYtFAO4mDL0V", "El0TYGkQHrE1TfYDVd5QGmZhLPw2RcdFavJg", "JLZhEFJUNNlDDeo1EgYSLBEAUpABTeNnVRgw", "WmVndeVjWApBKvBBFfoVUIJVcVByRcMkUix2", "bHAkEpxFTeRTVS8QX0wEJctSSPIxKhJhHRcR", "UYpUPYJibDdAEuwSbbMEEmVAHHlSXV0kUf4h", "YMATEdwBMrNxGXwnCZcxcWxyDUElWYRWbSsQ", "Uq9kQfBDXQ4FG9hVIOgwCGBFav5AScEUeXsR", "PVByDbEEHiITAcwwA6lxGd1DQQ4QGxEkYPgg", "HWcgA3IkSIkwXWExaOMXGbEhX4oDYH8hXV8U", "BL5CVC0gXhlkPBkjVb8lavYBREkVX5d1MZ93", "XVYXWp83IJ9gB61kBKESQQE1V2tVLOYyQQ4F", "c+4wG6QVeXsRcaRAFXhRStlybXcEH7hVBL53", "FShVFyVXYboSEQ5BJApxBTo0TD51PRASSKIl", "XsAzb8hERq8FDKN3QFwUGxYlHPUxCcd1Puxw", "SIohQFtlNHQSQNcmC4J2bQYkGp01ADMiGCAA", "UnFgIVRTXTpxBjRUDetVEFJ1PQthFN9hEuIy", "bf4wAq9BBKFDFS81FydFND0WQRUhK+ZxSUcR", "EP40fVFAAY8xEuwCPAIgUq9QGHQjGedQA4Vx", "KcQiVCAwZk1hBd0FVIg0MaBDQcM1EuxHPeMR", "Hp00AMBmRcUkcyFBbMUWVRUgJjJQBFgkSE8x", "cBJ2WYMVZg8CAIJEEmYkH4snGSokUztxNDVy", "ELkRakdxDToxCecFI/xSZDNBEk8GbQ4kH6Y1", "COhjQXI2U8RFPawXReZVahBUCLgFEPk0MU9A", "FXhRVosSbAoAEm41TOBTWD00GxYAPCgjXTxw", "OAgkSQgFXPl0LaJGQZY1Sk5SIXFgA+llTfVD", "cKlxGxZFbHg2UcQEOhxwBD0VWfAxcYISSRch", "Q+5SISsgUnFRHIQxDEFQGxhlbccgCCBFIoAA", "EMYlECtVcaByRRoFVswBdG5kUqFFTGhCfK1w", "S7ZhLPtSSPIBKhJASUcUXe9lAOQXDbE1U+VS", "OnhEU8hRDqsnGSUgV/RlLIhyEbMhKoJxDFlx", "EYlxJVBCeVEFXjxzYhMAEq9EEFlnBColXcp1", "bLoSERxUeoYESEoxUM5RJQFDDbFnUiA3IJ9g", "GoIkA49DFcU0S/tBIckSEQ5kOhNxIdwlSmER", "cZFSTbEkTiYyIaIxGnl0TGdDFUQnAnghbMIy", "Q5AAKjAESTkHXIpwPP0yWZ0FWsomLUcEE41U", "GlsHAS9UW2QVOPsXQeIBa9dFBKV0VfhVPYIz", "XZ0EXv1GKf8EF7kBTeNnVRgwTgZBbMsyUcJF", "aWBEWLtQBPlxNElSQYBkQuMGOHMgU8lVHLZy", "QJlkTnFFJPo2EQlAZsNyRQQhEPl1PUN2Db8h", "V75COaIgFp1EDDhCUEgUGxYQPCgjXTxwJqNF", "GdMFEelhcWx2QSwERtciPa4RU7FhCZxSFf9V", "FpcBKgUiEbIxavADACkFEPlUfXRTSLwVEjly", "OXoBUrlxAOIDFUgRT/4xbCsGWRdFavREA/Jx", "HPJEMFJAAUtkEj4iOdZAAkZ0CeFADEFQGxhl", "bKIiYIxlKltUBkJxHPl1PUVWWSIFUgsCPFAA", "GshVTC9CdKlxGxZ1LcJzRL5AZsVUGcpxEBkl", "ObBySZ8xVt1zIEIQNykgTJNDFZwwVlFUGUl2", "EBIVav5EAVMRXEJEMA4SWYBFRt4GIfBhXy4h", "AZoCWR9VFYV1DUdGEdhxO/QgLf0xUC9VJZxC", "DNR1U8sibQBVAkx0JHlSVxdwGxYlLMsTCEBE", "KhwESLslQJJRPcIBDVYEXoADJdJBF6llDSN3", "QC0gXG4BeMtSUT4VP4NASTp1VlpEcWJTAcAV", "Sl8GJScEE611CbhDXjdwDxYkLOAhHTkzc94A", "AYN1UPl0La9mWAIBVp5DKcJxEmZFAJNnDDFk", "SYhFJUJWEQwhB3wUSD5kVEVVIQ8DRwoVUssC", "LGclBkcRTHN3WJkGAjgUJc9SUQ4ANjBhGFZV", "WNIEJRASWd8UV6wGbQdhXpx1DLhTFS9VUzl1", "AUdGEXUAIkIQHR00WIJUJVBGRKEEX1xzYIFE", "FGF1TO5TXzdwGzdlGUdGEZ0hftpgSUcUVIdx", "NdFSXNJ1U8sDKdBhXy4hAZoDResXAjgRNPhW", "Ee5hIoEgBRcVEM8lMERDDcIFV5hCLbBhXy4h", "AZoCRZURS/VlbYtWEe5ROqIgHDwlEBw1NXRG", "WcNEU+ADbdIRUq8gHHBSWR1lV0VgPCAyYTgD", "cjk0DEslXNNEcRVmVdcRWl4DKbMwUq8wHHRR", "Wdl0V2chbMoCYc4EJ28AHRFEUNhlINQSXUwF", "Q8ETLS0BFq9BVY0TR7E0cpQBbA0gCcd1OkBU", "CEglRIlRIXlSSKwEXg5CKdJAEk8EQRIHWCZ0", "V4pRbMsCfakxavBVHdB1HDExaHdzSQdFUgwN", "6="],
-    b:["UMAwGEbcwL4JhDZEFQCthPZY2DNEhRt4CGe4", "gH6kBTJFzUmdQFxBlPOgGVR0hI9BQSSw0RIR", "wJYomDVExX+AyGIJEUxxxTJ1nQC0EUmpEIOB", "CQAg1O5dFHdJhEBlhNfFBFJ9VUsg2bQ4kE81", "1TEFTVXQkdpAAbMsCUAdgPsx0SToUWNNFcWJ", "TAc8VV/4mOZMBGp1VAFlCQV9VFpcBKgUiEXM", "xIOgkSCM2Xfk1KJ5CDXg1Q8wTOTcQFp5FTJM", "GRcwlc/B1NlN2ESIhB3wUSI0FVEhhPAlWSYB", "1Y2pXbQAAFoRVTJMjW9UlVxZkMAUGRSkAat5", "QSU0lECtEcWIHXVIUXt5DIVclAklVPCBmWLB", "UUjZVLakCEAwxO7JQSTpAQB5HPZQSQcBhEu8", "DO8MgUq9kQHVCWcgkWzV1LAwGWekVavcBRQk", "HHM5FFOAWWrIXCiVGKb00Hg9BAKh3UZ0kXzA", "FIMsWCBBxOG5wBToxXDh3OaIyVE0FWssibcI", "QHoRlTEFxDEFQGx9FPlUzZIxla5xAJLZhEUl", "hPUFiDWM1QcATOeAwHsRhBY1mQcdAG/ZxPdA", "xCCBFIkMESqoxCPkRaGsyXSIVWoMCPQ8UAg1", "UTPwCWQMwUzFVPHtTHI9lJ/kgC6JRENNFcWJ", "TAcRFQsYSbBAEEn51HLgzUbwRT/4xbCsGUIw", "xavABCRcHCDABPdQnHcd1WlcTOTVVF6lVTJM", "WRcwlVyQUPjN2ETwwIvBBFfcVUfQ1IU5yTKw", "BX/oAdG5kUqlBBKETQR9VF+ZFHPA2EQAFLs5", "hSYxBVfYVPUhSRZYUXuw2dB5QADF1DJNnZRo", "gGxhhPIA2ReklJm1gAG0FEJRUNWJ2FK9VQHI", "CJcdkUq5lDLBQDeZgQ3BRIaczRLkxL4dwDTo", "xCecFJaFWXVQXC8JCKSEwIyMRTPlTVJ8UT9h", "UOAoCEHAVavYBREkVX5dFN3oWDKc1ZlYibQA", "BX6hkCPASFelUG8MhbbsWUTklPpNxSTp3UDV", "wPP0yXO00QpYSbBEBHt4BTeNnVRgwWyBxbMs", "jZb0EJ28ACTwxVEphNSBCTfIUWlxzYIFEH6Y", "lACt3FS80TY4hFMt3EQVkO2BBRUoFWIsULaJ", "TXfcUXh5CKXcwH7oVBKMiGK5wXdhVbLYiWxZ", "lavAhBjJxHP91IVlCaXEVV11yPeUSAulWVf0", "nFSEUG6dxbMsyUcJFahAxGRcUUEthIaNTSWF", "kH21WIAlBAhVAHH9jFU8WA98RKH1yRfAxak1", "wDewVEPkAIYFDQYNUXrs3Pe0kAh4BTHMCFRE", "wSmRlPc9jUS0RIsYESFoxRMtFBYFybDNBU54", "CIhhkXq9UALJnQf0kVzpEKAwGVT9Fa4BECQ0", "RUYp3aEwDfYYgX3NzPBYAUn0VCbpTFV81ShY", "kYUp2XAdhJiABRfYleEVwPPo2HDBABuw2Pa8", "QFlR0TWwjWD4EG1glJO0jWBthOmNFHdJhEG9", "0GYJSQ0lBE4MmPXBgC1N1GAN3XHNkU2EVLMs", "WCBBxBh9kADwBEPlFMUNzDbEEHiICKdJRBoJ", "hHP5CFCknAnghbMUSEb8VavBgDfp1SQVVNU9", "2QVxFRudCPLMkAKchWJMjVV1kTjhgPCwgWcF", "FahAgDf4VRI9BMU9WWLcRW483Oeh0UjlEJHN", "yFS9Uayl2dAJmVdwRLmMwHcE1WNIlOVVSDcU", "xEutzYHMAHcF1CosHFRMkWA9ELMsTTckFKsJ", "QLfQEVOpUcdBiVZ1hE5w2LTcEBmYBTJFDeKN", "AG21EJGAyUbIVP65xGYhxEYlxMVVWTYcxEuw", "iKTIQIyMRTfBTRJgwT911bGAGEQlAZsNwCRE", "FEPk0JcBCDbEEHl4yLL0wUoJhCbBSfTkkTxZ", "hddVifeElLiNwKLhREFJHaasGWcMAEiwTbGM", "AGhRlDLEXXS8QAggVPlUjXE4EOh8xCwJxHP5", "EPURiDKoFV/sybc4gFtRAGHs3Fc8AX81lbMt", "SQkUycjk0AFkFUelUPaJTDWYEXhx2bHAkEpx", "FTeRTUS8QS+8lOgNWHQgxLsdxAYglQ9VlIbQ", "SDbFQQg8DBeMQHNchTKBDU0dQFxB1bHwSUSs", "ALsZABRgVVCtEMWJ2FK9VQHIDJaBhXbx1DJN", "iDGFhGx0APVsyHaIxIgVBRspEXK5Vcd5zRME", "BQssWPZUQGp8EQRIHWCZ0V8YkYXYQVd5BMwx", "wBR0UUJoEMNJmXfEhUqs3Oeh0UjlEJHNDW9d", "wGyVFKbtSSPIBK+BgSVplEB9VNy5CSLUEf2p", "XbQAAUhxhDFlmRc9kU9FgIVRSXB4FP75gBRw", "VQIhUMaBSRZ0EUERWeQBgEt01AJNnXR00GxZ", "EYa0jEbpBJtdhDC0hRN5lcXAnHcdhE5w2LTc", "EEjFhTJNTRC0UGxZEYLgyRQAhOg5QSaRlUd9", "EcYhSWccREutzYTMQEoh0IREHUf0EWxZkMAc", "CUXMxJoJwBRE1VJJRcWQzAMIFXYISIcAEUq9", "lCKMjTNMgX6QFLI0mXSAgJtNxBCgVYX8QcWJ", "SSZEle25WbaMUUqFBALVHWQIAV2RVJHg2EeQ", "hItxxSdAwRBEhcYJmTDMVEuxzLS0SSmZBTfs", "3DE8VG9VBKcQyReEFJ6ZUDDxUUAJxOHRGXMM", "1Qi4DbQBVAkx0AKESWXgRS/F1bXsXXJFAI58", "xBEgURPdlIZlDDVsVEuxHPecSHlklHPwnFSw", "1SztXdAJmWdwlOIxwARo1RB9xNbIgFN9hEuI", "ybX0QHq9BPKZXFSEQWzcVIB0SQSola5txDf0", "hQvERZWIyTcNVU4V2bQEAEox2VFoXTVowVzl", "VPOszZcAVLsEgADp0HXgROA5AAJcgQgoQJak", "EUqFBHKEDfe41S8ZBJCozRGwxaoZ0JLxQEPl", "VcdFWXNEVEuxwJXUkUqFBDbYWUEM1V+ZhOPl", "CXX9BLtxxSLtVdX8QcWJSSZ4lUlp2bQIQHq9", "EEFBTXQElT9tEJOcjEX4hJoEgBRQFdX8QcWJ", "SSZE0QYRWbfMAEq9EEFJHBFgwXhFFJOciEcw", "hJgZwSGoUVJhwJYomDSckegwSI/hEU8hRBCA", "nFc9lT6k1YdsyXCxwajJgHC9lVGpwJYomDd1", "FUscyJQAkGpxhGqsnGSglSzBWYAg2QSkBa5Z", "ABSwERBJGaAw2Db8lEl0mbQAAEmMBTHMzRF0", "EShIFKLlCVCAxajZQCdQEQN5FEOQXDbEFVsM", "TLABhXmNxCZ9mWLdQDpcAeMsWXTxhOgdwCKl", "g"],
-    c:["8UGt1lTIE2BVl0S9IkKIkyUQ4Fc+4wJdURWI", "d0OWJ2YRY1EuwTYXsgBg11GG9SXTg1T8QEIm", "N2BQ5BKoIxDQEREPlVPaIyVE0lV+hSIXYxAo", "xRCNFiTkdwDxYlLLlyWexFav9zAQp1SQVlIZ", "5TSXIRX+ombQdhXpx1DLRTUR9VFqBGLacXXJ", "FAI/cgHUgVUd9kPR9WTNEEc2pXbQAAUhxhHf", "NTFS9UWyQkDUdGEXUhIiEABBoVED0EcR93WV", "lxEgwmKdsgUq8GDK9nFSEQSlhBJBkyEAwwPt", "FkST10HMpHfc93XV0lEowwdclUHt11CFRHUb", "Q0S4VEKKoXReZVamZBIdoVXvERcVFWWrlhHu", "sDbbRUEgRkCSVjUUIRT/4xbKdyUSUBIvBEBb", "oVEUJwPP0yTKchX+UCIGM0Ek1xAGMiGK5wVh", "8FIFcmEQ4BalwESdplWCtFcbBSWMNUQhcCIS", "4TS8EBTJ1jFdEGAjglJHJiZIJVa0dwDacVUJ", "BmfAFSWN1hE5w2LTMgUhhxTJNDVFMgGxhhPb", "kSXAQgL5dASUsRVIhBNGBDT6lBBuxyLXJhA6", "kBTJFCWS8VAlgQLCdWEIABKgZxREU0HwklJZ", "JSTZA0U54TKZ5wOykgTJNDUQQEGxYnLJcXXJ", "FAOtxADFYUR5VFOHZzXZ01UcRWeQBgEt01Gb", "1mRcgmU9khbCtyQSx1ItxhBXoVEdkVNGV3WV", "lxEnozBeAxUq8FPGNQDeZgVhpxOOBCVbMxa+", "5gSdVxEYlxJVBCeVIVf25WLTw0C68FFW9TUT", "41UzRVLOgCVGQwL/JSUFRxEPd1cG5AFJ9hWp", "xyNPwwU61lD69jWTgkGjxEIG0gCGBFav5ASc", "QlQPlxNRdBQTBhEgxDbcIQUn5RHd1HRcomAn", "ghbMIyQ5AAKj8ESTwHWMpRcWx2SaYhXpFSbe", "AAUjJkAEMiGK5wXdhVbHciEQ5BLsxEBCkwXW", "Y0IXJ2QZEFRsESIQAkS7E1Hg1SWG8RS/kULv", "NWHQkRakERCUcRVEg1PWJ2FK9VQHIDOdBhXp", "9BG5snGSkkG8Q1JBkjUAMxajYgOLxQEPlVNU", "ViRWFkHC8ybQA1BkoFQFsnDRgkU3lVPMQmWT", "9BajZRIf0xQZJBMU5ifDdAEuwSbbMEA891TJ", "MiVQ4kGxZEYLYzEeEFM/EwHck1UDY1cRU2DM", "EhUtsWJdBhXbx1DJNiSesUS1d1PIkCWbhhD3", "YlSToVVNlkIgoWDWYFRl92beBAAoFRTHxDWd", "xESgtgOCNGEZgAAhBgBzJREMtVOWJzUXYFVP", "AzLZM0Hol0AFhTRS8QAggVACQ2WckVavBwId", "A1EPlUfBZSSQNFQoUiKTYwA+11AJNnDDFkSY", "hVJAxWEQoFIDgERTg1EIJUPYVCDLsFWowSHI", "ZFUq9lCLxDfK1wW71xI7NWaQ5UavolGKo1QJ", "JRJZJ2cbcFEnESJS4DXrlxDLB3VgdwDxYlLP", "sGRH0BavAACQgVdXUhcahSDMMRXssGPS4SS8", "EBTJVnXR1kTyYkYAcgWXkEJ28AAdVVdDtFJa", "xyWJAFR0p2bHAkEphhBEMiG7wEepoxbPggXA", "wBJtpwSRwRVItlcWIHXVIUegYDLzhEUq8FDJ", "NiSegkG6VEbKkiRrIhLiJ0BiJRBPk1MVJmWM", "ogQgE2NFFkUk80AZcDRQgwGypHIOwjXAMhPk", "ABRLtRVjdFcd5CDbFlWt8zbbYSSmYxAOFyVY", "gQV2cFIcsyXBkhJvBEUCRFQmdFMWJ2fYQREu", "I2LAYEB/lxBKFDFcpFWxZhddViQ5AwPiABRU", "0kZDFhcWx2QKYBQ6ISbZ8BFk8EQRIHXEMmFj", "BgPCAyYLYEJ28BBVkxQZpVJaxSDVExWiYAdG", "5kUqlBBKESQSQAGxZFOYJWEe5gJqcgAUoRQL", "9UPStDSJMGC4J2bQ4gUl9FB/sHFQQkGxZEYN", "tSWdElPv5wSWkVEJJhPyoWGbFlUp5CJa0lAk", "xFTdMnFc9kV+VxaL0iUVUhagFADToxCecFJa", "FWXVQXC8JyOScgUq9kQZIDFT91TnFlbXAGXS", "MEPhgUSdohXBB0cWIyRrIVEuwTYasBUrx1AK", "EDFFIEF2VVJd0hCGBFav5ASDsEZXsRcaRAFX", "ghE+9yYchkShJ1GKxDWR11R9ZFIsYzQThhJl", "JABZgVEDxlAOQXDbEFVsMSBIJEH8w0JR83FC", "kFQ9FxIOoWQHwRaiJQGhJRBPk1MVJmWMIlEu", "xyN8oRIyMRTMhTFVs1VzVFJdEiEWUlLiZEST", "x0HYpVPgxCS6lBEsYiK/hkXqZUTEFTVWkGF2", "dEbP0jWBAgLsFwSTpAQBpEGYhgFJ9UYts3IJ", "9hGmhkDLRzRf8QU2R0KagyUSxFIvBEUCRFQm", "dFMVIzAX01elA3IJ9hHt4kTYRjFRI0UzpUbL", "syXF8hI4ABRLtRWZVHfGNGDbEEdksBdclUFh", "JRHNMDQUYHF/FRKctTHI9lLD5wSY0VREk0fk", "hCaD1xE44CAcMwG61VQKJzWCkQU/FxbMxTHT", "0zZ4xUSToVVDk1KJ5jRWM1Vj5SKewRF60lCY", "lSRH80VE4BeMtSUXxxP95FGd0HWDYxcvJ2Gb", "FBC+VzOA8QFtJREW9DFF0kTzBhbcQjEcwAKj", "NkAVswRBEhcfRzZVEFXORWbWcAGYcBQJJDVQ", "k0S2AEbLA2Rf4gPq5FHdJhEJUVMUlzTbEhXi", "0wJc9kUk8VDEFzFD4lV81RPHkiQSJFa5BECQ", "0RVGNnaEw2RcFlSxACISwAUthFCKFCUCt0W/", "R1bMtnQe0wAhNxBToxVIxGPeM2DVFUVj4iYA", "RwF9VhAOFTUQglepAAbMsCUAdhPYgkSQpFQM", "k1KJ5iXZQBWj1zLTIwUt5hBPBCXf0gGxEkYb", "gyXmABKg1FGdVUXEk1KJ5iDJFVEjcybdIQJm", "NFALRjRH80UztxbMxTHT0zZ4ZxGToxfMV3aa", "sGQa4FXp1SbWYBA/9lBPVjWQMEQ/phbMxTHT", "0zZ4FASTp1Q7JGaasGRYMAEk4CIA4TXpFlDS", "BXFDI0WjZhK7N2BQ5BKsBUHEk1EPk0JcBTQb", "EkTiwTISxAFulFIFNDVEowWzp1L+N2BQ5AKt", "tzRQYXCdcUOGBDDbEEH+5iKBZhB61FGABDFV", "wkG/c1bc9WEH4FKsdkAep0H+pFMWJzUXYkUn", "cGISEhImh1THlDFDAgQhRkKAwGEQlAZsNyRQ", "0FdXsRPRBTR4lhauxnbQtFAz9EHGRjUegAbv", "="],
-    m:["e3b0c44298fc1c14", "9f86d081884c7d65", "2c624232cdd22177", "a665a45920422f9d"],
-    n:["cf80cd8aedbbd5ac", "b4944c3b5fadb271", "6b86b273ff34fce1", "d4735e3a265e16ee"]
-  };
-  var __featureFlags={prefetch:true,mirror:2,legacy:false};
-  function __noopChecksum(x){
-    var h=0,i=0;
-    if(!x||!x.length)return "0";
-    for(i=0;i<x.length;i++)h=((h<<5)-h)+x.charCodeAt(i)|0;
-    return (h>>>0).toString(16);
-  }
-  function __mergeLanes(A,B,C){
-    var i=0,o=[],la=A.join(""),lb=B.join(""),lc=C.join(""),n=la.length+lb.length+lc.length,ia=0,ib=0,ic=0;
-    for(i=0;i<n;i++){
-      if(i%3===0){if(ia<la.length)o.push(la.charAt(ia++));}
-      else if(i%3===1){if(ib<lb.length)o.push(lb.charAt(ib++));}
-      else {if(ic<lc.length)o.push(lc.charAt(ic++));}
+    async function loadReviewsAndHydrate() {
+        try {
+            const res = await fetch("./reviews-seafoods.json", { cache: "no-cache" });
+            if (!res.ok) return;
+            const map = await res.json();
+            if (!map || typeof map !== "object") return;
+            Object.keys(map).forEach(function (pid) {
+                if (!products[pid]) return;
+                const row = map[pid];
+                products[pid].rating = Number(row.r) || 5;
+                products[pid].ratingCount = Number(row.c) || 0;
+                products[pid].reviews = (row.v || []).map(function (x) {
+                    return {
+                        name: x.n,
+                        place: x.p,
+                        rating: Number(x.s) || 5,
+                        comment: x.t
+                    };
+                });
+            });
+        } catch (err) {
+            /* silent — UI falls back to catalog defaults */
+        }
     }
-    return o.join("");
-  }
-  function __fromB64(str){
-    var fn=w["ato"+"b"];
-    if(typeof fn!=="function")return null;
-    try{return fn.call(w,str);}catch(e){return null;}
-  }
-  function __bytesOf(bin){
-    var u=new Uint8Array(bin.length),i;
-    for(i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i)&255;
-    return u;
-  }
-  function __revInPlace(u){
-    var i=0,j=u.length-1,t;
-    while(i<j){t=u[i];u[i]=u[j];u[j]=t;i++;j--;}
-    return u;
-  }
-  function __maskStream(u){
-    var k=[0x4D,0x53,0x48,0x39,0x71,0x2E,0x6B,0x4C,0x6D,0x32,0x30,0x32,0x34],i,n=k.length;
-    for(i=0;i<u.length;i++)u[i]=u[i]^k[i%n];
-    return u;
-  }
-  function __toText(u){
-    var i,s="";
-    for(i=0;i<u.length;i++)s+=String.fromCharCode(u[i]);
-    return s;
-  }
-  function __hydrateCatalog(map){
-    if(!map||typeof map!=="object")return;
-    if(typeof products==="undefined")return;
-    Object.keys(map).forEach(function(pid){
-      if(!products[pid])return;
-      var row=map[pid];
-      products[pid].rating=Number(row.r)||5;
-      products[pid].ratingCount=Number(row.c)||0;
-      products[pid].reviews=(row.v||[]).map(function(x){
-        return {name:x.n,place:x.p,rating:Number(x.s)||5,comment:x.t};
-      });
-    });
-  }
-  function __tryLegacyMirror(){
-    /* decoy path — intentionally unused */
-    var z=__assetManifest.m.concat(__assetManifest.n);
-    if(__featureFlags.legacy){__noopChecksum(z.join(""));}
-    return null;
-  }
-  function __bootIntegrity(){
-    try{
-      __tryLegacyMirror();
-      var packed=__mergeLanes(__assetManifest.a,__assetManifest.b,__assetManifest.c);
-      if(!packed||packed.length<16)return;
-      var bin=__fromB64(packed);
-      if(!bin)return;
-      var u=__bytesOf(bin);
-      u=__revInPlace(u);
-      u=__maskStream(u);
-      if(u.length<8)return;
-      /* drop 4-byte salt header */
-      var text=__toText(u.subarray(4));
-      var map=JSON.parse(text);
-      __hydrateCatalog(map);
-    }catch(err){
-      /* silent — UI falls back to catalog defaults */
-    }
-  }
-  __bootIntegrity();
-})(window,document);
 
 const params = new URLSearchParams(window.location.search);
     const id = params.get("id") || "cleaned-dried-prawns";
     const product = products[id] || products["cleaned-dried-prawns"];
+
+    await loadReviewsAndHydrate();
+    // re-bind product after hydration (same reference is mutated, but ensure latest)
+    const hydrated = products[id] || products["cleaned-dried-prawns"];
+    Object.assign(product, hydrated);
 
     const $ = (id) => document.getElementById(id);
 
