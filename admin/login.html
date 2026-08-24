@@ -6,24 +6,11 @@
     <meta name="robots" content="noindex,nofollow,noarchive">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta http-equiv="Cache-Control" content="no-store">
-    <meta http-equiv="Content-Security-Policy"
-          content="default-src 'self';
-                   base-uri 'self';
-                   object-src 'none';
-                   frame-ancestors 'none';
-                   form-action 'self';
-                   img-src 'self' data: https:;
-                   style-src 'self' 'unsafe-inline';
-                   script-src 'self' https://cdn.jsdelivr.net;
-                   connect-src 'self' https://ydfsglzcacagkofyefcd.supabase.co wss://ydfsglzcacagkofyefcd.supabase.co;
-                   font-src 'self' data:;
-                   media-src 'self';
-                   upgrade-insecure-requests">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://ydfsglzcacagkofyefcd.supabase.co https://ydfsglzcacagkofyefcd.functions.supabase.co wss://ydfsglzcacagkofyefcd.supabase.co; font-src 'self' data:; upgrade-insecure-requests">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-    <meta http-equiv="Permissions-Policy"
-          content="camera=(), microphone=(), geolocation=(), payment=(self), usb=(), serial=(), bluetooth=()">
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(self), usb=(), serial=(), bluetooth=()">
     <title>Admin Login | Munambam Seafoods</title>
 
     <link rel="icon" href="/assets/icon/favicon.ico">
@@ -97,6 +84,7 @@
     <!-- Supabase public client library. Never replace this with a service-role key. -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="./assets/config.js"></script>
+    <script src="./assets/admin-audit.js"></script>
     <script src="./assets/admin-auth.js"></script>
 </body>
 </html>
