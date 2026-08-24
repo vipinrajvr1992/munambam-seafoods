@@ -3084,6 +3084,16 @@
                     document.head.appendChild(lockStyle);
                 }
 
+                /* Track last mouse position for hold-target lock */
+                let lastX = 0;
+                let lastY = 0;
+
+                /*
+                   HOLD FIX: browser applies UA :active cursor on the
+                   element under the pointer. Setting only html/body is
+                   not enough while mouse button is held. Force none on
+                   the live hit-target and its ancestors every frame.
+                */
                 const lockNativeCursor = () => {
                     document.documentElement.style.setProperty(
                         "cursor",
@@ -3096,6 +3106,30 @@
                             "none",
                             "important"
                         );
+                    }
+
+                    let el = null;
+                    try {
+                        el = document.elementFromPoint(lastX, lastY);
+                    } catch (_) {
+                        el = null;
+                    }
+
+                    let depth = 0;
+                    while (
+                        el &&
+                        el !== document.documentElement &&
+                        depth < 16
+                    ) {
+                        if (el !== cursor) {
+                            el.style.setProperty(
+                                "cursor",
+                                "none",
+                                "important"
+                            );
+                        }
+                        el = el.parentElement;
+                        depth += 1;
                     }
                 };
 
@@ -3116,6 +3150,9 @@
                 let frame = false;
 
                 const moveCursor = (event) => {
+                    lastX = event.clientX;
+                    lastY = event.clientY;
+
                     if (frame) {
                         return;
                     }
@@ -3127,6 +3164,10 @@
                                 ${event.clientY - 14}px,
                                 0
                             )`;
+                        /* Re-lock while moving (esp. during hold+drag) */
+                        if (pointerActive) {
+                            lockNativeCursor();
+                        }
                         frame = false;
                     });
                 };
@@ -3143,8 +3184,8 @@
                     { passive: true }
                 );
 
-                /* Continuous force-lock during pointer press +
-                   several frames after release/click (kills flash) */
+                /* Continuous force-lock during pointer HOLD +
+                   several frames after release/click */
                 let pointerActive = false;
                 let forceRaf = 0;
 
@@ -3155,8 +3196,13 @@
                     }
                 };
 
-                const startForce = () => {
+                const startForce = (event) => {
+                    if (event) {
+                        lastX = event.clientX;
+                        lastY = event.clientY;
+                    }
                     pointerActive = true;
+                    lockNativeCursor();
                     if (!forceRaf) {
                         forceRaf = requestAnimationFrame(forceLoop);
                     }
@@ -3179,8 +3225,12 @@
                 document.addEventListener(
                     "pointerdown",
                     (e) => {
-                        if (e.pointerType === "mouse" || e.pointerType === "") {
-                            startForce();
+                        if (
+                            e.pointerType === "mouse" ||
+                            e.pointerType === "" ||
+                            e.pointerType === undefined
+                        ) {
+                            startForce(e);
                         }
                         lockNativeCursor();
                     },
@@ -3189,8 +3239,21 @@
 
                 document.addEventListener(
                     "mousedown",
-                    () => {
-                        startForce();
+                    (e) => {
+                        startForce(e);
+                    },
+                    { capture: true, passive: true }
+                );
+
+                /* While holding and moving — keep lock on target */
+                document.addEventListener(
+                    "pointermove",
+                    (e) => {
+                        if (!pointerActive) {
+                            return;
+                        }
+                        lastX = e.clientX;
+                        lastY = e.clientY;
                         lockNativeCursor();
                     },
                     { capture: true, passive: true }
@@ -3228,6 +3291,24 @@
                     () => {
                         lockNativeCursor();
                         stopForceSoon();
+                    },
+                    { capture: true, passive: true }
+                );
+
+                /* Prevent drag from showing system cursor */
+                document.addEventListener(
+                    "dragstart",
+                    (e) => {
+                        e.preventDefault();
+                        lockNativeCursor();
+                    },
+                    { capture: true }
+                );
+
+                document.addEventListener(
+                    "selectstart",
+                    () => {
+                        lockNativeCursor();
                     },
                     { capture: true, passive: true }
                 );
