@@ -145,6 +145,41 @@
             scroll-behavior: smooth;
         }
 
+        /* =========================================================
+           CUSTOM CURSOR — DESKTOP ONLY
+           Browser-level fish cursor. Keeps the same custom fish
+           through hover, mousedown, hold, mouseup and focus.
+        ========================================================= */
+        @media (min-width: 1025px) {
+            html,
+            body,
+            body *,
+            body *::before,
+            body *::after,
+            a,
+            a:link,
+            a:visited,
+            a:hover,
+            a:active,
+            a:focus,
+            button,
+            button:hover,
+            button:active,
+            button:focus,
+            input,
+            textarea,
+            select,
+            label,
+            [role="button"],
+            [tabindex] {
+                cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='30' viewBox='0 0 50 30' fill='none'%3E%3Cpath d='M5 15Q25-5 45 25M5 15Q25 35 45 5' stroke='%23e0bc68' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M15 8.5Q18 15 15 21.5' stroke='%23e0bc68' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='10' cy='14.5' r='1.8' fill='%23e0bc68'/%3E%3C/svg%3E") 5 15, auto !important;
+            }
+
+            #fish-cursor {
+                display: none !important;
+            }
+        }
+
         body {
             margin: 0;
             min-height: 100vh;
@@ -162,21 +197,11 @@
                 sans-serif;
 
             overflow-x: hidden;
-
-            cursor: none;
         }
 
         body::selection {
             background: var(--gold);
             color: var(--navy);
-        }
-
-        a,
-        button,
-        input,
-        textarea,
-        select {
-            cursor: none !important;
         }
 
         img {
@@ -2974,75 +2999,9 @@ body.nav-drawer-open {
 
             /* =====================================================
                CUSTOM CURSOR
+               Desktop cursor is handled by the shared CSS above.
+               This avoids a second JS cursor fighting the browser.
             ===================================================== */
-
-            const cursor =
-                document.getElementById(
-                    "fish-cursor"
-                );
-
-            const mouseDevice =
-                window.matchMedia(
-                    "(hover:hover) and (pointer:fine)"
-                ).matches;
-
-
-            if (
-                cursor &&
-                mouseDevice
-            ) {
-
-                let x = 0;
-                let y = 0;
-
-                let frame =
-                    false;
-
-
-                document.addEventListener(
-                    "mousemove",
-
-                    (event) => {
-
-                        x =
-                            event.clientX;
-
-                        y =
-                            event.clientY;
-
-
-                        if (frame) {
-                            return;
-                        }
-
-
-                        frame =
-                            true;
-
-
-                        requestAnimationFrame(
-                            () => {
-
-                                cursor.style.transform =
-                                    `translate3d(
-                                        ${x - 6}px,
-                                        ${y - 14}px,
-                                        0
-                                    )`;
-
-                                frame =
-                                    false;
-                            }
-                        );
-
-                    },
-
-                    {
-                        passive: true
-                    }
-                );
-
-            }
 
 
             /* =====================================================
@@ -3483,6 +3442,45 @@ body.nav-drawer-open {
     }
 })();
 </script>
+
+
+<!-- =========================================================
+     MUNAMBAM SEAFOODS — CLIENT-SIDE SECURITY HARDENING
+     Browser-level deterrents only. Does not replace server security.
+========================================================= -->
+<script>
+(() => {
+    "use strict";
+
+    document.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener("keydown", (event) => {
+        const key = String(event.key || "").toLowerCase();
+        const ctrlOrMeta = event.ctrlKey || event.metaKey;
+
+        const blocked =
+            event.key === "F12" ||
+            (ctrlOrMeta && key === "u") ||
+            (ctrlOrMeta && key === "s") ||
+            (ctrlOrMeta && event.shiftKey &&
+                ["i", "j", "c"].includes(key));
+
+        if (blocked) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+        }
+    }, true);
+
+    document.addEventListener("dragstart", (event) => {
+        if (event.target && event.target.tagName === "IMG") {
+            event.preventDefault();
+        }
+    }, { passive: false });
+})();
+</script>
+
 
 </body>
 </html>
