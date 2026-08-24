@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" style="cursor:none !important;">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
 
@@ -170,7 +170,10 @@
             scroll-behavior: smooth;
         }
 
-        /* CUSTOM CURSOR — DESKTOP ONLY (native cursor never shown) */
+        /* CUSTOM CURSOR — DESKTOP ONLY
+           System cursor = same gold fish (not cursor:none).
+           cursor:none fails on mousedown HOLD in Chrome; cursor:url does not.
+           Fish design matches existing SVG (gold #e0bc68). */
         @media (min-width: 1025px) {
             html,
             body,
@@ -194,7 +197,12 @@
             label,
             [role="button"],
             [tabindex] {
-                cursor: none !important;
+                cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='27' viewBox='0 0 50 30' fill='none'%3E%3Cpath d='M5 15Q25-5 45 25M5 15Q25 35 45 5' stroke='%23e0bc68' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M15 8.5Q18 15 15 21.5' stroke='%23e0bc68' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='10' cy='14.5' r='1.5' fill='%23e0bc68'/%3E%3C/svg%3E") 8 13, none !important;
+            }
+
+            /* DOM fish follower not needed when system cursor is the fish */
+            #fish-cursor {
+                display: none !important;
             }
         }
 
@@ -1960,8 +1968,8 @@
 
         /* =========================================================
            FINAL DESKTOP CURSOR LOCK
-           This is intentionally after TOUCH DEVICES so desktop
-           native cursors can never reappear after a click/focus.
+           After TOUCH rules so desktop always wins.
+           System cursor = gold fish (cursor:url) — survives HOLD/click.
         ========================================================= */
         @media (min-width: 1025px) {
             html,
@@ -1986,15 +1994,11 @@
             label,
             [role="button"],
             [tabindex] {
-                cursor: none !important;
+                cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='27' viewBox='0 0 50 30' fill='none'%3E%3Cpath d='M5 15Q25-5 45 25M5 15Q25 35 45 5' stroke='%23e0bc68' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M15 8.5Q18 15 15 21.5' stroke='%23e0bc68' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='10' cy='14.5' r='1.5' fill='%23e0bc68'/%3E%3C/svg%3E") 8 13, none !important;
             }
 
             #fish-cursor {
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-                pointer-events: none !important;
-                z-index: 2147483647 !important;
+                display: none !important;
             }
         }
 
@@ -2285,7 +2289,7 @@
 </head>
 
 
-<body style="cursor:none !important;">
+<body>
 
 
     <!-- =========================================================
@@ -3037,311 +3041,79 @@
 
             /* =====================================================
                CUSTOM CURSOR
-               Desktop only: native cursor permanently suppressed.
-               Touch/mobile: unchanged (media query hides fish cursor).
-
-               WHY CLICK SHOWED DEFAULT CURSOR:
-               Browsers (esp. Chrome) briefly restore the system
-               arrow during mousedown/active/link-navigation even
-               when CSS has cursor:none. One-shot setProperty on
-               events is not enough. Fix = injected universal CSS
-               lock + continuous rAF re-assert while pointer is
-               down and for several frames after click/release.
+               Desktop: system cursor = gold fish via CSS cursor:url
+               (same SVG design). cursor:none cannot survive HOLD in
+               Chrome; cursor:url is the OS cursor so HOLD/click never
+               falls back to the default arrow.
+               DOM #fish-cursor is hidden on desktop (CSS).
+               Touch/mobile: unchanged.
             ===================================================== */
-
-            const cursor =
-                document.getElementById(
-                    "fish-cursor"
-                );
 
             const mouseDevice =
                 window.matchMedia(
                     "(min-width: 1025px) and (hover:hover) and (pointer:fine)"
                 ).matches;
 
+            if (mouseDevice) {
 
-            if (
-                cursor &&
-                mouseDevice
-            ) {
+                const FISH_CURSOR =
+                    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='27' viewBox='0 0 50 30' fill='none'%3E%3Cpath d='M5 15Q25-5 45 25M5 15Q25 35 45 5' stroke='%23e0bc68' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M15 8.5Q18 15 15 21.5' stroke='%23e0bc68' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='10' cy='14.5' r='1.5' fill='%23e0bc68'/%3E%3C/svg%3E\") 8 13, none";
 
-                /* Inject highest-priority universal cursor lock
-                   (runs after page CSS; covers all elements/states) */
+                /* Inject lock after all page CSS so it always wins */
                 if (!document.getElementById("munambam-cursor-lock")) {
                     const lockStyle = document.createElement("style");
                     lockStyle.id = "munambam-cursor-lock";
                     lockStyle.textContent = `
                         @media (min-width: 1025px) {
                             html, body, *, *::before, *::after {
-                                cursor: none !important;
+                                cursor: ${FISH_CURSOR} !important;
                             }
-                            #fish-cursor, #fish-cursor * {
-                                cursor: none !important;
-                                pointer-events: none !important;
+                            #fish-cursor {
+                                display: none !important;
                             }
                         }
                     `;
                     document.head.appendChild(lockStyle);
                 }
 
-                /* Track last mouse position for hold-target lock */
-                let lastX = 0;
-                let lastY = 0;
-
-                /*
-                   HOLD FIX: browser applies UA :active cursor on the
-                   element under the pointer. Setting only html/body is
-                   not enough while mouse button is held. Force none on
-                   the live hit-target and its ancestors every frame.
-                */
-                const lockNativeCursor = () => {
+                const applyFishCursor = () => {
                     document.documentElement.style.setProperty(
                         "cursor",
-                        "none",
+                        FISH_CURSOR,
                         "important"
                     );
                     if (document.body) {
                         document.body.style.setProperty(
                             "cursor",
-                            "none",
+                            FISH_CURSOR,
                             "important"
                         );
                     }
-
-                    let el = null;
-                    try {
-                        el = document.elementFromPoint(lastX, lastY);
-                    } catch (_) {
-                        el = null;
-                    }
-
-                    let depth = 0;
-                    while (
-                        el &&
-                        el !== document.documentElement &&
-                        depth < 16
-                    ) {
-                        if (el !== cursor) {
-                            el.style.setProperty(
-                                "cursor",
-                                "none",
-                                "important"
-                            );
-                        }
-                        el = el.parentElement;
-                        depth += 1;
-                    }
                 };
 
-                /* Immediate lock */
-                lockNativeCursor();
+                applyFishCursor();
 
-                cursor.style.setProperty(
-                    "cursor",
-                    "none",
-                    "important"
-                );
-                cursor.style.display = "block";
-                cursor.style.visibility = "visible";
-                cursor.style.opacity = "1";
-                cursor.style.pointerEvents = "none";
-                cursor.style.zIndex = "2147483647";
-
-                let frame = false;
-
-                const moveCursor = (event) => {
-                    lastX = event.clientX;
-                    lastY = event.clientY;
-
-                    if (frame) {
-                        return;
-                    }
-                    frame = true;
-                    requestAnimationFrame(() => {
-                        cursor.style.transform =
-                            `translate3d(
-                                ${event.clientX - 6}px,
-                                ${event.clientY - 14}px,
-                                0
-                            )`;
-                        /* Re-lock while moving (esp. during hold+drag) */
-                        if (pointerActive) {
-                            lockNativeCursor();
-                        }
-                        frame = false;
-                    });
-                };
-
-                document.addEventListener(
-                    "mousemove",
-                    moveCursor,
-                    { passive: true }
-                );
-
-                document.addEventListener(
-                    "mouseenter",
-                    moveCursor,
-                    { passive: true }
-                );
-
-                /* Continuous force-lock during pointer HOLD +
-                   several frames after release/click */
-                let pointerActive = false;
-                let forceRaf = 0;
-
-                const forceLoop = () => {
-                    lockNativeCursor();
-                    if (pointerActive) {
-                        forceRaf = requestAnimationFrame(forceLoop);
-                    }
-                };
-
-                const startForce = (event) => {
-                    if (event) {
-                        lastX = event.clientX;
-                        lastY = event.clientY;
-                    }
-                    pointerActive = true;
-                    lockNativeCursor();
-                    if (!forceRaf) {
-                        forceRaf = requestAnimationFrame(forceLoop);
-                    }
-                };
-
-                const stopForceSoon = () => {
-                    pointerActive = false;
-                    let n = 0;
-                    const after = () => {
-                        lockNativeCursor();
-                        if (++n < 45) {
-                            requestAnimationFrame(after);
-                        } else {
-                            forceRaf = 0;
-                        }
-                    };
-                    requestAnimationFrame(after);
-                };
-
-                document.addEventListener(
-                    "pointerdown",
-                    (e) => {
-                        if (
-                            e.pointerType === "mouse" ||
-                            e.pointerType === "" ||
-                            e.pointerType === undefined
-                        ) {
-                            startForce(e);
-                        }
-                        lockNativeCursor();
-                    },
-                    { capture: true, passive: true }
-                );
-
-                document.addEventListener(
+                /* Re-apply on interaction so nothing can strip the fish */
+                [
                     "mousedown",
-                    (e) => {
-                        startForce(e);
-                    },
-                    { capture: true, passive: true }
-                );
-
-                /* While holding and moving — keep lock on target */
-                document.addEventListener(
-                    "pointermove",
-                    (e) => {
-                        if (!pointerActive) {
-                            return;
-                        }
-                        lastX = e.clientX;
-                        lastY = e.clientY;
-                        lockNativeCursor();
-                    },
-                    { capture: true, passive: true }
-                );
-
-                document.addEventListener(
-                    "pointerup",
-                    () => {
-                        lockNativeCursor();
-                        stopForceSoon();
-                    },
-                    { capture: true, passive: true }
-                );
-
-                document.addEventListener(
                     "mouseup",
-                    () => {
-                        lockNativeCursor();
-                        stopForceSoon();
-                    },
-                    { capture: true, passive: true }
-                );
-
-                document.addEventListener(
+                    "pointerdown",
+                    "pointerup",
                     "click",
-                    () => {
-                        lockNativeCursor();
-                        stopForceSoon();
-                    },
-                    { capture: true, passive: true }
-                );
-
-                document.addEventListener(
                     "auxclick",
-                    () => {
-                        lockNativeCursor();
-                        stopForceSoon();
-                    },
-                    { capture: true, passive: true }
-                );
-
-                /* Prevent drag from showing system cursor */
-                document.addEventListener(
-                    "dragstart",
-                    (e) => {
-                        e.preventDefault();
-                        lockNativeCursor();
-                    },
-                    { capture: true }
-                );
-
-                document.addEventListener(
-                    "selectstart",
-                    () => {
-                        lockNativeCursor();
-                    },
-                    { capture: true, passive: true }
-                );
-
-                const extraLockEvents = [
                     "focusin",
-                    "focusout",
-                    "blur",
-                    "mouseover",
-                    "mouseout"
-                ];
-
-                extraLockEvents.forEach((evtName) => {
+                    "mouseover"
+                ].forEach((evtName) => {
                     document.addEventListener(
                         evtName,
-                        lockNativeCursor,
+                        applyFishCursor,
                         { capture: true, passive: true }
                     );
                 });
 
                 window.addEventListener(
                     "focus",
-                    lockNativeCursor,
-                    { passive: true }
-                );
-
-                document.addEventListener(
-                    "visibilitychange",
-                    () => {
-                        if (!document.hidden) {
-                            lockNativeCursor();
-                        }
-                    },
+                    applyFishCursor,
                     { passive: true }
                 );
 
