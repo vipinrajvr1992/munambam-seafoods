@@ -172,12 +172,10 @@
 
         /* =========================================================
            CUSTOM CURSOR — DESKTOP ONLY
-           Use the browser's actual cursor with the fish SVG.
-           This remains active during hover, mousedown, hold,
-           mouseup and focus states.
+           Browser-level fish cursor. Keeps the same custom fish
+           through hover, mousedown, hold, mouseup and focus.
         ========================================================= */
         @media (min-width: 1025px) {
-
             html,
             body,
             body *,
@@ -199,11 +197,9 @@
             label,
             [role="button"],
             [tabindex] {
-                cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='30' viewBox='0 0 50 30'%3E%3Cpath d='M5 15Q25-5 45 25M5 15Q25 35 45 5' fill='none' stroke='%23e0bc68' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M15 8.5Q18 15 15 21.5' fill='none' stroke='%23e0bc68' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='10' cy='14.5' r='1.8' fill='%23e0bc68'/%3E%3C/svg%3E") 5 15, auto !important;
+                cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='30' viewBox='0 0 50 30' fill='none'%3E%3Cpath d='M5 15Q25-5 45 25M5 15Q25 35 45 5' stroke='%23e0bc68' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M15 8.5Q18 15 15 21.5' stroke='%23e0bc68' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='10' cy='14.5' r='1.8' fill='%23e0bc68'/%3E%3C/svg%3E") 5 15, auto !important;
             }
 
-            /* The DOM follower remains disabled; the browser itself
-               renders the fish as the actual cursor. */
             #fish-cursor {
                 display: none !important;
             }
@@ -3447,6 +3443,7 @@
 </script>
 
 
+
 <!-- =========================================================
      MUNAMBAM SEAFOODS — CLIENT-SIDE SECURITY HARDENING
      Browser-level deterrents only. Does not replace server security.
@@ -3455,14 +3452,11 @@
 (() => {
     "use strict";
 
-    /* Block right-click context menu */
     document.addEventListener("contextmenu", (event) => {
         event.preventDefault();
     }, { passive: false });
 
-    /* Block common source / DevTools / save shortcuts */
     document.addEventListener("keydown", (event) => {
-
         const key = String(event.key || "").toLowerCase();
         const ctrlOrMeta = event.ctrlKey || event.metaKey;
 
@@ -3479,18 +3473,14 @@
         }
     }, true);
 
-    /* Prevent casual image dragging */
     document.addEventListener("dragstart", (event) => {
-        if (
-            event.target &&
-            event.target.tagName === "IMG"
-        ) {
+        if (event.target && event.target.tagName === "IMG") {
             event.preventDefault();
         }
     }, { passive: false });
-
 })();
 </script>
+
 
 </body>
 </html>
