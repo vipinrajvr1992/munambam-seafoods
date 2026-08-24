@@ -34,6 +34,14 @@
 
     <!-- SECURITY HARDENING -->
     <meta
+        http-equiv="X-Content-Type-Options"
+        content="nosniff"
+    >
+    <meta
+        http-equiv="X-Frame-Options"
+        content="DENY"
+    >
+    <meta
         http-equiv="Content-Security-Policy"
         content="default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self' data:; media-src 'self'; upgrade-insecure-requests"
     >
@@ -160,6 +168,16 @@
 
         html {
             scroll-behavior: smooth;
+        }
+
+        /* CUSTOM CURSOR LOCK — desktop only */
+        @media (hover:hover) and (pointer:fine) {
+            html,
+            html *,
+            html *::before,
+            html *::after {
+                cursor: none !important;
+            }
         }
 
         body {
@@ -1910,6 +1928,10 @@
 
         @media (hover:none) and (pointer:coarse) {
 
+            html,
+            html *,
+            html *::before,
+            html *::after,
             body,
             a,
             button {
@@ -3390,6 +3412,47 @@
             link.addEventListener("click", () => closeNavDrawer());
         });
     }
+})();
+</script>
+
+
+<!-- =========================================================
+     MUNAMBAM SEAFOODS — CLIENT-SIDE SECURITY HARDENING
+     Protects against common browser shortcuts / casual inspection.
+     Does NOT replace real server/hosting security.
+========================================================= -->
+<script>
+(() => {
+    "use strict";
+
+    /* Disable browser context menu */
+    document.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+    }, { passive: false });
+
+    /* Block common source / DevTools / save shortcuts */
+    document.addEventListener("keydown", (event) => {
+        const key = String(event.key || "").toLowerCase();
+        const ctrlOrMeta = event.ctrlKey || event.metaKey;
+
+        const blocked =
+            event.key === "F12" ||
+            (ctrlOrMeta && key === "u") ||
+            (ctrlOrMeta && key === "s") ||
+            (ctrlOrMeta && event.shiftKey && ["i", "j", "c"].includes(key));
+
+        if (blocked) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }, true);
+
+    /* Prevent casual drag-copy of page images */
+    document.addEventListener("dragstart", (event) => {
+        if (event.target && event.target.tagName === "IMG") {
+            event.preventDefault();
+        }
+    }, { passive: false });
 })();
 </script>
 
