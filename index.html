@@ -170,13 +170,30 @@
             scroll-behavior: smooth;
         }
 
-        /* CUSTOM CURSOR — DESKTOP ONLY */
+        /* CUSTOM CURSOR — DESKTOP ONLY (native cursor never shown) */
         @media (min-width: 1025px) {
             html,
+            body,
             html body,
             html body *,
             html body *::before,
-            html body *::after {
+            html body *::after,
+            a,
+            a:link,
+            a:visited,
+            a:hover,
+            a:active,
+            a:focus,
+            button,
+            button:hover,
+            button:active,
+            button:focus,
+            input,
+            textarea,
+            select,
+            label,
+            [role="button"],
+            [tabindex] {
                 cursor: none !important;
             }
         }
@@ -203,14 +220,6 @@
         body::selection {
             background: var(--gold);
             color: var(--navy);
-        }
-
-        a,
-        button,
-        input,
-        textarea,
-        select {
-            cursor: none !important;
         }
 
         img {
@@ -1960,7 +1969,23 @@
             html body,
             html body *,
             html body *::before,
-            html body *::after {
+            html body *::after,
+            a,
+            a:link,
+            a:visited,
+            a:hover,
+            a:active,
+            a:focus,
+            button,
+            button:hover,
+            button:active,
+            button:focus,
+            input,
+            textarea,
+            select,
+            label,
+            [role="button"],
+            [tabindex] {
                 cursor: none !important;
             }
 
@@ -3012,6 +3037,8 @@
 
             /* =====================================================
                CUSTOM CURSOR
+               Desktop only: native cursor permanently suppressed.
+               Touch/mobile: unchanged (media query hides fish cursor).
             ===================================================== */
 
             const cursor =
@@ -3030,48 +3057,49 @@
                 mouseDevice
             ) {
 
-                /* Keep the browser's native page cursor OFF */
-                document.documentElement.style.setProperty(
-                    "cursor",
-                    "none",
-                    "important"
-                );
+                const lockNativeCursor = () => {
+                    document.documentElement.style.setProperty(
+                        "cursor",
+                        "none",
+                        "important"
+                    );
+                    if (document.body) {
+                        document.body.style.setProperty(
+                            "cursor",
+                            "none",
+                            "important"
+                        );
+                    }
+                };
 
-                document.body.style.setProperty(
-                    "cursor",
-                    "none",
-                    "important"
-                );
+                /* Immediate lock — before first paint interaction */
+                lockNativeCursor();
 
                 cursor.style.setProperty(
                     "cursor",
                     "none",
                     "important"
                 );
-
                 cursor.style.display = "block";
                 cursor.style.visibility = "visible";
                 cursor.style.opacity = "1";
+                cursor.style.pointerEvents = "none";
+                cursor.style.zIndex = "2147483647";
 
                 let frame = false;
 
                 const moveCursor = (event) => {
-
                     if (frame) {
                         return;
                     }
-
                     frame = true;
-
                     requestAnimationFrame(() => {
-
                         cursor.style.transform =
                             `translate3d(
                                 ${event.clientX - 6}px,
                                 ${event.clientY - 14}px,
                                 0
                             )`;
-
                         frame = false;
                     });
                 };
@@ -3088,20 +3116,42 @@
                     { passive: true }
                 );
 
-                /* Re-assert native cursor lock during mouse interaction */
-                document.addEventListener(
+                /* Re-assert native cursor lock on every interaction
+                   so the system arrow never flashes after click/focus */
+                const lockEvents = [
                     "mousedown",
+                    "mouseup",
+                    "pointerdown",
+                    "pointerup",
+                    "click",
+                    "auxclick",
+                    "focusin",
+                    "focusout",
+                    "blur",
+                    "mouseover",
+                    "mouseout"
+                ];
+
+                lockEvents.forEach((evtName) => {
+                    document.addEventListener(
+                        evtName,
+                        lockNativeCursor,
+                        { capture: true, passive: true }
+                    );
+                });
+
+                window.addEventListener(
+                    "focus",
+                    lockNativeCursor,
+                    { passive: true }
+                );
+
+                document.addEventListener(
+                    "visibilitychange",
                     () => {
-                        document.documentElement.style.setProperty(
-                            "cursor",
-                            "none",
-                            "important"
-                        );
-                        document.body.style.setProperty(
-                            "cursor",
-                            "none",
-                            "important"
-                        );
+                        if (!document.hidden) {
+                            lockNativeCursor();
+                        }
                     },
                     { passive: true }
                 );
