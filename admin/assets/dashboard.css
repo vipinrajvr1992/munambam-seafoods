@@ -454,3 +454,195 @@ footer {
         scroll-behavior: auto !important;
     }
 }
+
+
+/* ============================================================
+   MUNAMBAM ADMIN — MODULE DARK THEME + MICRO-INTERACTIONS
+   ============================================================ */
+
+.nav-link,
+.icon-btn,
+.module-btn,
+.text-btn,
+.export-reports-btn,
+#exportReportsBtn {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.icon-btn.is-loading,
+#refreshBtn.is-loading {
+    animation: munambam-spin .72s linear infinite;
+    pointer-events: none;
+}
+
+#exportReportsBtn:hover,
+.export-reports-btn:hover {
+    animation: munambam-export-pulse .9s ease-in-out infinite;
+}
+
+@keyframes munambam-spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes munambam-export-pulse {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-1px); }
+}
+
+.module-page {
+    color: var(--text);
+}
+
+.module-header h2,
+.module-modal-head h3,
+.module-empty strong,
+.module-error strong {
+    color: #fff !important;
+}
+
+.module-btn.secondary,
+.row-action,
+.modal-close {
+    border-color: var(--border) !important;
+    background: rgba(255,255,255,.035) !important;
+    color: var(--text-2) !important;
+}
+
+.module-btn.secondary:hover,
+.row-action:hover,
+.modal-close:hover {
+    background: rgba(255,255,255,.075) !important;
+    border-color: var(--border-strong) !important;
+    color: #fff !important;
+}
+
+.module-search,
+.module-card,
+.module-modal,
+.detail-field,
+.module-form input,
+.module-form textarea,
+.module-form select {
+    border-color: var(--border) !important;
+    background: var(--panel) !important;
+    color: var(--text) !important;
+}
+
+.module-search input,
+.module-form input,
+.module-form textarea,
+.module-form select {
+    color: #fff !important;
+}
+
+.module-search input::placeholder,
+.module-form input::placeholder,
+.module-form textarea::placeholder {
+    color: var(--muted-2) !important;
+}
+
+.module-count,
+.module-error p,
+.module-empty,
+.detail-field span,
+.module-form label > span {
+    color: var(--muted) !important;
+}
+
+.module-table th {
+    background: #0a1728 !important;
+    color: #a9bdd5 !important;
+    border-color: var(--border) !important;
+}
+
+.module-table td {
+    color: var(--text-2) !important;
+    border-color: rgba(157,185,218,.10) !important;
+}
+
+.module-table tbody tr:hover {
+    background: rgba(255,255,255,.035) !important;
+}
+
+.module-status {
+    background: rgba(145,164,186,.12) !important;
+    color: #c8d7e8 !important;
+}
+
+.module-status.active,
+.module-status.paid,
+.module-status.delivered,
+.module-status.confirmed {
+    background: rgba(49,210,139,.12) !important;
+    color: #6fe7ad !important;
+}
+
+.module-status.inactive,
+.module-status.cancelled,
+.module-status.failed {
+    background: rgba(255,107,99,.12) !important;
+    color: #ff9b95 !important;
+}
+
+.module-status.pending,
+.module-status.processing,
+.module-status.authorized,
+.module-status.packed,
+.module-status.shipped {
+    background: rgba(47,134,255,.13) !important;
+    color: #75adff !important;
+}
+
+.module-pagination {
+    border-color: var(--border) !important;
+    color: var(--muted) !important;
+}
+
+.module-modal-overlay {
+    background: rgba(2,10,19,.80) !important;
+}
+
+.module-modal-head {
+    border-color: var(--border) !important;
+}
+
+.detail-grid {
+    background: var(--border) !important;
+}
+
+.detail-field strong {
+    color: #fff !important;
+}
+
+.form-actions {
+    border-color: var(--border) !important;
+}
+
+.module-loading {
+    color: var(--muted) !important;
+}
+
+.module-empty-icon {
+    background: rgba(47,134,255,.12) !important;
+    color: #75adff !important;
+}
+
+.module-form input:focus,
+.module-form textarea:focus,
+.module-form select:focus,
+.module-search:focus-within {
+    border-color: rgba(47,134,255,.65) !important;
+    box-shadow: 0 0 0 3px rgba(23,105,232,.12) !important;
+}
+
+.module-form select option {
+    background: #0d1b2d;
+    color: #fff;
+}
+
+@media (max-width: 760px) {
+    .module-table {
+        min-width: 760px !important;
+    }
+}
