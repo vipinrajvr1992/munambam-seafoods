@@ -2123,5 +2123,44 @@ var cursor=document.getElementById("fish-cursor");
 })();
 </script>
 
+<!-- =========================================================
+     MUNAMBAM SEAFOODS — CLIENT-SIDE SECURITY HARDENING
+     SECURITY ONLY — EXISTING CURSOR / CHECKOUT / DESIGN UNTOUCHED
+========================================================= -->
+<script>
+(() => {
+    "use strict";
+
+    /* Block right-click / context menu */
+    document.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+    }, { passive: false });
+
+    /* Block common source / DevTools / save shortcuts */
+    document.addEventListener("keydown", (event) => {
+        const key = String(event.key || "").toLowerCase();
+        const ctrlOrMeta = event.ctrlKey || event.metaKey;
+
+        const blocked =
+            event.key === "F12" ||
+            (ctrlOrMeta && key === "u") ||
+            (ctrlOrMeta && key === "s") ||
+            (ctrlOrMeta && event.shiftKey && ["i", "j", "c"].includes(key));
+
+        if (blocked) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }, true);
+
+    /* Block casual image dragging */
+    document.addEventListener("dragstart", (event) => {
+        if (event.target && event.target.tagName === "IMG") {
+            event.preventDefault();
+        }
+    }, { passive: false });
+})();
+</script>
+
 </body>
 </html>
