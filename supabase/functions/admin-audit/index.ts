@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
           ...corsHeaders,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
   }
 
@@ -46,24 +46,20 @@ Deno.serve(async (req) => {
   ) {
     return new Response(
       JSON.stringify({
-        error:
-          "Server configuration missing",
+        error: "Server configuration missing",
       }),
       {
         status: 500,
         headers: {
           ...corsHeaders,
-          "Content-Type":
-            "application/json",
+          "Content-Type": "application/json",
         },
-      }
+      },
     );
   }
 
   const authHeader =
-    req.headers.get(
-      "Authorization"
-    );
+    req.headers.get("Authorization");
 
   if (
     !authHeader ||
@@ -71,25 +67,17 @@ Deno.serve(async (req) => {
   ) {
     return new Response(
       JSON.stringify({
-        error:
-          "Authentication required",
+        error: "Authentication required",
       }),
       {
         status: 401,
         headers: {
           ...corsHeaders,
-          "Content-Type":
-            "application/json",
+          "Content-Type": "application/json",
         },
-      }
+      },
     );
   }
-
-  /*
-   * ------------------------------------------------------------
-   * USER AUTH CLIENT
-   * ------------------------------------------------------------
-   */
 
   const userClient =
     createClient(
@@ -98,8 +86,7 @@ Deno.serve(async (req) => {
       {
         global: {
           headers: {
-            Authorization:
-              authHeader,
+            Authorization: authHeader,
           },
         },
 
@@ -107,7 +94,7 @@ Deno.serve(async (req) => {
           persistSession: false,
           autoRefreshToken: false,
         },
-      }
+      },
     );
 
   const {
@@ -124,25 +111,17 @@ Deno.serve(async (req) => {
   ) {
     return new Response(
       JSON.stringify({
-        error:
-          "Invalid session",
+        error: "Invalid session",
       }),
       {
         status: 401,
         headers: {
           ...corsHeaders,
-          "Content-Type":
-            "application/json",
+          "Content-Type": "application/json",
         },
-      }
+      },
     );
   }
-
-  /*
-   * ------------------------------------------------------------
-   * ADMIN MEMBERSHIP CHECK
-   * ------------------------------------------------------------
-   */
 
   const {
     data: admin,
@@ -153,7 +132,7 @@ Deno.serve(async (req) => {
       .select("user_id")
       .eq(
         "user_id",
-        user.id
+        user.id,
       )
       .maybeSingle();
 
@@ -163,27 +142,19 @@ Deno.serve(async (req) => {
   ) {
     return new Response(
       JSON.stringify({
-        error:
-          "Admin access required",
+        error: "Admin access required",
       }),
       {
         status: 403,
         headers: {
           ...corsHeaders,
-          "Content-Type":
-            "application/json",
+          "Content-Type": "application/json",
         },
-      }
+      },
     );
   }
 
-  /*
-   * ------------------------------------------------------------
-   * REQUEST BODY
-   * ------------------------------------------------------------
-   */
-
-  let body;
+  let body: Record<string, unknown>;
 
   try {
     body =
@@ -191,17 +162,15 @@ Deno.serve(async (req) => {
   } catch {
     return new Response(
       JSON.stringify({
-        error:
-          "Invalid JSON body",
+        error: "Invalid JSON body",
       }),
       {
         status: 400,
         headers: {
           ...corsHeaders,
-          "Content-Type":
-            "application/json",
+          "Content-Type": "application/json",
         },
-      }
+      },
     );
   }
 
@@ -218,7 +187,7 @@ Deno.serve(async (req) => {
     error_message = null,
     device_id = null,
     session_id = null,
-  } = body || {};
+  } = body;
 
   if (
     typeof action !== "string" ||
@@ -233,47 +202,32 @@ Deno.serve(async (req) => {
         status: 400,
         headers: {
           ...corsHeaders,
-          "Content-Type":
-            "application/json",
+          "Content-Type": "application/json",
         },
-      }
+      },
     );
   }
 
-  /*
-   * ------------------------------------------------------------
-   * CLIENT IP / USER AGENT
-   * ------------------------------------------------------------
-   */
-
-  const forwardedFor =
+  const forwarded =
     req.headers.get(
-      "x-forwarded-for"
+      "x-forwarded-for",
     ) ||
     req.headers.get(
-      "x-real-ip"
+      "x-real-ip",
     ) ||
     "";
 
   const ipAddress =
-    forwardedFor
+    forwarded
       .split(",")[0]
-      ?.trim() || null;
+      ?.trim() ||
+    null;
 
   const userAgent =
     req.headers.get(
-      "user-agent"
-    ) || null;
-
-  /*
-   * ------------------------------------------------------------
-   * SERVICE ROLE CLIENT
-   *
-   * IMPORTANT:
-   * This key exists ONLY inside the Edge Function environment.
-   * It is NEVER exposed to the browser.
-   * ------------------------------------------------------------
-   */
+      "user-agent",
+    ) ||
+    null;
 
   const adminClient =
     createClient(
@@ -284,34 +238,24 @@ Deno.serve(async (req) => {
           persistSession: false,
           autoRefreshToken: false,
         },
-      }
+      },
     );
-
-  /*
-   * ------------------------------------------------------------
-   * CURRENT ADMIN ROLE
-   * ------------------------------------------------------------
-   */
 
   const {
     data: roleRow,
   } =
     await adminClient
-      .from(
-        "admin_user_roles"
-      )
-      .select(
-        "role_code"
-      )
+      .from("admin_user_roles")
+      .select("role_code")
       .eq(
         "user_id",
-        user.id
+        user.id,
       )
       .order(
         "created_at",
         {
           ascending: true,
-        }
+        },
       )
       .limit(1)
       .maybeSingle();
@@ -320,18 +264,12 @@ Deno.serve(async (req) => {
     roleRow?.role_code ||
     "admin";
 
-  /*
-   * ------------------------------------------------------------
-   * WRITE ACTIVITY LOG
-   * ------------------------------------------------------------
-   */
-
   const {
     error: insertError,
   } =
     await adminClient
       .from(
-        "admin_activity_logs"
+        "admin_activity_logs",
       )
       .insert({
         user_id:
@@ -350,7 +288,7 @@ Deno.serve(async (req) => {
           target_id === null
             ? null
             : String(
-                target_id
+                target_id,
               ),
 
         description,
@@ -372,8 +310,7 @@ Deno.serve(async (req) => {
         session_id,
 
         result:
-          result ===
-          "failed"
+          result === "failed"
             ? "failed"
             : "success",
 
@@ -395,15 +332,9 @@ Deno.serve(async (req) => {
           "Content-Type":
             "application/json",
         },
-      }
+      },
     );
   }
-
-  /*
-   * ------------------------------------------------------------
-   * SUCCESS
-   * ------------------------------------------------------------
-   */
 
   return new Response(
     JSON.stringify({
@@ -416,6 +347,6 @@ Deno.serve(async (req) => {
         "Content-Type":
           "application/json",
       },
-    }
+    },
   );
 });
