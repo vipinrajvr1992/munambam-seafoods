@@ -222,3 +222,10 @@ body {
         border-radius: 21px;
     }
 }
+
+
+/* Security / performance polish */
+button, input, a { -webkit-tap-highlight-color: transparent; }
+.login-button { transition: transform .14s ease, opacity .14s ease, box-shadow .14s ease; }
+.login-button:active { transform: translateY(1px); }
+.login-button[aria-busy="true"] { box-shadow: 0 0 0 3px rgba(22,141,204,.10); }
