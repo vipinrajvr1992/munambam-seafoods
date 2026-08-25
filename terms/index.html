@@ -3002,10 +3002,6 @@ body.nav-drawer-open {
 
             /* =====================================================
                CUSTOM CURSOR
-               Same working DOM fish cursor method as the reference page.
-               Desktop/fine-pointer only via CSS; movement listeners are
-               attached without a matchMedia gate so the cursor cannot
-               remain stuck at the initial top-left position.
             ===================================================== */
 
             const cursor =
@@ -3013,7 +3009,16 @@ body.nav-drawer-open {
                     "fish-cursor"
                 );
 
-            if (cursor) {
+            const mouseDevice =
+                window.matchMedia(
+                    "(hover:hover) and (pointer:fine)"
+                ).matches;
+
+
+            if (
+                cursor &&
+                mouseDevice
+            ) {
 
                 let x = 0;
                 let y = 0;
@@ -3021,7 +3026,10 @@ body.nav-drawer-open {
                 let frame =
                     false;
 
-                const moveCursor =
+
+                document.addEventListener(
+                    "mousemove",
+
                     (event) => {
 
                         x =
@@ -3030,12 +3038,15 @@ body.nav-drawer-open {
                         y =
                             event.clientY;
 
+
                         if (frame) {
                             return;
                         }
 
+
                         frame =
                             true;
+
 
                         requestAnimationFrame(
                             () => {
@@ -3051,29 +3062,20 @@ body.nav-drawer-open {
                                     false;
                             }
                         );
-                    };
 
-                window.addEventListener(
-                    "pointermove",
-                    moveCursor,
+                    },
+
                     {
                         passive: true
                     }
                 );
 
-                window.addEventListener(
-                    "mousemove",
-                    moveCursor,
-                    {
-                        passive: true
-                    }
-                );
             }
 
 
             /* =====================================================
                MOVING SEA CREATURES
-            =====================================================
+            ===================================================== */
 
             const layer =
                 document.getElementById(
