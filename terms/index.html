@@ -3002,14 +3002,80 @@ body.nav-drawer-open {
 
             /* =====================================================
                CUSTOM CURSOR
-               Desktop cursor is handled by the shared CSS above.
-               This avoids a second JS cursor fighting the browser.
+               Same working DOM fish cursor method as the About page.
+               Desktop/fine-pointer only.
             ===================================================== */
+
+            const cursor =
+                document.getElementById(
+                    "fish-cursor"
+                );
+
+            const mouseDevice =
+                window.matchMedia(
+                    "(hover:hover) and (pointer:fine)"
+                ).matches;
+
+            if (
+                cursor &&
+                mouseDevice
+            ) {
+
+                let x = 0;
+                let y = 0;
+
+                let frame =
+                    false;
+
+
+                document.addEventListener(
+                    "mousemove",
+                    (event) => {
+
+                        x =
+                            event.clientX;
+
+                        y =
+                            event.clientY;
+
+
+                        if (frame) {
+                            return;
+                        }
+
+
+                        frame =
+                            true;
+
+
+                        requestAnimationFrame(
+                            () => {
+
+                                cursor.style.transform =
+                                    `translate3d(
+                                        ${x - 6}px,
+                                        ${y - 14}px,
+                                        0
+                                    )`;
+
+                                frame =
+                                    false;
+                            }
+                        );
+
+                    },
+
+                    {
+                        passive: true
+                    }
+                );
+
+            }
 
 
             /* =====================================================
                MOVING SEA CREATURES
-            ===================================================== */
+            =====================================================
 
             const layer =
                 document.getElementById(
