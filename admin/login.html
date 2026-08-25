@@ -16,16 +16,6 @@
     <link rel="icon" href="/assets/icon/favicon.ico">
     <link rel="stylesheet" href="./assets/admin.css">
     <style>
-        .operator-hint {
-            margin: 0 0 14px;
-            padding: 10px 12px;
-            border-radius: 10px;
-            background: rgba(22, 141, 204, 0.08);
-            border: 1px solid rgba(22, 141, 204, 0.16);
-            color: #0d4a6e;
-            font-size: 0.68rem;
-            line-height: 1.5;
-        }
         #operatorSelect {
             width: 100%;
             min-height: 49px;
@@ -60,11 +50,6 @@
             </div>
 
             <div id="authMessage" class="auth-message error" role="alert" hidden></div>
-
-            <p class="operator-hint">
-                Select the person signing in. This name is stored with every audit log.
-                Device ID / HWID is also recorded so activity can be traced even if a wrong name is chosen.
-            </p>
 
             <form id="loginForm" novalidate>
                 <div class="form-group">
@@ -117,7 +102,6 @@
                 Access is verified through Supabase Auth and the
                 server-side admin authorization table. Unauthorized
                 accounts are rejected before entering the dashboard.
-                Login activity is emailed and logged with operator name, IP and device fingerprint.
             </p>
         </section>
     </main>
