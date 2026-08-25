@@ -2014,15 +2014,9 @@ body.nav-drawer-open {
             </p>
 
             <div class="rating-row" aria-label="Customer rating">
-                <span aria-hidden="true">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                </span>
-                <span class="rating-value" id="ratingValue">5.0</span>
-                <span class="rating-count" id="ratingCount">5-star product rating</span>
+                <span aria-hidden="true"></span>
+                <span class="rating-value" id="ratingValue">—</span>
+                <span class="rating-count" id="ratingCount">No verified ratings yet</span>
             </div>
 
             <div class="price-box">
@@ -2126,9 +2120,9 @@ body.nav-drawer-open {
             <p>See what customers say about this product.</p>
         </div>
         <div class="rating-summary" aria-live="polite">
-            <span class="stars" aria-hidden="true">★★★★★</span>
+            <span class="stars" aria-hidden="true"></span>
             <strong id="reviewsAverage">—</strong>
-            <small id="reviewsCount"></small>
+            <small id="reviewsCount">No verified ratings yet</small>
         </div>
     </div>
 
@@ -2296,36 +2290,70 @@ body.nav-drawer-open {
     "use strict";
 
     const products = {
-        "cleaned-dried-prawns":{name:"Cleaned Dried Prawns",image:"./PRODUCT_1.webp",category:"Prawns",tagline:"100% Meat Weight, Low Sodium & Chemical Free",description:"Premium cleaned dried prawns prepared with careful handling and hygienic drying.",prices:{"100g":200,"250g":499,"500g":899},hsn:"0306",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false,rating:4.9,ratingCount:0},
-        "whole-dried-prawns":{name:"Whole Dried Prawns",image:"./PRODUCT_2.webp",category:"Prawns",tagline:"Hygienically Dried Direct From Harbour",description:"Whole dried prawns with an authentic coastal character and careful hygienic drying.",prices:{"100g":120,"250g":299,"500g":549},hsn:"0306",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false,rating:4.9,ratingCount:0},
-        "prawn-chammanthi-podi":{name:"Prawn Chammanthi Podi",image:"./PRODUCT_3.webp",category:"Podi / Blends",tagline:"Authentic Kerala Homemade Blend",description:"An authentic Kerala-style prawn chammanthi podi prepared as a convenient dry coastal blend.",prices:{"100g":80,"250g":199,"500g":349},hsn:"2106 90 99",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false,rating:4.9,ratingCount:0},
-        "premium-dried-shark":{name:"Premium Dried Shark",image:"./PRODUCT_4.webp",category:"Dried Fish",tagline:"Traditional Coastal Delicacy",description:"A traditional coastal dried-fish selection from Munambam Seafoods.",prices:{"100g":140,"250g":349,"500g":649},hsn:"0305",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false,rating:4.9,ratingCount:0},
-        "premium-dried-tuna":{name:"Premium Dried Tuna",image:"./PRODUCT_5.webp",category:"Dried Fish",tagline:"Rich in Flavor, Clean & Hygienic",description:"Premium dried tuna selected for rich coastal flavour and hygienic preparation.",prices:{"100g":120,"250g":299,"500g":549},hsn:"0305",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false,rating:4.9,ratingCount:0},
-        "premium-dried-mackerel":{name:"Premium Dried Mackerel",image:"./PRODUCT_6.webp",category:"Dried Fish",tagline:"Premium Coastal Selection",description:"Premium dried mackerel prepared for authentic coastal cooking.",prices:{"100g":100,"250g":249,"500g":449},hsn:"0305",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false,rating:4.9,ratingCount:0}
+        "cleaned-dried-prawns":{name:"Cleaned Dried Prawns",image:"./PRODUCT_1.webp",category:"Prawns",tagline:"100% Meat Weight, Low Sodium & Chemical Free",description:"Premium cleaned dried prawns prepared with careful handling and hygienic drying.",prices:{"100g":200,"250g":499,"500g":899},hsn:"0306",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false},
+        "whole-dried-prawns":{name:"Whole Dried Prawns",image:"./PRODUCT_2.webp",category:"Prawns",tagline:"Hygienically Dried Direct From Harbour",description:"Whole dried prawns with an authentic coastal character and careful hygienic drying.",prices:{"100g":120,"250g":299,"500g":549},hsn:"0306",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false},
+        "prawn-chammanthi-podi":{name:"Prawn Chammanthi Podi",image:"./PRODUCT_3.webp",category:"Podi / Blends",tagline:"Authentic Kerala Homemade Blend",description:"An authentic Kerala-style prawn chammanthi podi prepared as a convenient dry coastal blend.",prices:{"100g":80,"250g":199,"500g":349},hsn:"2106 90 99",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false},
+        "premium-dried-shark":{name:"Premium Dried Shark",image:"./PRODUCT_4.webp",category:"Dried Fish",tagline:"Traditional Coastal Delicacy",description:"A traditional coastal dried-fish selection from Munambam Seafoods.",prices:{"100g":140,"250g":349,"500g":649},hsn:"0305",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false},
+        "premium-dried-tuna":{name:"Premium Dried Tuna",image:"./PRODUCT_5.webp",category:"Dried Fish",tagline:"Rich in Flavor, Clean & Hygienic",description:"Premium dried tuna selected for rich coastal flavour and hygienic preparation.",prices:{"100g":120,"250g":299,"500g":549},hsn:"0305",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false},
+        "premium-dried-mackerel":{name:"Premium Dried Mackerel",image:"./PRODUCT_6.webp",category:"Dried Fish",tagline:"Premium Coastal Selection",description:"Premium dried mackerel prepared for authentic coastal cooking.",prices:{"100g":100,"250g":249,"500g":449},hsn:"0305",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false}
     };
 
     async function loadReviewsAndHydrate() {
+        /*
+         * GENUINE REVIEWS ONLY:
+         * A review is public only when the store/backend explicitly marks it
+         * as verified:true. No supplied rating average, count, or unverified
+         * review data is trusted.
+         */
         try {
             const res = await fetch("./reviews-seafoods.json", { cache: "no-cache" });
             if (!res.ok) return;
+
             const map = await res.json();
             if (!map || typeof map !== "object") return;
+
             Object.keys(map).forEach(function (pid) {
                 if (!products[pid]) return;
-                const row = map[pid];
-                products[pid].rating = Number(row.r) || 5;
-                products[pid].ratingCount = Number(row.c) || 0;
-                products[pid].reviews = (row.v || []).map(function (x) {
-                    return {
-                        name: x.n,
-                        place: x.p,
-                        rating: Number(x.s) || 5,
-                        comment: x.t
-                    };
-                });
+
+                const row = map[pid] || {};
+                const verifiedReviews = Array.isArray(row.v)
+                    ? row.v.filter(function (x) {
+                        const score = Number(x && x.s);
+                        return !!(
+                            x &&
+                            x.verified === true &&
+                            typeof x.n === "string" && x.n.trim() &&
+                            typeof x.t === "string" && x.t.trim() &&
+                            Number.isFinite(score) &&
+                            score >= 1 && score <= 5
+                        );
+                    }).map(function (x) {
+                        return {
+                            name: x.n.trim(),
+                            place: typeof x.p === "string" ? x.p.trim() : "",
+                            rating: Number(x.s),
+                            comment: x.t.trim()
+                        };
+                    })
+                    : [];
+
+                if (!verifiedReviews.length) {
+                    products[pid].reviews = [];
+                    delete products[pid].rating;
+                    delete products[pid].ratingCount;
+                    return;
+                }
+
+                const total = verifiedReviews.reduce(function (sum, review) {
+                    return sum + review.rating;
+                }, 0);
+
+                products[pid].reviews = verifiedReviews;
+                products[pid].rating = total / verifiedReviews.length;
+                products[pid].ratingCount = verifiedReviews.length;
             });
         } catch (err) {
-            /* silent — UI falls back to catalog defaults */
+            /* No fallback rating/review data is used. */
         }
     }
 
@@ -2341,16 +2369,25 @@ const params = new URLSearchParams(window.location.search);
     const $ = (id) => document.getElementById(id);
 
     function renderRating(){
-        const rating=Number(product.rating)||5;
+        const rating=Number(product.rating);
         const count=Number(product.ratingCount)||0;
-        $("ratingValue").textContent=rating.toFixed(1);
-        $("ratingCount").textContent=count>0?`${count} verified rating${count===1?"":"s"}`:"5-star product rating";
-        $("reviewsAverage").textContent=rating.toFixed(1);
-        $("reviewsCount").textContent=count>0?`${count} verified rating${count===1?"":"s"}`:"";
-        const starHost=document.querySelector(".rating-row > span[aria-hidden=\"true\"]");
-        if(starHost) starHost.innerHTML=starsFor(rating);
+        const hasVerifiedRating=Number.isFinite(rating) && count>0;
+
+        $("ratingValue").textContent=hasVerifiedRating ? rating.toFixed(1) : "—";
+        $("ratingCount").textContent=hasVerifiedRating
+            ? `${count} verified rating${count===1?"":"s"}`
+            : "No verified ratings yet";
+
+        $("reviewsAverage").textContent=hasVerifiedRating ? rating.toFixed(1) : "—";
+        $("reviewsCount").textContent=hasVerifiedRating
+            ? `${count} verified rating${count===1?"":"s"}`
+            : "No verified ratings yet";
+
+        const starHost=document.querySelector('.rating-row > span[aria-hidden="true"]');
+        if(starHost) starHost.innerHTML=hasVerifiedRating ? starsFor(rating) : "";
+
         const summaryStars=document.querySelector(".rating-summary .stars");
-        if(summaryStars) summaryStars.innerHTML=starsFor(rating);
+        if(summaryStars) summaryStars.innerHTML=hasVerifiedRating ? starsFor(rating) : "";
     }
 
     function starsFor(rating){
@@ -2406,7 +2443,7 @@ const params = new URLSearchParams(window.location.search);
         const list=$("reviewList");
         const reviews=Array.isArray(product.reviews)?product.reviews:[];
         if(!reviews.length){
-            list.innerHTML='<div class="review-empty">No verified reviews yet.</div>';
+            list.innerHTML='<div class="review-empty">No verified reviews yet. Ratings and reviews appear only after store verification.</div>';
         }else{
             list.innerHTML=reviews.map(r=>{
                 const rating=Number(r.rating)||5;
