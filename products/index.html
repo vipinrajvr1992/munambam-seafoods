@@ -4386,22 +4386,27 @@ footer p{
   "use strict";
 
   /*
-   * MUNAMBAM SEAFOODS — REAL REVIEW/RATING DISPLAY BRIDGE
+   * MUNAMBAM SEAFOODS — VERIFIED CUSTOMER REVIEW/RATING DISPLAY
    *
-   * This page contains NO fabricated ratings or review counts.
-   * The product-review page can persist genuine submitted ratings
-   * in localStorage under this shared key.
+   * IMPORTANT:
+   * This page displays ONLY ratings explicitly marked as
+   * verified === true by the review/order-verification system.
+   *
+   * Unverified, fabricated, manually injected, or legacy ratings
+   * are never displayed or included in the average/count.
    *
    * Expected store format:
    * {
    *   "product-id": [
-   *     { "rating": 5, "verified": true },
-   *     { "rating": 4, "verified": false }
+   *     { "rating": 5, "verified": true }
    *   ]
    * }
    *
-   * Only numeric ratings from 1–5 are counted.
-   * No stored/valid rating = "No ratings yet".
+   * A browser/localStorage flag by itself is NOT customer verification.
+   * The system that creates a review must set verified === true only
+   * after confirming the customer's genuine completed purchase/order.
+   *
+   * No verified rating = "No verified ratings yet".
    */
   var REVIEW_STORE_KEY = "munambam_product_reviews_v1";
 
@@ -4416,15 +4421,31 @@ footer p{
     }
   }
 
+  /*
+   * Keep ONLY verified customer ratings.
+   * Any rating without verified === true is discarded from the
+   * display calculation and cannot affect the visible average/count.
+   */
   function getRatings(productId, store){
     var list = store && Array.isArray(store[productId]) ? store[productId] : [];
+
     return list.map(function(item){
       if(!item || typeof item !== "object") return null;
+
       var rating = Number(item.rating);
-      if(!Number.isFinite(rating) || rating < 1 || rating > 5) return null;
+
+      if(
+        item.verified !== true ||
+        !Number.isFinite(rating) ||
+        rating < 1 ||
+        rating > 5
+      ){
+        return null;
+      }
+
       return {
         rating: Math.round(rating * 10) / 10,
-        verified: item.verified === true
+        verified: true
       };
     }).filter(Boolean);
   }
@@ -4434,9 +4455,11 @@ footer p{
     var half = (rating - full) >= 0.5 ? 1 : 0;
     var empty = 5 - full - half;
     var output = "";
+
     for(var i = 0; i < full; i++) output += "★";
     if(half) output += "½";
     for(var j = 0; j < empty; j++) output += "☆";
+
     return output;
   }
 
@@ -4454,9 +4477,9 @@ footer p{
       var labEl = slot.querySelector(".rating-label");
 
       if(!ratings.length){
-        slot.setAttribute("aria-label", "No ratings yet");
+        slot.setAttribute("aria-label", "No verified customer ratings yet");
         if(starEl) starEl.textContent = "";
-        if(labEl) labEl.textContent = "No ratings yet";
+        if(labEl) labEl.textContent = "No verified ratings yet";
         return;
       }
 
@@ -4465,9 +4488,6 @@ footer p{
       }, 0);
 
       var average = Math.round((total / ratings.length) * 10) / 10;
-      var verifiedCount = ratings.filter(function(item){
-        return item.verified === true;
-      }).length;
 
       if(starEl) starEl.textContent = stars(average);
 
@@ -4478,11 +4498,10 @@ footer p{
       slot.setAttribute(
         "aria-label",
         average.toFixed(1) +
-        " star product rating from " +
+        " star rating from " +
         ratings.length +
-        " rating" +
-        (ratings.length === 1 ? "" : "s") +
-        (verifiedCount ? "; " + verifiedCount + " verified purchase rating" + (verifiedCount === 1 ? "" : "s") : "")
+        " verified customer rating" +
+        (ratings.length === 1 ? "" : "s")
       );
     });
   }
