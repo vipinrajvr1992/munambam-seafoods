@@ -147,11 +147,11 @@
     }
 
     /* =========================================================
-       CUSTOM CURSOR — DESKTOP ONLY
-       Browser-level fish cursor. Keeps the same custom fish
-       through hover, mousedown, hold, mouseup and focus.
+       CUSTOM CURSOR — SAME WORKING FISH CURSOR
+       Desktop/fine-pointer only. The visible SVG cursor carries
+       the contrast shadow needed on cream/light backgrounds.
     ========================================================= */
-    @media (min-width: 1025px) {
+    @media (hover: hover) and (pointer: fine) {
         html,
         body,
         body *,
@@ -171,13 +171,16 @@
         textarea,
         select,
         label,
+        summary,
         [role="button"],
-        [tabindex] {
-            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='30' viewBox='0 0 50 30' fill='none'%3E%3Cpath d='M5 15Q25-5 45 25M5 15Q25 35 45 5' stroke='%23e0bc68' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M15 8.5Q18 15 15 21.5' stroke='%23e0bc68' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='10' cy='14.5' r='1.8' fill='%23e0bc68'/%3E%3C/svg%3E") 5 15, auto !important;
+        [onclick],
+        [tabindex],
+        .btn {
+            cursor: none !important;
         }
 
         #fish-cursor {
-            display: none !important;
+            display: block !important;
         }
     }
 
