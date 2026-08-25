@@ -147,129 +147,128 @@
     }
 
     /* =========================================================
-           CUSTOM CURSOR — SAME WORKING FISH CURSOR
-           Desktop/fine-pointer only. The visible SVG cursor carries
-           the contrast shadow needed on cream/light backgrounds.
-        ========================================================= */
-        @media (hover: hover) and (pointer: fine) {
-            html,
-            body,
-            body *,
-            body *::before,
-            body *::after,
-            a,
-            a:link,
-            a:visited,
-            a:hover,
-            a:active,
-            a:focus,
-            button,
-            button:hover,
-            button:active,
-            button:focus,
-            input,
-            textarea,
-            select,
-            label,
-            summary,
-            [role="button"],
-            [onclick],
-            [tabindex],
-            .btn {
-                cursor: none !important;
-            }
-
-            #fish-cursor {
-                display: block !important;
-            }
+       CUSTOM CURSOR — SAME WORKING FISH CURSOR
+       Desktop/fine-pointer only. The visible SVG cursor carries
+       the contrast shadow needed on cream/light backgrounds.
+    ========================================================= */
+    @media (hover: hover) and (pointer: fine) {
+        html,
+        body,
+        body *,
+        body *::before,
+        body *::after,
+        a,
+        a:link,
+        a:visited,
+        a:hover,
+        a:active,
+        a:focus,
+        button,
+        button:hover,
+        button:active,
+        button:focus,
+        input,
+        textarea,
+        select,
+        label,
+        summary,
+        [role="button"],
+        [onclick],
+        [tabindex],
+        .btn {
+            cursor: none !important;
         }
-
-        body {
-            margin: 0;
-            min-height: 100vh;
-
-            background:
-                var(--navy);
-
-            color:
-                var(--cream);
-
-            font-family:
-                "Segoe UI",
-                Arial,
-                Helvetica,
-                sans-serif;
-
-            overflow-x: hidden;
-
-        }
-
-        body::selection {
-            background: var(--gold);
-            color: var(--navy);
-        }
-
-        img {
-            max-width: 100%;
-        }
-
-        a {
-            color: inherit;
-        }
-
-
-        /* =========================================================
-           CUSTOM FISH CURSOR
-        ========================================================= */
 
         #fish-cursor {
-            position: fixed;
-
-            left: 0;
-            top: 0;
-
-            width: 44px;
-            height: 27px;
-
-            pointer-events: none;
-
-            z-index: 99999;
-
-            transform:
-                translate3d(-6px,-14px,0);
-
-            will-change:
-                transform;
+            display: block !important;
         }
+    }
 
-        #fish-cursor svg {
-            display: block;
+    body {
+        margin: 0;
+        min-height: 100vh;
 
-            width: 44px;
-            height: 27px;
+        background:
+            var(--navy);
 
-            /* Stronger 3D shadow so the fish stays visible on cream/light backgrounds */
-            filter:
-                drop-shadow(
-                    0 1px 0
-                    rgba(18,24,32,.95)
-                )
-                drop-shadow(
-                    0 2px 2px
-                    rgba(18,24,32,.72)
-                )
-                drop-shadow(
-                    0 5px 6px
-                    rgba(0,0,0,.42)
-                )
-                drop-shadow(
-                    0 9px 10px
-                    rgba(0,0,0,.20)
-                );
-        }
+        color:
+            var(--cream);
+
+        font-family:
+            "Segoe UI",
+            Arial,
+            Helvetica,
+            sans-serif;
+
+        overflow-x: hidden;
+    }
+
+    body::selection {
+        background: var(--gold);
+        color: var(--navy);
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    a {
+        color: inherit;
+    }
 
 
-        /* =========================================================
+    /* =========================================================
+       CUSTOM FISH CURSOR
+    ========================================================= */
+
+    #fish-cursor {
+        position: fixed;
+
+        left: 0;
+        top: 0;
+
+        width: 44px;
+        height: 27px;
+
+        pointer-events: none;
+
+        z-index: 99999;
+
+        transform:
+            translate3d(-6px,-14px,0);
+
+        will-change:
+            transform;
+    }
+
+    #fish-cursor svg {
+        display: block;
+
+        width: 44px;
+        height: 27px;
+
+        /* Stronger 3D shadow so the fish stays visible on cream/light backgrounds */
+        filter:
+            drop-shadow(
+                0 1px 0
+                rgba(18,24,32,.95)
+            )
+            drop-shadow(
+                0 2px 2px
+                rgba(18,24,32,.72)
+            )
+            drop-shadow(
+                0 5px 6px
+                rgba(0,0,0,.42)
+            )
+            drop-shadow(
+                0 9px 10px
+                rgba(0,0,0,.20)
+            );
+    }
+
+
+    /* =========================================================
        MOVING OCEAN OBJECTS
     ========================================================= */
 
@@ -3003,8 +3002,10 @@ body.nav-drawer-open {
 
             /* =====================================================
                CUSTOM CURSOR
-               Same working DOM fish cursor method as the About page.
-               Desktop/fine-pointer only.
+               Same working DOM fish cursor method as the reference page.
+               Desktop/fine-pointer only via CSS; movement listeners are
+               attached without a matchMedia gate so the cursor cannot
+               remain stuck at the initial top-left position.
             ===================================================== */
 
             const cursor =
@@ -3012,15 +3013,7 @@ body.nav-drawer-open {
                     "fish-cursor"
                 );
 
-            const mouseDevice =
-                window.matchMedia(
-                    "(hover:hover) and (pointer:fine)"
-                ).matches;
-
-            if (
-                cursor &&
-                mouseDevice
-            ) {
+            if (cursor) {
 
                 let x = 0;
                 let y = 0;
@@ -3028,9 +3021,7 @@ body.nav-drawer-open {
                 let frame =
                     false;
 
-
-                document.addEventListener(
-                    "mousemove",
+                const moveCursor =
                     (event) => {
 
                         x =
@@ -3039,15 +3030,12 @@ body.nav-drawer-open {
                         y =
                             event.clientY;
 
-
                         if (frame) {
                             return;
                         }
 
-
                         frame =
                             true;
-
 
                         requestAnimationFrame(
                             () => {
@@ -3063,14 +3051,23 @@ body.nav-drawer-open {
                                     false;
                             }
                         );
+                    };
 
-                    },
-
+                window.addEventListener(
+                    "pointermove",
+                    moveCursor,
                     {
                         passive: true
                     }
                 );
 
+                window.addEventListener(
+                    "mousemove",
+                    moveCursor,
+                    {
+                        passive: true
+                    }
+                );
             }
 
 
