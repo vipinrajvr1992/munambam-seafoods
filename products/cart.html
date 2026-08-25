@@ -21,17 +21,46 @@ content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'
 
 <style>
 
-/* Hide system cursor everywhere — only custom fish cursor is visible */
-html, body, * {
-    cursor: none !important;
-}
+/* Hide system cursor on desktop/fine-pointer devices — only custom fish cursor is visible */
 html, body {
     cursor: none !important;
 }
-a, button, input, select, textarea, label, summary,
-[role="button"], [onclick], .btn, .filter-btn, .offer-btn {
-    cursor: none !important;
+
+@media (hover: hover) and (pointer: fine) {
+    html,
+    body,
+    body *,
+    body *::before,
+    body *::after,
+    a,
+    a:link,
+    a:visited,
+    a:hover,
+    a:active,
+    a:focus,
+    button,
+    button:hover,
+    button:active,
+    button:focus,
+    input,
+    textarea,
+    select,
+    label,
+    summary,
+    [role="button"],
+    [onclick],
+    [tabindex],
+    .btn,
+    .filter-btn,
+    .offer-btn {
+        cursor: none !important;
+    }
+
+    #fish-cursor {
+        display: block !important;
+    }
 }
+
 #fish-cursor {
     position: fixed !important;
     left: 0; top: 0;
@@ -41,6 +70,7 @@ a, button, input, select, textarea, label, summary,
     transform: translate3d(-6px, -14px, 0);
     will-change: transform;
 }
+
 #fish-cursor svg {
     display: block;
     width: 44px; height: 27px;
@@ -50,6 +80,31 @@ a, button, input, select, textarea, label, summary,
         drop-shadow(0 5px 6px rgba(0,0,0,.42))
         drop-shadow(0 9px 10px rgba(0,0,0,.20));
 }
+
+@media (hover: none) and (pointer: coarse) {
+    html,
+    body,
+    body *,
+    body *::before,
+    body *::after,
+    a,
+    button,
+    input,
+    textarea,
+    select,
+    label,
+    summary,
+    [role="button"],
+    [onclick],
+    [tabindex] {
+        cursor: auto !important;
+    }
+
+    #fish-cursor {
+        display: none !important;
+    }
+}
+
 
 
 :root{
