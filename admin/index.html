@@ -1,0 +1,1395 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <!-- =========================================================
+         BROWSER SECURITY HARDENING
+         ========================================================= -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self';
+                   base-uri 'self';
+                   object-src 'none';
+                   frame-ancestors 'none';
+                   form-action 'self';
+                   img-src 'self' data: https:;
+                   style-src 'self' 'unsafe-inline';
+                   script-src 'self' https://cdn.jsdelivr.net;
+                   connect-src 'self' https://ydfsglzcacagkofyefcd.supabase.co https://ydfsglzcacagkofyefcd.functions.supabase.co wss://ydfsglzcacagkofyefcd.supabase.co;
+                   font-src 'self' data:;
+                   media-src 'self' https:;
+                   upgrade-insecure-requests">
+
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+
+    <meta http-equiv="Permissions-Policy"
+          content="camera=(),
+                   microphone=(),
+                   geolocation=(),
+                   payment=(self),
+                   usb=(),
+                   serial=(),
+                   bluetooth=()">
+
+    <title>Dashboard | Munambam Seafoods Admin</title>
+
+    <link rel="icon" href="/assets/icon/favicon.ico">
+    <link rel="stylesheet" href="./assets/dashboard.css">
+    <link rel="stylesheet" href="./assets/settings-mobile.css">
+
+    <style>
+        /* =====================================================
+           SALES FILTER
+           ===================================================== */
+
+        .sales-filter-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .select-pill {
+            min-width: 150px;
+            border: 1px solid rgba(148, 173, 205, .18);
+            border-radius: 9px;
+            padding: 9px 34px 9px 12px;
+            background: #ffffff;
+            color: #0b1c30;
+            font: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .select-pill:focus {
+            border-color: #1769e8;
+            box-shadow: 0 0 0 3px rgba(23, 105, 232, .10);
+        }
+
+        .custom-range {
+            position: absolute;
+            z-index: 100;
+            top: calc(100% + 8px);
+            right: 0;
+            display: flex;
+            align-items: end;
+            gap: 8px;
+            padding: 12px;
+            background: #ffffff;
+            border: 1px solid #dce5ef;
+            border-radius: 12px;
+            box-shadow: 0 18px 45px rgba(7, 20, 36, .16);
+        }
+
+        /* IMPORTANT:
+           The custom date/time panel must remain completely hidden
+           until "Custom Date & Time" is selected. */
+        .custom-range[hidden] {
+            display: none !important;
+        }
+
+        .custom-range label {
+            display: grid;
+            gap: 5px;
+        }
+
+        .custom-range label span {
+            color: #52657a;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .custom-range input {
+            width: 190px;
+            min-height: 36px;
+            padding: 7px 9px;
+            border: 1px solid #d6e0ea;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #0b1c30;
+            font: inherit;
+            font-size: 11px;
+            outline: none;
+        }
+
+        .custom-range input:focus {
+            border-color: #1769e8;
+        }
+
+        .apply-range-btn {
+            min-height: 36px;
+            padding: 0 14px;
+            border: 0;
+            border-radius: 8px;
+            background: #1769e8;
+            color: #ffffff;
+            font: inherit;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .apply-range-btn:hover {
+            background: #0d5bd4;
+        }
+
+
+        /* =====================================================
+           EXPORT BUTTON
+           ===================================================== */
+
+        #exportReportsBtn {
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+
+        /* =====================================================
+           EXPORT MODAL
+           ===================================================== */
+
+        .munambam-export-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(2, 10, 19, .76);
+            backdrop-filter: blur(6px);
+        }
+
+        .munambam-export-overlay.is-open {
+            display: flex;
+        }
+
+        .munambam-export-modal {
+            width: min(620px, 100%);
+            max-height: calc(100vh - 40px);
+            overflow: auto;
+            border: 1px solid rgba(148, 173, 205, .20);
+            border-radius: 18px;
+            background: #091728;
+            color: #ffffff;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, .48);
+        }
+
+        .export-modal-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 22px;
+            border-bottom: 1px solid rgba(148, 173, 205, .12);
+        }
+
+        .export-modal-head .eyebrow {
+            margin-bottom: 5px;
+        }
+
+        .export-modal-head h2 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 24px;
+            letter-spacing: -.03em;
+        }
+
+        .export-modal-head p {
+            margin: 5px 0 0;
+            color: #8ea4bd;
+            font-size: 12px;
+        }
+
+        .export-close {
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(148, 173, 205, .18);
+            border-radius: 9px;
+            background: #0d1b2d;
+            color: #ffffff;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .export-modal-body {
+            display: grid;
+            gap: 20px;
+            padding: 22px;
+        }
+
+        .export-field {
+            display: grid;
+            gap: 8px;
+        }
+
+        .export-field > span {
+            color: #dce8f5;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .export-field select {
+            width: 100%;
+            min-height: 42px;
+            padding: 0 12px;
+            border: 1px solid rgba(148, 173, 205, .20);
+            border-radius: 9px;
+            background: #071424;
+            color: #ffffff;
+            font: inherit;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .export-format-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .export-format {
+            position: relative;
+            display: grid;
+            gap: 4px;
+            padding: 12px 10px;
+            border: 1px solid rgba(148, 173, 205, .15);
+            border-radius: 10px;
+            background: #0b1b2d;
+            cursor: pointer;
+        }
+
+        .export-format:hover {
+            border-color: rgba(47, 134, 255, .55);
+        }
+
+        .export-format input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .export-format:has(input:checked) {
+            border-color: #2f86ff;
+            background: rgba(23, 105, 232, .13);
+        }
+
+        .export-format strong {
+            color: #ffffff;
+            font-size: 12px;
+        }
+
+        .export-format small {
+            color: #71859d;
+            font-size: 9px;
+        }
+
+        .export-note {
+            padding: 11px 13px;
+            border: 1px solid rgba(23, 105, 232, .18);
+            border-radius: 9px;
+            background: rgba(23, 105, 232, .08);
+            color: #a9c9ed;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .export-modal-foot {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            padding: 16px 22px;
+            border-top: 1px solid rgba(148, 173, 205, .12);
+        }
+
+        .export-cancel-btn,
+        .export-start-btn {
+            min-height: 40px;
+            padding: 0 16px;
+            border-radius: 8px;
+            font: inherit;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .export-cancel-btn {
+            border: 1px solid rgba(148, 173, 205, .18);
+            background: #0d1b2d;
+            color: #dce8f5;
+        }
+
+        .export-start-btn {
+            border: 1px solid #1769e8;
+            background: #1769e8;
+            color: #ffffff;
+        }
+
+        .export-start-btn:hover {
+            background: #2b7bf0;
+        }
+
+        .export-start-btn:disabled {
+            opacity: .55;
+            cursor: wait;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+        @media (max-width: 760px) {
+
+            .custom-range {
+                position: fixed;
+                top: auto;
+                right: 12px;
+                bottom: 12px;
+                left: 12px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .custom-range input {
+                width: 100%;
+            }
+
+            .export-format-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .sales-filter-wrap {
+                width: 100%;
+            }
+
+            .select-pill {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+<div class="app-shell">
+
+    <!-- =========================================================
+         SIDEBAR
+         ========================================================= -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+
+            <img
+                src="/assets/MUNAMBAM_Seafood_Logo_HQ.png"
+                alt="Munambam Seafoods"
+                width="52"
+                height="52"
+            >
+
+            <div class="brand-copy">
+                <strong>MUNAMBAM</strong>
+                <span>SEAFOODS</span>
+            </div>
+
+        </div>
+
+
+        <nav class="nav" aria-label="Admin navigation">
+
+            <a
+                class="nav-link active"
+                href="./index.html"
+                data-section="overview"
+            >
+                <span class="nav-icon">▦</span>
+                <span>Overview</span>
+            </a>
+
+            <a
+                class="nav-link"
+                href="#"
+                data-section="products"
+            >
+                <span class="nav-icon">◇</span>
+                <span>Products</span>
+            </a>
+
+            <a
+                class="nav-link"
+                href="#"
+                data-section="orders"
+            >
+                <span class="nav-icon">▣</span>
+                <span>Orders</span>
+            </a>
+
+            <a
+                class="nav-link"
+                href="#"
+                data-section="customers"
+            >
+                <span class="nav-icon">♙</span>
+                <span>Customers</span>
+            </a>
+
+            <a
+                class="nav-link"
+                href="#"
+                data-section="payments"
+            >
+                <span class="nav-icon">₹</span>
+                <span>Payments</span>
+            </a>
+
+            <a
+                class="nav-link"
+                href="#"
+                data-section="inventory"
+            >
+                <span class="nav-icon">□</span>
+                <span>Inventory</span>
+            </a>
+
+            <a
+                class="nav-link"
+                href="#"
+                data-section="coupons"
+            >
+                <span class="nav-icon">◇</span>
+                <span>Coupons</span>
+            </a>
+
+            <a
+                class="nav-link"
+                href="#"
+                data-section="reviews"
+            >
+                <span class="nav-icon">☆</span>
+                <span>Reviews</span>
+            </a>
+
+            <a
+                class="nav-link"
+                href="#"
+                data-section="delivery"
+            >
+                <span class="nav-icon">⌁</span>
+                <span>Delivery</span>
+            </a>
+
+            <a
+                class="nav-link"
+                href="#"
+                data-section="audit"
+            >
+                <span class="nav-icon">▤</span>
+                <span>Audit Logs</span>
+            </a>
+
+            <a
+                class="nav-link"
+                href="#"
+                data-section="settings"
+            >
+                <span class="nav-icon">⚙</span>
+                <span>Settings</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="brand-card">
+                <strong>MUNAMBAM SEAFOODS</strong>
+                <span>Premium Seafood. Pure &amp; Fresh.</span>
+                <small>Admin Panel v2.0</small>
+            </div>
+
+            <button
+                class="logout-btn"
+                id="logoutBtn"
+                type="button"
+            >
+                <span>↪</span>
+                Logout
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================================================
+         MAIN
+         ========================================================= -->
+
+    <main class="main">
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <button
+                class="icon-btn mobile-only"
+                id="menuBtn"
+                type="button"
+                aria-label="Open navigation"
+            >
+                ☰
+            </button>
+
+
+            <div class="page-title">
+
+                <span class="eyebrow">
+                    MUNAMBAM SEAFOODS
+                </span>
+
+                <h1 id="pageTitle">
+                    Dashboard
+                </h1>
+
+            </div>
+
+
+            <div class="top-actions">
+
+                <!-- SEARCH
+                     Ctrl / REMOVED -->
+
+                <label class="search-box">
+
+                    <span>⌕</span>
+
+                    <input
+                        id="globalSearch"
+                        type="search"
+                        placeholder="Search..."
+                        autocomplete="off"
+                        spellcheck="false"
+                        aria-label="Search admin panel"
+                    >
+
+                </label>
+
+
+                <!-- EXPORT -->
+
+                <button
+                    class="icon-btn"
+                    type="button"
+                    id="exportReportsBtn"
+                    aria-label="Export reports"
+                    title="Export Reports"
+                >
+                    ⇩
+                </button>
+
+
+                <!-- REFRESH -->
+
+                <button
+                    class="icon-btn"
+                    type="button"
+                    id="refreshBtn"
+                    aria-label="Refresh dashboard"
+                    title="Refresh Dashboard"
+                >
+                    ↻
+                </button>
+
+
+                <div class="admin-chip">
+
+                    <div class="avatar">
+                        A
+                    </div>
+
+                    <div>
+
+                        <strong id="adminName">
+                            Admin
+                        </strong>
+
+                        <span id="adminEmail">
+                            Administrator
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+             CONTENT
+             ===================================================== -->
+
+        <section
+            class="content"
+            id="dashboardContent"
+        >
+
+            <!-- HERO -->
+
+            <div class="hero-row">
+
+                <div>
+
+                    <p class="eyebrow">
+                        STORE OVERVIEW
+                    </p>
+
+                    <h2>
+                        Welcome back, Admin
+                        <span aria-hidden="true">👋</span>
+                    </h2>
+
+                    <p class="muted">
+                        A fast, secure overview of your Munambam Seafoods store.
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="date-pill"
+                    id="datePill"
+                >
+                    Today
+                </div>
+
+            </div>
+
+
+            <!-- STATS -->
+
+            <div class="stats-grid">
+
+                <article class="stat-card">
+
+                    <div class="stat-icon blue">
+                        ▣
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Orders
+                        </span>
+
+                        <strong id="totalOrders">
+                            —
+                        </strong>
+
+                        <small id="ordersSub">
+                            Loading…
+                        </small>
+
+                    </div>
+
+                </article>
+
+
+                <article class="stat-card">
+
+                    <div class="stat-icon light">
+                        ₹
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Revenue
+                        </span>
+
+                        <strong id="totalRevenue">
+                            —
+                        </strong>
+
+                        <small id="revenueSub">
+                            Paid orders
+                        </small>
+
+                    </div>
+
+                </article>
+
+
+                <article class="stat-card">
+
+                    <div class="stat-icon blue">
+                        ◇
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Active Products
+                        </span>
+
+                        <strong id="totalProducts">
+                            —
+                        </strong>
+
+                        <small id="productsSub">
+                            Published products
+                        </small>
+
+                    </div>
+
+                </article>
+
+
+                <article class="stat-card">
+
+                    <div class="stat-icon light">
+                        ♙
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Customers
+                        </span>
+
+                        <strong id="totalCustomers">
+                            —
+                        </strong>
+
+                        <small id="customersSub">
+                            Registered checkout customers
+                        </small>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+
+            <!-- =================================================
+                 SALES + ORDER STATUS
+                 ================================================= -->
+
+            <div class="grid-2">
+
+
+                <!-- SALES -->
+
+                <section class="panel">
+
+                    <div class="panel-head">
+
+                        <div>
+
+                            <h3>
+                                Sales Overview
+                            </h3>
+
+                            <span
+                                class="muted"
+                                id="salesSubtitle"
+                            >
+                                Last 7 Days · paid orders
+                            </span>
+
+                        </div>
+
+
+                        <div class="sales-filter-wrap">
+
+                            <select
+                                class="select-pill"
+                                id="salesRange"
+                                aria-label="Sales date range"
+                            >
+
+                                <option value="today">
+                                    Today
+                                </option>
+
+                                <option
+                                    value="7days"
+                                    selected
+                                >
+                                    Last 7 Days
+                                </option>
+
+                                <option value="30days">
+                                    Last 1 Month
+                                </option>
+
+                                <option value="custom">
+                                    Custom Date &amp; Time
+                                </option>
+
+                            </select>
+
+
+                            <div
+                                class="custom-range"
+                                id="customRange"
+                                hidden
+                            >
+
+                                <label>
+
+                                    <span>
+                                        From
+                                    </span>
+
+                                    <input
+                                        type="datetime-local"
+                                        id="salesFrom"
+                                    >
+
+                                </label>
+
+
+                                <label>
+
+                                    <span>
+                                        To
+                                    </span>
+
+                                    <input
+                                        type="datetime-local"
+                                        id="salesTo"
+                                    >
+
+                                </label>
+
+
+                                <button
+                                    type="button"
+                                    class="apply-range-btn"
+                                    id="applySalesRange"
+                                >
+                                    Apply
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="chart-wrap">
+
+                        <svg
+                            id="salesChart"
+                            viewBox="0 0 760 260"
+                            preserveAspectRatio="none"
+                            aria-label="Sales chart"
+                        ></svg>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ORDER STATUS -->
+
+                <section class="panel">
+
+                    <div class="panel-head">
+
+                        <div>
+
+                            <h3>
+                                Order Status
+                            </h3>
+
+                            <span class="muted">
+                                Current order distribution
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="status-layout">
+
+                        <div
+                            class="donut"
+                            id="statusDonut"
+                        >
+
+                            <div>
+
+                                <strong id="statusTotal">
+                                    —
+                                </strong>
+
+                                <span>
+                                    Total
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="status-list"
+                            id="statusList"
+                        >
+
+                            <div class="empty">
+                                Loading…
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+
+            <!-- =================================================
+                 LOWER PANELS
+                 ================================================= -->
+
+            <div class="grid-3">
+
+
+                <!-- TOP PRODUCTS -->
+
+                <section class="panel list-panel">
+
+                    <div class="panel-head">
+
+                        <h3>
+                            Top Products
+                        </h3>
+
+                        <button
+                            type="button"
+                            class="text-btn"
+                            data-section="products"
+                        >
+                            View all →
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        id="topProducts"
+                        class="list"
+                    ></div>
+
+                </section>
+
+
+                <!-- RECENT ORDERS -->
+
+                <section class="panel list-panel">
+
+                    <div class="panel-head">
+
+                        <h3>
+                            Recent Orders
+                        </h3>
+
+                        <button
+                            type="button"
+                            class="text-btn"
+                            data-section="orders"
+                        >
+                            View all →
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        id="recentOrders"
+                        class="list"
+                    ></div>
+
+                </section>
+
+
+                <!-- STOCK ALERTS -->
+
+                <section class="panel list-panel">
+
+                    <div class="panel-head">
+
+                        <h3>
+                            Stock Alerts
+                        </h3>
+
+                        <button
+                            type="button"
+                            class="text-btn"
+                            data-section="inventory"
+                        >
+                            View all →
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        id="stockAlerts"
+                        class="list"
+                    ></div>
+
+                </section>
+
+            </div>
+
+
+            <!-- SECURITY -->
+
+            <section class="panel system-panel">
+
+                <div>
+
+                    <h3>
+                        Admin System
+                    </h3>
+
+                    <p class="muted">
+                        Authenticated Supabase session verified.
+                        Dashboard data is protected by database access policies.
+                    </p>
+
+                </div>
+
+
+                <span class="secure-badge">
+                    <i></i>
+                    SECURE SESSION
+                </span>
+
+            </section>
+
+        </section>
+
+
+        <!-- FOOTER -->
+
+        <footer>
+
+            <div>
+                © 2026 Munambam Seafoods. All Rights Reserved.
+            </div>
+
+            <div class="footer-credit">
+
+                Digital Experience by
+
+                <a
+                    href="https://www.thegypsycartel.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    www.thegypsycartel.com
+                </a>
+
+            </div>
+
+        </footer>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     EXPORT MODAL
+     ========================================================= -->
+
+<div
+    class="munambam-export-overlay"
+    id="exportModal"
+    aria-hidden="true"
+>
+
+    <div
+        class="munambam-export-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="exportTitle"
+    >
+
+        <div class="export-modal-head">
+
+            <div>
+
+                <span class="eyebrow">
+                    REPORT CENTRE
+                </span>
+
+                <h2 id="exportTitle">
+                    Export Reports
+                </h2>
+
+                <p>
+                    Choose the report and format you need.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="export-close"
+                id="exportClose"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="export-modal-body">
+
+            <label class="export-field">
+
+                <span>
+                    REPORT
+                </span>
+
+                <select id="exportReport">
+
+                    <option value="overview">
+                        Overview / Sales
+                    </option>
+
+                    <option value="products">
+                        Products
+                    </option>
+
+                    <option value="orders">
+                        Orders
+                    </option>
+
+                    <option value="customers">
+                        Customers
+                    </option>
+
+                    <option value="payments">
+                        Payments
+                    </option>
+
+                    <option value="inventory">
+                        Inventory
+                    </option>
+
+                    <option value="coupons">
+                        Coupons
+                    </option>
+
+                    <option value="reviews">
+                        Reviews
+                    </option>
+
+                    <option value="delivery">
+                        Delivery
+                    </option>
+
+                    <option value="audit">
+                        Audit Logs
+                    </option>
+
+                </select>
+
+            </label>
+
+
+            <div class="export-field">
+
+                <span>
+                    FORMAT
+                </span>
+
+
+                <div class="export-format-grid">
+
+                    <label class="export-format">
+
+                        <input
+                            type="radio"
+                            name="exportFormat"
+                            value="xlsx"
+                            checked
+                        >
+
+                        <strong>
+                            Excel
+                        </strong>
+
+                        <small>
+                            .xlsx
+                        </small>
+
+                    </label>
+
+
+                    <label class="export-format">
+
+                        <input
+                            type="radio"
+                            name="exportFormat"
+                            value="pdf"
+                        >
+
+                        <strong>
+                            PDF
+                        </strong>
+
+                        <small>
+                            .pdf
+                        </small>
+
+                    </label>
+
+
+                    <label class="export-format">
+
+                        <input
+                            type="radio"
+                            name="exportFormat"
+                            value="csv"
+                        >
+
+                        <strong>
+                            CSV
+                        </strong>
+
+                        <small>
+                            .csv
+                        </small>
+
+                    </label>
+
+
+                    <label class="export-format">
+
+                        <input
+                            type="radio"
+                            name="exportFormat"
+                            value="json"
+                        >
+
+                        <strong>
+                            JSON
+                        </strong>
+
+                        <small>
+                            .json
+                        </small>
+
+                    </label>
+
+
+                    <label class="export-format">
+
+                        <input
+                            type="radio"
+                            name="exportFormat"
+                            value="print"
+                        >
+
+                        <strong>
+                            Print
+                        </strong>
+
+                        <small>
+                            Save as PDF
+                        </small>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="export-note"
+                id="exportInfo"
+            >
+                Sales export will use the currently selected date range.
+            </div>
+
+        </div>
+
+
+        <div class="export-modal-foot">
+
+            <button
+                type="button"
+                class="export-cancel-btn"
+                id="exportCancel"
+            >
+                Cancel
+            </button>
+
+            <button
+                type="button"
+                class="export-start-btn"
+                id="exportStart"
+            >
+                Export Report
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     TOAST
+     ========================================================= -->
+
+<div
+    class="toast"
+    id="toast"
+    role="status"
+    aria-live="polite"
+></div>
+
+
+<!-- =========================================================
+     SUPABASE + ADMIN SCRIPTS
+     ========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./assets/config.js"></script>
+<script src="./assets/dashboard.js"></script>
+<script src="./assets/admin-modules.js"></script>
+<script src="./assets/settings-mobile.js"></script>
+<script src="./assets/admin-audit.js"></script>
+<script src="./assets/admin-export.js"></script>
+
+</body>
+</html>
