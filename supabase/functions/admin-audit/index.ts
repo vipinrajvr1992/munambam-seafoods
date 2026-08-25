@@ -90,6 +90,18 @@ Deno.serve(async (req) => {
     session_id = null,
   } = body as Record<string, unknown>;
 
+  const metaObj =
+    typeof metadata === "object" && metadata !== null
+      ? (metadata as Record<string, unknown>)
+      : {};
+
+  const operatorName =
+    (metaObj.operator_name && String(metaObj.operator_name)) || null;
+  const hwid = (metaObj.hwid && String(metaObj.hwid)) || null;
+  const platform = (metaObj.platform && String(metaObj.platform)) || null;
+  const screen = (metaObj.screen && String(metaObj.screen)) || null;
+  const timezone = (metaObj.timezone && String(metaObj.timezone)) || null;
+
   const forwarded =
     req.headers.get("x-forwarded-for") ||
     req.headers.get("x-real-ip") ||
@@ -120,7 +132,14 @@ Deno.serve(async (req) => {
     description,
     old_data,
     new_data,
-    metadata,
+    metadata: {
+      ...metaObj,
+      operator_name: operatorName,
+      hwid,
+      platform,
+      screen,
+      timezone,
+    },
     ip_address: ipAddress,
     user_agent: userAgent,
     device_id,
@@ -140,7 +159,7 @@ Deno.serve(async (req) => {
       entity_type: moduleName,
       entity_id: row.target_id,
       metadata: {
-        ...(typeof metadata === "object" && metadata ? metadata : {}),
+        ...metaObj,
         device_id,
         session_id,
         result: row.result,
@@ -159,17 +178,22 @@ Deno.serve(async (req) => {
         <h2 style="margin:0 0 8px">Munambam Seafoods — Admin login</h2>
         <p style="color:#5b6f88;margin:0 0 16px">A successful admin sign-in was recorded.</p>
         <table style="width:100%;border-collapse:collapse;font-size:14px">
-          <tr><td style="padding:8px 0;color:#5b6f88">Email</td><td style="padding:8px 0"><strong>${escapeHtml(user.email || "—")}</strong></td></tr>
+          <tr><td style="padding:8px 0;color:#5b6f88">Operator</td><td style="padding:8px 0"><strong>${escapeHtml(operatorName || "—")}</strong></td></tr>
+          <tr><td style="padding:8px 0;color:#5b6f88">Auth email</td><td style="padding:8px 0"><strong>${escapeHtml(user.email || "—")}</strong></td></tr>
           <tr><td style="padding:8px 0;color:#5b6f88">User ID</td><td style="padding:8px 0">${escapeHtml(user.id)}</td></tr>
           <tr><td style="padding:8px 0;color:#5b6f88">Time (IST)</td><td style="padding:8px 0">${escapeHtml(when)}</td></tr>
           <tr><td style="padding:8px 0;color:#5b6f88">IP</td><td style="padding:8px 0">${escapeHtml(ipAddress || "—")}</td></tr>
-          <tr><td style="padding:8px 0;color:#5b6f88">Device</td><td style="padding:8px 0">${escapeHtml(String(device_id || "—"))}</td></tr>
+          <tr><td style="padding:8px 0;color:#5b6f88">Device ID</td><td style="padding:8px 0">${escapeHtml(String(device_id || "—"))}</td></tr>
+          <tr><td style="padding:8px 0;color:#5b6f88">HWID</td><td style="padding:8px 0">${escapeHtml(hwid || "—")}</td></tr>
+          <tr><td style="padding:8px 0;color:#5b6f88">Platform</td><td style="padding:8px 0">${escapeHtml(platform || "—")}</td></tr>
+          <tr><td style="padding:8px 0;color:#5b6f88">Screen</td><td style="padding:8px 0">${escapeHtml(screen || "—")}</td></tr>
+          <tr><td style="padding:8px 0;color:#5b6f88">Timezone</td><td style="padding:8px 0">${escapeHtml(timezone || "—")}</td></tr>
         </table>
-        <p style="margin-top:20px;font-size:12px;color:#8aa0b8">If this was not you, change the admin password immediately.</p>
+        <p style="margin-top:20px;font-size:12px;color:#8aa0b8">If this was not you, change the admin password immediately. Operator name is self-selected; IP + HWID identify the device.</p>
       </div>`;
 
     try {
-      await fetch("https://api.resend.com/emails", {
+      const res = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${resendKey}`,
@@ -180,12 +204,16 @@ Deno.serve(async (req) => {
             Deno.env.get("RESEND_FROM") ||
             "Munambam Admin <onboarding@resend.dev>",
           to: [NOTIFY_EMAIL],
-          subject: `Admin login: ${user.email || "admin"} — Munambam Seafoods`,
+          subject: `Admin login: ${operatorName || user.email || "admin"} — Munambam Seafoods`,
           html,
         }),
       });
-    } catch (_) {
-      // never fail audit because email failed
+      if (!res.ok) {
+        const errText = await res.text().catch(() => "");
+        console.error("Resend failed:", res.status, errText);
+      }
+    } catch (e) {
+      console.error("Resend exception:", e);
     }
   }
 
