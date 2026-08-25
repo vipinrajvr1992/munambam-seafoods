@@ -170,98 +170,71 @@
             scroll-behavior: smooth;
         }
 
+
         /* =========================================================
-   CUSTOM FISH CURSOR — DESKTOP / FINE POINTER ONLY
-   Real fixed fish element follows the pointer.
-   The browser cursor is disabled across interactive states,
-   preventing fallback to the default arrow during hold/click/focus.
-   ========================================================= */
-html,
-body {
-    cursor: none !important;
-}
+           CUSTOM CURSOR — SAME WORKING FISH CURSOR
+           Desktop/fine-pointer only.
+        ========================================================= */
+        @media (hover: hover) and (pointer: fine) {
+            html,
+            body,
+            body *,
+            body *::before,
+            body *::after,
+            a,
+            a:link,
+            a:visited,
+            a:hover,
+            a:active,
+            a:focus,
+            button,
+            button:hover,
+            button:active,
+            button:focus,
+            input,
+            textarea,
+            select,
+            label,
+            summary,
+            [role="button"],
+            [onclick],
+            [tabindex],
+            .btn {
+                cursor: none !important;
+            }
 
-@media (hover: hover) and (pointer: fine) {
-    html,
-    body,
-    body *,
-    body *::before,
-    body *::after,
-    a,
-    a:link,
-    a:visited,
-    a:hover,
-    a:active,
-    a:focus,
-    button,
-    button:hover,
-    button:active,
-    button:focus,
-    input,
-    textarea,
-    select,
-    label,
-    summary,
-    [role="button"],
-    [onclick],
-    [tabindex] {
-        cursor: none !important;
-    }
+            #fish-cursor {
+                display: block !important;
+            }
+        }
 
-    #fish-cursor {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-}
+        /* =========================================================
+           CUSTOM FISH CURSOR
+        ========================================================= */
 
-#fish-cursor {
-    position: fixed !important;
-    left: 0;
-    top: 0;
-    width: 44px;
-    height: 27px;
-    pointer-events: none !important;
-    z-index: 2147483647 !important;
-    transform: translate3d(-6px, -14px, 0);
-    will-change: transform;
-}
+        #fish-cursor {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 44px;
+            height: 27px;
+            pointer-events: none;
+            z-index: 2147483647;
+            transform: translate3d(-6px,-14px,0);
+            will-change: transform;
+            display: block;
+            visibility: visible;
+            opacity: 1;
+        }
 
-#fish-cursor svg {
-    display: block;
-    width: 44px;
-    height: 27px;
-    filter:
-        drop-shadow(0 1px 0 rgba(18,24,32,.95))
-        drop-shadow(0 2px 2px rgba(18,24,32,.72))
-        drop-shadow(0 5px 6px rgba(0,0,0,.42))
-        drop-shadow(0 9px 10px rgba(0,0,0,.20));
-}
+        #fish-cursor svg {
+            display: block;
+            width: 44px;
+            height: 27px;
 
-@media (hover: none) and (pointer: coarse) {
-    html,
-    body,
-    body *,
-    body *::before,
-    body *::after,
-    a,
-    button,
-    input,
-    textarea,
-    select,
-    label,
-    summary,
-    [role="button"],
-    [onclick],
-    [tabindex] {
-        cursor: auto !important;
-    }
-
-    #fish-cursor {
-        display: none !important;
-    }
-}
-
+            /* FIX: one tight shadow only — removes the old halo/stacked shadow */
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,.58));
+        }
 
 
 
@@ -1927,33 +1900,27 @@ body {
 
 
         /* =========================================================
-   TOUCH DEVICES
-   ========================================================= */
-@media (hover:none) and (pointer:coarse) {
-    html,
-    body,
-    body *,
-    body *::before,
-    body *::after,
-    a,
-    button,
-    input,
-    textarea,
-    select,
-    label,
-    summary,
-    [role="button"],
-    [onclick],
-    [tabindex] {
-        cursor: auto !important;
-    }
+           TOUCH DEVICES
+        ========================================================= */
 
-    #fish-cursor {
-        display: none !important;
-    }
-}
+        @media (hover:none) and (pointer:coarse) {
 
+            html,
+            html *,
+            html *::before,
+            html *::after,
+            body,
+            a,
+            button {
+                cursor:
+                    auto !important;
+            }
 
+            #fish-cursor {
+                display:
+                    none;
+            }
+        }
 
 
         /* =========================================================
@@ -2953,61 +2920,6 @@ body {
     ========================================================= -->
 
     <script>
-/* =========================================================
-   MUNAMBAM SEAFOODS — FISH CURSOR FOLLOWER
-   Desktop/fine pointer only.
-   ========================================================= */
-(() => {
-    "use strict";
-
-    const cursor = document.getElementById("fish-cursor");
-    if (!cursor) return;
-
-    const finePointer = window.matchMedia(
-        "(hover: hover) and (pointer: fine)"
-    );
-
-    const updateMode = () => {
-        if (finePointer.matches) {
-            cursor.style.display = "block";
-            cursor.style.visibility = "visible";
-            cursor.style.opacity = "1";
-        } else {
-            cursor.style.display = "none";
-        }
-    };
-
-    updateMode();
-
-    if (typeof finePointer.addEventListener === "function") {
-        finePointer.addEventListener("change", updateMode);
-    } else if (typeof finePointer.addListener === "function") {
-        finePointer.addListener(updateMode);
-    }
-
-    let x = 0;
-    let y = 0;
-    let framePending = false;
-
-    document.addEventListener("mousemove", (event) => {
-        if (!finePointer.matches) return;
-
-        x = event.clientX;
-        y = event.clientY;
-
-        if (framePending) return;
-        framePending = true;
-
-        requestAnimationFrame(() => {
-            cursor.style.transform =
-                "translate3d(" + (x - 6) + "px," + (y - 14) + "px,0)";
-            framePending = false;
-        });
-    }, { passive: true });
-})();
-</script>
-
-<script>
 
         (() => {
 
@@ -3050,87 +2962,61 @@ body {
 
             /* =====================================================
                CUSTOM CURSOR
-               Desktop: system cursor = gold fish via CSS cursor:url
-               (same SVG design). cursor:none cannot survive HOLD in
-               Chrome; cursor:url is the OS cursor so HOLD/click never
-               falls back to the default arrow.
-               DOM #fish-cursor is hidden on desktop (CSS).
-               Touch/mobile: unchanged.
+               Same working DOM fish cursor as the About page.
             ===================================================== */
+
+            const cursor =
+                document.getElementById(
+                    "fish-cursor"
+                );
 
             const mouseDevice =
                 window.matchMedia(
-                    "(min-width: 1025px) and (hover:hover) and (pointer:fine)"
+                    "(hover:hover) and (pointer:fine)"
                 ).matches;
 
-            if (mouseDevice) {
+            if (
+                cursor &&
+                mouseDevice
+            ) {
+                let x = 0;
+                let y = 0;
+                let frame = false;
 
-                const FISH_CURSOR =
-                    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='27' viewBox='0 0 50 30' fill='none'%3E%3Cpath d='M5 15Q25-5 45 25M5 15Q25 35 45 5' stroke='%23e0bc68' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M15 8.5Q18 15 15 21.5' stroke='%23e0bc68' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='10' cy='14.5' r='1.5' fill='%23e0bc68'/%3E%3C/svg%3E\") 8 13, none";
+                document.addEventListener(
+                    "mousemove",
+                    (event) => {
+                        x = event.clientX;
+                        y = event.clientY;
 
-                /* Inject lock after all page CSS so it always wins */
-                if (!document.getElementById("munambam-cursor-lock")) {
-                    const lockStyle = document.createElement("style");
-                    lockStyle.id = "munambam-cursor-lock";
-                    lockStyle.textContent = `
-                        @media (min-width: 1025px) {
-                            html, body, *, *::before, *::after {
-                                cursor: ${FISH_CURSOR} !important;
-                            }
-                            #fish-cursor {
-                                display: none !important;
-                            }
+                        if (frame) {
+                            return;
                         }
-                    `;
-                    document.head.appendChild(lockStyle);
-                }
 
-                const applyFishCursor = () => {
-                    document.documentElement.style.setProperty(
-                        "cursor",
-                        FISH_CURSOR,
-                        "important"
-                    );
-                    if (document.body) {
-                        document.body.style.setProperty(
-                            "cursor",
-                            FISH_CURSOR,
-                            "important"
+                        frame = true;
+
+                        requestAnimationFrame(
+                            () => {
+                                cursor.style.transform =
+                                    `translate3d(
+                                        ${x - 6}px,
+                                        ${y - 14}px,
+                                        0
+                                    )`;
+
+                                frame = false;
+                            }
                         );
+                    },
+                    {
+                        passive: true
                     }
-                };
-
-                applyFishCursor();
-
-                /* Re-apply on interaction so nothing can strip the fish */
-                [
-                    "mousedown",
-                    "mouseup",
-                    "pointerdown",
-                    "pointerup",
-                    "click",
-                    "auxclick",
-                    "focusin",
-                    "mouseover"
-                ].forEach((evtName) => {
-                    document.addEventListener(
-                        evtName,
-                        applyFishCursor,
-                        { capture: true, passive: true }
-                    );
-                });
-
-                window.addEventListener(
-                    "focus",
-                    applyFishCursor,
-                    { passive: true }
                 );
-
             }
-
 
             /* =====================================================
                MOVING SEA CREATURES
+            
             ===================================================== */
 
             const layer =
