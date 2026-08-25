@@ -151,35 +151,99 @@
 
     <style>
 
-/* Hide system cursor everywhere — only custom fish cursor is visible */
-html, body, * {
+/* =========================================================
+   MUNAMBAM SEAFOODS — CUSTOM FISH CURSOR
+   Desktop/fine pointer: fish cursor only.
+   Touch/coarse pointer: native cursor fallback.
+   ========================================================= */
+html,
+body {
     cursor: none !important;
 }
-html, body {
-    cursor: none !important;
+
+@media (hover: hover) and (pointer: fine) {
+    html,
+    body,
+    body *,
+    body *::before,
+    body *::after,
+    a,
+    a:link,
+    a:visited,
+    a:hover,
+    a:active,
+    a:focus,
+    button,
+    button:hover,
+    button:active,
+    button:focus,
+    input,
+    textarea,
+    select,
+    label,
+    summary,
+    [role="button"],
+    [onclick],
+    [tabindex],
+    .btn,
+    .filter-btn,
+    .offer-btn {
+        cursor: none !important;
+    }
+
+    #fish-cursor {
+        display: block !important;
+    }
 }
-a, button, input, select, textarea, label, summary,
-[role="button"], [onclick], .btn, .filter-btn, .offer-btn {
-    cursor: none !important;
-}
+
 #fish-cursor {
     position: fixed !important;
-    left: 0; top: 0;
-    width: 44px; height: 27px;
+    left: 0;
+    top: 0;
+    width: 44px;
+    height: 27px;
     pointer-events: none !important;
     z-index: 2147483647 !important;
     transform: translate3d(-6px, -14px, 0);
     will-change: transform;
 }
+
 #fish-cursor svg {
     display: block;
-    width: 44px; height: 27px;
+    width: 44px;
+    height: 27px;
     filter:
         drop-shadow(0 1px 0 rgba(18,24,32,.95))
         drop-shadow(0 2px 2px rgba(18,24,32,.72))
         drop-shadow(0 5px 6px rgba(0,0,0,.42))
         drop-shadow(0 9px 10px rgba(0,0,0,.20));
 }
+
+@media (hover: none) and (pointer: coarse) {
+    html,
+    body,
+    body *,
+    body *::before,
+    body *::after,
+    a,
+    button,
+    input,
+    textarea,
+    select,
+    label,
+    summary,
+    [role="button"],
+    [onclick],
+    [tabindex] {
+        cursor: auto !important;
+    }
+
+    #fish-cursor {
+        display: none !important;
+    }
+}
+
+
 
 
 
@@ -222,7 +286,12 @@ a, button, input, select, textarea, label, summary,
             color: var(--text);
             background: var(--navy);
             overflow-x: hidden;
-            cursor: none;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            body {
+                cursor: none !important;
+            }
         }
 
         a, button, input, textarea, select {
@@ -806,12 +875,26 @@ a, button, input, select, textarea, label, summary,
         }
 
         @media (hover:none) and (pointer:coarse) {
-            #fish-cursor {
-                display: none;
+            html,
+            body,
+            body *,
+            body *::before,
+            body *::after,
+            a,
+            button,
+            input,
+            textarea,
+            select,
+            label,
+            summary,
+            [role="button"],
+            [onclick],
+            [tabindex] {
+                cursor: auto !important;
             }
 
-            body, a, button, select {
-                cursor: auto !important;
+            #fish-cursor {
+                display: none !important;
             }
         }
 
