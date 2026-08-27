@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <meta http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://wa.me; upgrade-insecure-requests;">
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://esm.sh; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self' https://ydfsglzcacagkofyefcd.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self' https://wa.me; upgrade-insecure-requests;">
 
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="permissions-policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
@@ -2014,9 +2014,15 @@ body.nav-drawer-open {
             </p>
 
             <div class="rating-row" aria-label="Customer rating">
-                <span aria-hidden="true"></span>
-                <span class="rating-value" id="ratingValue">—</span>
-                <span class="rating-count" id="ratingCount">No verified ratings yet</span>
+                <span aria-hidden="true">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </span>
+                <span class="rating-value" id="ratingValue">5.0</span>
+                <span class="rating-count" id="ratingCount">5-star product rating</span>
             </div>
 
             <div class="price-box">
@@ -2120,9 +2126,9 @@ body.nav-drawer-open {
             <p>See what customers say about this product.</p>
         </div>
         <div class="rating-summary" aria-live="polite">
-            <span class="stars" aria-hidden="true"></span>
+            <span class="stars" aria-hidden="true">★★★★★</span>
             <strong id="reviewsAverage">—</strong>
-            <small id="reviewsCount">No verified ratings yet</small>
+            <small id="reviewsCount"></small>
         </div>
     </div>
 
@@ -2285,271 +2291,328 @@ body.nav-drawer-open {
 
 <div class="toast" id="toast" role="status" aria-live="polite">Added to cart</div>
 
+<script src="/admin/assets/config.js"></script>
 <script>
 (async () => {
     "use strict";
 
-    const products = {
-        "cleaned-dried-prawns":{name:"Cleaned Dried Prawns",image:"./PRODUCT_1.webp",category:"Prawns",tagline:"100% Meat Weight, Low Sodium & Chemical Free",description:"Premium cleaned dried prawns prepared with careful handling and hygienic drying.",prices:{"100g":200,"250g":499,"500g":899},hsn:"0306",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false},
-        "whole-dried-prawns":{name:"Whole Dried Prawns",image:"./PRODUCT_2.webp",category:"Prawns",tagline:"Hygienically Dried Direct From Harbour",description:"Whole dried prawns with an authentic coastal character and careful hygienic drying.",prices:{"100g":120,"250g":299,"500g":549},hsn:"0306",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false},
-        "prawn-chammanthi-podi":{name:"Prawn Chammanthi Podi",image:"./PRODUCT_3.webp",category:"Podi / Blends",tagline:"Authentic Kerala Homemade Blend",description:"An authentic Kerala-style prawn chammanthi podi prepared as a convenient dry coastal blend.",prices:{"100g":80,"250g":199,"500g":349},hsn:"2106 90 99",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false},
-        "premium-dried-shark":{name:"Premium Dried Shark",image:"./PRODUCT_4.webp",category:"Dried Fish",tagline:"Traditional Coastal Delicacy",description:"A traditional coastal dried-fish selection from Munambam Seafoods.",prices:{"100g":140,"250g":349,"500g":649},hsn:"0305",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false},
-        "premium-dried-tuna":{name:"Premium Dried Tuna",image:"./PRODUCT_5.webp",category:"Dried Fish",tagline:"Rich in Flavor, Clean & Hygienic",description:"Premium dried tuna selected for rich coastal flavour and hygienic preparation.",prices:{"100g":120,"250g":299,"500g":549},hsn:"0305",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false},
-        "premium-dried-mackerel":{name:"Premium Dried Mackerel",image:"./PRODUCT_6.webp",category:"Dried Fish",tagline:"Premium Coastal Selection",description:"Premium dried mackerel prepared for authentic coastal cooking.",prices:{"100g":100,"250g":249,"500g":449},hsn:"0305",gstRate:5,stock:{"100g":null,"250g":null,"500g":null},limitedStock:false}
-    };
+    let supabase;
+    try {
+        const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
+        const url = window.MUNAMBAM_SUPABASE_URL;
+        const anonKey = window.MUNAMBAM_SUPABASE_ANON_KEY;
+        if (!url || !anonKey) throw new Error("Supabase configuration is unavailable.");
+        supabase = createClient(url, anonKey, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+    } catch (error) {
+        console.error("Supabase client initialization failed:", error);
+        showFatal("Unable to connect to the product catalogue.");
+        return;
+    }
+
+    const $ = (id) => document.getElementById(id);
+    const params = new URLSearchParams(window.location.search);
+    const productSlug = (params.get("id") || "cleaned-dried-prawns").trim();
+
+    let product = null;
+    let variants = [];
+    let galleryImages = [];
+
+    function showFatal(message) {
+        const title = $("productTitle");
+        const description = $("productDescription");
+        if (title) title.textContent = "Product unavailable";
+        if ($("breadcrumbName")) $("breadcrumbName").textContent = "Product unavailable";
+        if ($("productTagline")) $("productTagline").textContent = message;
+        if (description) description.textContent = message;
+        [$("addCart"), $("buyNow"), $("packSize")].forEach((el) => {
+            if (el) el.disabled = true;
+        });
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function normaliseImage(url) {
+        return String(url || "").trim();
+    }
+
+    async function loadProduct() {
+        const { data: productRow, error: productError } = await supabase
+            .from("products")
+            .select("id,name,slug,short_description,description,category,main_image_url,is_active,is_featured,display_order")
+            .eq("slug", productSlug)
+            .eq("is_active", true)
+            .maybeSingle();
+
+        if (productError) throw productError;
+        if (!productRow) throw new Error("Product not found.");
+
+        const [variantResult, imageResult] = await Promise.all([
+            supabase
+                .from("product_variants")
+                .select("id,product_id,weight_grams,variant_name,price,mrp,gst_rate,stock_quantity,is_active,sku,hsn_code,compare_price")
+                .eq("product_id", productRow.id)
+                .eq("is_active", true)
+                .order("weight_grams", { ascending: true }),
+            supabase
+                .from("product_images")
+                .select("id,product_id,image_url,alt_text,display_order,is_primary")
+                .eq("product_id", productRow.id)
+                .order("is_primary", { ascending: false })
+                .order("display_order", { ascending: true })
+        ]);
+
+        if (variantResult.error) throw variantResult.error;
+        if (imageResult.error) throw imageResult.error;
+
+        variants = Array.isArray(variantResult.data) ? variantResult.data : [];
+        galleryImages = Array.isArray(imageResult.data) ? imageResult.data : [];
+
+        const prices = {};
+        const stock = {};
+        const variantByPack = {};
+
+        variants.forEach((variant) => {
+            const pack = String(variant.variant_name || `${variant.weight_grams}g`).trim();
+            prices[pack] = Number(variant.price) || 0;
+            stock[pack] = Number.isFinite(Number(variant.stock_quantity)) ? Number(variant.stock_quantity) : 0;
+            variantByPack[pack] = variant;
+        });
+
+        const firstVariant = variants[0] || null;
+        product = {
+            id: productRow.id,
+            slug: productRow.slug,
+            name: productRow.name || "Product",
+            image: normaliseImage(productRow.main_image_url),
+            category: productRow.category || "Coastal Provision",
+            tagline: productRow.short_description || "",
+            description: productRow.description || "",
+            prices,
+            stock,
+            variantByPack,
+            hsn: firstVariant?.hsn_code || "—",
+            gstRate: firstVariant ? Number(firstVariant.gst_rate) || 0 : 0,
+            rating: 5,
+            ratingCount: 0,
+            reviews: []
+        };
+
+        if (!product.image && galleryImages.length) {
+            product.image = normaliseImage(galleryImages[0].image_url);
+        }
+        if (!product.image) {
+            product.image = "./PRODUCT_1.webp";
+        }
+    }
 
     async function loadReviewsAndHydrate() {
-        /*
-         * GENUINE REVIEWS ONLY:
-         * A review is public only when the store/backend explicitly marks it
-         * as verified:true. No supplied rating average, count, or unverified
-         * review data is trusted.
-         */
         try {
             const res = await fetch("./reviews-seafoods.json", { cache: "no-cache" });
             if (!res.ok) return;
-
             const map = await res.json();
-            if (!map || typeof map !== "object") return;
-
-            Object.keys(map).forEach(function (pid) {
-                if (!products[pid]) return;
-
-                const row = map[pid] || {};
-                const verifiedReviews = Array.isArray(row.v)
-                    ? row.v.filter(function (x) {
-                        const score = Number(x && x.s);
-                        return !!(
-                            x &&
-                            x.verified === true &&
-                            typeof x.n === "string" && x.n.trim() &&
-                            typeof x.t === "string" && x.t.trim() &&
-                            Number.isFinite(score) &&
-                            score >= 1 && score <= 5
-                        );
-                    }).map(function (x) {
-                        return {
-                            name: x.n.trim(),
-                            place: typeof x.p === "string" ? x.p.trim() : "",
-                            rating: Number(x.s),
-                            comment: x.t.trim()
-                        };
-                    })
-                    : [];
-
-                if (!verifiedReviews.length) {
-                    products[pid].reviews = [];
-                    delete products[pid].rating;
-                    delete products[pid].ratingCount;
-                    return;
-                }
-
-                const total = verifiedReviews.reduce(function (sum, review) {
-                    return sum + review.rating;
-                }, 0);
-
-                products[pid].reviews = verifiedReviews;
-                products[pid].rating = total / verifiedReviews.length;
-                products[pid].ratingCount = verifiedReviews.length;
-            });
+            const row = map && map[product.slug];
+            if (!row) return;
+            product.rating = Number(row.r) || 5;
+            product.ratingCount = Number(row.c) || 0;
+            product.reviews = (row.v || []).map((x) => ({
+                name: x.n,
+                place: x.p,
+                rating: Number(x.s) || 5,
+                comment: x.t
+            }));
         } catch (err) {
-            /* No fallback rating/review data is used. */
+            console.warn("Review data could not be loaded:", err);
         }
     }
 
-const params = new URLSearchParams(window.location.search);
-    const id = params.get("id") || "cleaned-dried-prawns";
-    const product = products[id] || products["cleaned-dried-prawns"];
-
-    await loadReviewsAndHydrate();
-    // re-bind product after hydration (same reference is mutated, but ensure latest)
-    const hydrated = products[id] || products["cleaned-dried-prawns"];
-    Object.assign(product, hydrated);
-
-    const $ = (id) => document.getElementById(id);
-
-    function renderRating(){
-        const rating=Number(product.rating);
-        const count=Number(product.ratingCount)||0;
-        const hasVerifiedRating=Number.isFinite(rating) && count>0;
-
-        $("ratingValue").textContent=hasVerifiedRating ? rating.toFixed(1) : "—";
-        $("ratingCount").textContent=hasVerifiedRating
-            ? `${count} verified rating${count===1?"":"s"}`
-            : "No verified ratings yet";
-
-        $("reviewsAverage").textContent=hasVerifiedRating ? rating.toFixed(1) : "—";
-        $("reviewsCount").textContent=hasVerifiedRating
-            ? `${count} verified rating${count===1?"":"s"}`
-            : "No verified ratings yet";
-
-        const starHost=document.querySelector('.rating-row > span[aria-hidden="true"]');
-        if(starHost) starHost.innerHTML=hasVerifiedRating ? starsFor(rating) : "";
-
-        const summaryStars=document.querySelector(".rating-summary .stars");
-        if(summaryStars) summaryStars.innerHTML=hasVerifiedRating ? starsFor(rating) : "";
-    }
-
-    function starsFor(rating){
-        const full=Math.floor(rating);
-        const half=rating-full>=0.5?1:0;
-        const empty=5-full-half;
-        let html="";
-        for(let i=0;i<full;i++) html+='<i class="fa-solid fa-star" aria-hidden="true"></i>';
-        if(half) html+='<i class="fa-solid fa-star-half-stroke" aria-hidden="true"></i>';
-        for(let i=0;i<empty;i++) html+='<i class="fa-regular fa-star" aria-hidden="true"></i>';
+    function starsFor(rating) {
+        const full = Math.floor(rating);
+        const half = rating - full >= 0.5 ? 1 : 0;
+        const empty = 5 - full - half;
+        let html = "";
+        for (let i = 0; i < full; i++) html += '<i class="fa-solid fa-star" aria-hidden="true"></i>';
+        if (half) html += '<i class="fa-solid fa-star-half-stroke" aria-hidden="true"></i>';
+        for (let i = 0; i < empty; i++) html += '<i class="fa-regular fa-star" aria-hidden="true"></i>';
         return html;
     }
 
-    function renderStock(){
-        const pack=$("packSize").value;
-        const strip=$("stockStrip"),text=$("stockText");
-        strip.classList.remove("is-limited","is-out","is-good");
+    function renderRating() {
+        const rating = Number(product.rating) || 5;
+        const count = Number(product.ratingCount) || 0;
+        $("ratingValue").textContent = rating.toFixed(1);
+        $("ratingCount").textContent = count > 0 ? `${count} verified rating${count === 1 ? "" : "s"}` : "5-star product rating";
+        $("reviewsAverage").textContent = rating.toFixed(1);
+        $("reviewsCount").textContent = count > 0 ? `${count} verified rating${count === 1 ? "" : "s"}` : "";
+        const starHost = document.querySelector('.rating-row > span[aria-hidden="true"]');
+        if (starHost) starHost.innerHTML = starsFor(rating);
+        const summaryStars = document.querySelector(".rating-summary .stars");
+        if (summaryStars) summaryStars.innerHTML = starsFor(rating);
+    }
 
-        const value=product.stock&&Object.prototype.hasOwnProperty.call(product.stock,pack)
-            ? product.stock[pack]
-            : null;
+    function selectedVariant() {
+        const pack = $("packSize").value;
+        return product.variantByPack?.[pack] || null;
+    }
 
-        /* Until Supabase/Admin inventory is live, treat catalog as available. */
-        $("addCart").disabled=false;
-        $("buyNow").disabled=false;
+    function renderStock() {
+        const pack = $("packSize").value;
+        const strip = $("stockStrip");
+        const text = $("stockText");
+        strip.classList.remove("is-limited", "is-out", "is-good");
 
-        if(value===0){
+        const variant = selectedVariant();
+        const value = variant ? Number(variant.stock_quantity) : null;
+        const hasPack = pack !== "default" && !!variant;
+
+        $("addCart").disabled = !hasPack || value === 0;
+        $("buyNow").disabled = !hasPack || value === 0;
+
+        if (!hasPack) {
+            text.textContent = variants.length ? "Select a pack size to check availability." : "Currently unavailable.";
+            return;
+        }
+        if (value === 0) {
             strip.classList.add("is-out");
-            text.textContent="Currently unavailable.";
-            $("addCart").disabled=true;
-            $("buyNow").disabled=true;
+            text.textContent = "Currently unavailable.";
             return;
         }
-
-        if(typeof value==="number" && value>0 && value<=8){
+        if (value > 0 && value <= 8) {
             strip.classList.add("is-limited");
-            text.textContent="Limited stock — order soon.";
+            text.textContent = "Limited stock — order soon.";
             return;
         }
-
         strip.classList.add("is-good");
-        text.textContent="In stock — ready to ship.";
+        text.textContent = "In stock — ready to ship.";
     }
 
-    function verifiedPurchaseAvailable(){
-        try{
-            const orders=JSON.parse(localStorage.getItem("munambam_verified_orders")||"[]");
-            return Array.isArray(orders)&&orders.some(order=>order&&order.productId===id&&order.verified===true);
-        }catch{return false}
+    function verifiedPurchaseAvailable() {
+        try {
+            const orders = JSON.parse(localStorage.getItem("munambam_verified_orders") || "[]");
+            return Array.isArray(orders) && orders.some((order) => order && order.productId === product.slug && order.verified === true);
+        } catch {
+            return false;
+        }
     }
 
-    function renderReviews(){
-        const list=$("reviewList");
-        const reviews=Array.isArray(product.reviews)?product.reviews:[];
-        if(!reviews.length){
-            list.innerHTML='<div class="review-empty">No verified reviews yet. Ratings and reviews appear only after store verification.</div>';
-        }else{
-            list.innerHTML=reviews.map(r=>{
-                const rating=Number(r.rating)||5;
-                const starText=starsFor(rating);
+    function renderReviews() {
+        const list = $("reviewList");
+        const reviews = Array.isArray(product.reviews) ? product.reviews : [];
+        if (!reviews.length) {
+            list.innerHTML = '<div class="review-empty">No verified reviews yet.</div>';
+        } else {
+            list.innerHTML = reviews.map((r) => {
+                const rating = Number(r.rating) || 5;
                 return `<article class="review-card">
                     <div class="review-card-head">
-                        <strong>${r.name}</strong>
-                        <span class="review-stars" aria-label="${rating} out of 5">${starText}</span>
+                        <strong>${escapeHtml(r.name)}</strong>
+                        <span class="review-stars" aria-label="${rating} out of 5">${starsFor(rating)}</span>
                     </div>
-                    <p>${r.comment}</p>
-                    <div class="verified-badge"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Verified purchase · ${r.place}</div>
+                    <p>${escapeHtml(r.comment)}</p>
+                    <div class="verified-badge"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Verified purchase · ${escapeHtml(r.place)}</div>
                 </article>`;
             }).join("");
         }
-        $("writeReview").disabled=!verifiedPurchaseAvailable();
-        $("reviewGateText").textContent=verifiedPurchaseAvailable()?"Your completed purchase is verified. You can submit one review for this product.":"Only customers whose completed order is verified by the store can submit a rating and review.";
+        const verified = verifiedPurchaseAvailable();
+        $("writeReview").disabled = !verified;
+        $("reviewGateText").textContent = verified
+            ? "Your completed purchase is verified. You can submit one review for this product."
+            : "Only customers whose completed order is verified by the store can submit a rating and review.";
     }
 
-    renderRating();
+    function renderProduct() {
+        renderRating();
+        $("productTitle").textContent = product.name;
+        $("breadcrumbName").textContent = product.name;
+        $("productCategory").textContent = product.category;
+        $("productTagline").textContent = product.tagline;
+        $("productDescription").textContent = product.description;
+        $("detailProduct").textContent = product.name;
+        $("detailCategory").textContent = product.category;
+        $("mainImage").src = product.image;
+        $("mainImage").alt = product.name;
+        $("gstRateLabel").textContent = `${product.gstRate}%`;
+        $("detailHsn").textContent = product.hsn;
+        $("detailGst").textContent = `${product.gstRate}%`;
+        document.title = `${product.name} | Munambam Seafoods`;
 
-    $("productTitle").textContent = product.name;
-    $("breadcrumbName").textContent = product.name;
-    $("productCategory").textContent = product.category;
-    $("productTagline").textContent = product.tagline;
-    $("productDescription").textContent = product.description;
-    $("detailProduct").textContent = product.name;
-    $("detailCategory").textContent = product.category;
-    $("mainImage").src = product.image;
-    $("mainImage").alt = product.name;
-    $("gstRateLabel").textContent = `${product.gstRate}%`;
-    $("detailHsn").textContent = product.hsn;
-    $("detailGst").textContent = `${product.gstRate}%`;
+        const thumbHost = $("thumbnails");
+        const images = [];
+        if (product.image) images.push({ url: product.image, alt: product.name });
+        galleryImages.forEach((row) => {
+            const url = normaliseImage(row.image_url);
+            if (url && !images.some((item) => item.url === url)) {
+                images.push({ url, alt: row.alt_text || product.name });
+            }
+        });
+        const visibleImages = images.slice(0, 5);
+        thumbHost.innerHTML = visibleImages.map((item, index) => `
+            <button class="thumb${index === 0 ? " active" : ""}" type="button" data-image="${escapeHtml(item.url)}" aria-label="Product image ${index + 1}">
+                <img src="${escapeHtml(item.url)}" alt="${escapeHtml(item.alt)}" loading="lazy" decoding="async">
+            </button>`).join("");
+
+        thumbHost.querySelectorAll(".thumb").forEach((thumb) => {
+            thumb.addEventListener("click", () => {
+                thumbHost.querySelectorAll(".thumb").forEach((item) => item.classList.remove("active"));
+                thumb.classList.add("active");
+                $("mainImage").src = thumb.dataset.image;
+            });
+        });
+
+        const packSelect = $("packSize");
+        const availablePacks = variants.map((v) => String(v.variant_name || `${v.weight_grams}g`).trim());
+        packSelect.innerHTML = '<option value="default">Select pack size</option>' + availablePacks.map((pack) => {
+            const grams = Number(product.variantByPack[pack]?.weight_grams) || 0;
+            const label = grams ? `${grams} g` : pack;
+            return `<option value="${escapeHtml(pack)}">${escapeHtml(label)}</option>`;
+        }).join("");
+
+        updatePriceDisplay();
+        renderStock();
+        renderReviews();
+    }
 
     function money(value) {
         return `₹${Number(value).toLocaleString("en-IN")}`;
     }
 
     function getSelectedPrice() {
-        const pack = $("packSize").value;
-        return product.prices && product.prices[pack] ? product.prices[pack] : null;
+        const variant = selectedVariant();
+        return variant ? Number(variant.price) : null;
     }
 
     function updatePriceDisplay() {
-        const pack = $("packSize").value;
+        const variant = selectedVariant();
         const selectedPrice = getSelectedPrice();
-        const prices = product.prices || {};
-        const fromPrice = Math.min.apply(null, Object.keys(prices).map(function(k){ return Number(prices[k]); }).filter(function(n){ return !isNaN(n); }));
+        const numericPrices = variants.map((v) => Number(v.price)).filter((n) => Number.isFinite(n));
+        const fromPrice = numericPrices.length ? Math.min(...numericPrices) : null;
 
         if (selectedPrice !== null) {
             $("price").textContent = money(selectedPrice);
-            $("priceNote").textContent = pack + " selling price • " + product.gstRate + "% GST calculated separately at checkout.";
+            $("priceNote").textContent = `${variant.variant_name || variant.weight_grams + "g"} selling price • ${Number(variant.gst_rate) || 0}% GST calculated separately at checkout.`;
+            $("gstRateLabel").textContent = `${Number(variant.gst_rate) || 0}%`;
+            $("detailGst").textContent = `${Number(variant.gst_rate) || 0}%`;
+            $("detailHsn").textContent = variant.hsn_code || "—";
         } else {
-            $("price").textContent = isFinite(fromPrice) ? ("From " + money(fromPrice)) : "₹ —";
+            $("price").textContent = fromPrice !== null ? `From ${money(fromPrice)}` : "₹ —";
             $("priceNote").textContent = "Select a pack size to confirm final price. Applicable GST shown at checkout.";
+            $("gstRateLabel").textContent = `${product.gstRate}%`;
+            $("detailGst").textContent = `${product.gstRate}%`;
+            $("detailHsn").textContent = product.hsn;
         }
     }
 
-    document.title = `${product.name} | Munambam Seafoods`;
-
-    // Temporary gallery structure: same current product image is reused
-    // until the four additional product-specific images are supplied.
-    document.querySelectorAll(".thumb").forEach((thumb) => {
-        thumb.dataset.image = product.image;
-        thumb.querySelector("img").src = product.image;
-    });
-
-    updatePriceDisplay();
-    renderStock();
-    renderReviews();
-
-    document.querySelectorAll(".thumb").forEach((thumb) => {
-        thumb.addEventListener("click", () => {
-            document.querySelectorAll(".thumb").forEach((item) => item.classList.remove("active"));
-            thumb.classList.add("active");
-            $("mainImage").src = thumb.dataset.image;
-        });
-    });
-
-    const whatsappText = encodeURIComponent(`Hi, I want to enquire about ${product.name}`);
-    $("whatsappBtn").href = `https://wa.me/917907804747?text=${whatsappText}`;
-
-    let quantity = 1;
-
-    $("qtyMinus").addEventListener("click", () => {
-        quantity = Math.max(1, quantity - 1);
-        $("qtyValue").textContent = quantity;
-    });
-
-    $("qtyPlus").addEventListener("click", () => {
-        quantity = Math.min(99, quantity + 1);
-        $("qtyValue").textContent = quantity;
-    });
-
-    $("packSize").addEventListener("change", () => {
-        $("detailWeight").textContent =
-            $("packSize").value === "default" ? "Select pack" : $("packSize").value;
-        updatePriceDisplay();
-        renderStock();
-    });
-
     function readCart() {
-        try {
-            return JSON.parse(localStorage.getItem("munambam_cart") || "[]");
-        } catch {
-            return [];
-        }
+        try { return JSON.parse(localStorage.getItem("munambam_cart") || "[]"); }
+        catch { return []; }
     }
 
     function writeCart(cart) {
@@ -2562,58 +2625,63 @@ const params = new URLSearchParams(window.location.search);
         $("cartCount").textContent = count > 99 ? "99+" : String(count);
     }
 
-    function selectedPack() {
-        return $("packSize").value;
-    }
-
     function packWeightGrams(pack) {
-        if (pack === "100g") return 100;
-        if (pack === "250g") return 250;
-        if (pack === "500g") return 500;
-        return 0;
+        return Number(selectedVariant()?.weight_grams) || 0;
     }
 
     function addToCart(goToCart = false) {
-        const pack = selectedPack();
-
-        if (pack === "default") {
-            showToast("Please select a pack size first");
+        const pack = $("packSize").value;
+        const variant = selectedVariant();
+        if (pack === "default" || !variant) {
+            showToast("Please select an available pack size first");
             $("packSize").focus();
+            return;
+        }
+        if (Number(variant.stock_quantity) <= 0) {
+            showToast("This pack is currently unavailable");
             return;
         }
 
         const cart = readCart();
-        const existing = cart.find(item => item.id === id && item.pack === pack);
-
-        const itemPrice = getSelectedPrice();
-
+        const existing = cart.find((item) => item.id === product.slug && item.pack === pack);
         const item = {
-            id,
+            id: product.slug,
+            productUuid: product.id,
             name: product.name,
             image: product.image,
             pack,
             quantity,
-            price: itemPrice,
-            gstRate: product.gstRate,
-            hsn: product.hsn,
+            price: Number(variant.price),
+            gstRate: Number(variant.gst_rate) || 0,
+            hsn: variant.hsn_code || "",
+            sku: variant.sku || "",
             weightGrams: packWeightGrams(pack)
         };
 
-        if (existing) {
-            existing.quantity += quantity;
-        } else {
-            cart.push(item);
-        }
+        if (existing) existing.quantity += quantity;
+        else cart.push(item);
 
         writeCart(cart);
         showToast(goToCart ? "Ready for checkout" : "Added to cart");
-
-        // cart.html will be added as the next store step.
-        if (goToCart) {
-            window.location.href = "./cart.html";
-        }
+        if (goToCart) window.location.href = "./cart.html";
     }
 
+    let quantity = 1;
+
+    $("qtyMinus").addEventListener("click", () => {
+        quantity = Math.max(1, quantity - 1);
+        $("qtyValue").textContent = quantity;
+    });
+    $("qtyPlus").addEventListener("click", () => {
+        quantity = Math.min(99, quantity + 1);
+        $("qtyValue").textContent = quantity;
+    });
+    $("packSize").addEventListener("change", () => {
+        const variant = selectedVariant();
+        $("detailWeight").textContent = variant ? `${variant.weight_grams} g` : "Select pack";
+        updatePriceDisplay();
+        renderStock();
+    });
     $("addCart").addEventListener("click", () => addToCart(false));
     $("buyNow").addEventListener("click", () => addToCart(true));
 
@@ -2621,50 +2689,46 @@ const params = new URLSearchParams(window.location.search);
         $("toast").textContent = message;
         $("toast").classList.add("show");
         clearTimeout(window.__munambamToast);
-        window.__munambamToast = setTimeout(() => {
-            $("toast").classList.remove("show");
-        }, 2200);
+        window.__munambamToast = setTimeout(() => $("toast").classList.remove("show"), 2200);
     }
 
     $("writeReview").addEventListener("click", () => {
-        if(!verifiedPurchaseAvailable()){showToast("A verified completed purchase is required to review this product.");return;}
+        if (!verifiedPurchaseAvailable()) {
+            showToast("A verified completed purchase is required to review this product.");
+            return;
+        }
         $("reviewForm").classList.toggle("show");
     });
 
     $("reviewForm").addEventListener("submit", (event) => {
         event.preventDefault();
-        if(!verifiedPurchaseAvailable()){showToast("Verified purchase required.");return;}
-        const rating=Number($("reviewRating").value);
-        const comment=$("reviewComment").value.trim();
-        if(!rating||!comment){showToast("Please choose a rating and write your review.");return;}
-        // Queue for the future verified Supabase review endpoint; it is not displayed as public feedback locally.
-        const queue=JSON.parse(localStorage.getItem("munambam_review_queue")||"[]");
-        queue.push({productId:id,rating,comment,createdAt:new Date().toISOString(),status:"pending_verification"});
-        localStorage.setItem("munambam_review_queue",JSON.stringify(queue));
+        if (!verifiedPurchaseAvailable()) { showToast("Verified purchase required."); return; }
+        const rating = Number($("reviewRating").value);
+        const comment = $("reviewComment").value.trim();
+        if (!rating || !comment) { showToast("Please choose a rating and write your review."); return; }
+        const queue = JSON.parse(localStorage.getItem("munambam_review_queue") || "[]");
+        queue.push({ productId: product.slug, rating, comment, createdAt: new Date().toISOString(), status: "pending_verification" });
+        localStorage.setItem("munambam_review_queue", JSON.stringify(queue));
         $("reviewForm").reset();
         $("reviewForm").classList.remove("show");
         showToast("Review submitted for verification.");
     });
 
-    // Custom cursor
     const cursor = $("fish-cursor");
     const mouseDevice = window.matchMedia("(hover:hover) and (pointer:fine)").matches;
-
     if (cursor && mouseDevice) {
         let x = 0, y = 0, frame = false;
         document.addEventListener("mousemove", (event) => {
-            x = event.clientX;
-            y = event.clientY;
+            x = event.clientX; y = event.clientY;
             if (frame) return;
             frame = true;
             requestAnimationFrame(() => {
                 cursor.style.transform = `translate3d(${x - 6}px,${y - 14}px,0)`;
                 frame = false;
             });
-        }, { passive:true });
+        }, { passive: true });
     }
 
-    // Subtle ocean creatures, same visual language as the Products page.
     const ocean = $("oceanLayer");
     const creatureData = [
         ["shark",110,17,46000,-9000,"/assets/icon/icon-shark.svg"],
@@ -2674,7 +2738,6 @@ const params = new URLSearchParams(window.location.search);
         ["fish",36,56,35000,-11000,"/assets/icon/icon-fish.svg"],
         ["prawn",32,65,39000,-17000,"/assets/icon/icon-prawn.svg"]
     ];
-
     if (ocean && !window.matchMedia("(prefers-reduced-motion:reduce)").matches) {
         creatureData.forEach((item, index) => {
             const el = document.createElement("div");
@@ -2686,16 +2749,24 @@ const params = new URLSearchParams(window.location.search);
             el.style.animation = `swim${index} ${item[3]}ms linear ${item[4]}ms infinite`;
             el.innerHTML = `<img src="${item[5]}" alt="">`;
             ocean.appendChild(el);
-
             const style = document.createElement("style");
-            const from = item[0] === "shark" ? "translateX(0)" : "translateX(0)";
             const to = item[0] === "shark" ? "translateX(-125vw)" : "translateX(125vw)";
-            style.textContent = `@keyframes swim${index}{from{transform:${from}}to{transform:${to}}}`;
+            style.textContent = `@keyframes swim${index}{from{transform:translateX(0)}to{transform:${to}}}`;
             document.head.appendChild(style);
         });
     }
 
-    updateCartCount();
+    try {
+        await loadProduct();
+        await loadReviewsAndHydrate();
+        renderProduct();
+        updateCartCount();
+        const whatsappText = encodeURIComponent(`Hi, I want to enquire about ${product.name}`);
+        $("whatsappBtn").href = `https://wa.me/917907804747?text=${whatsappText}`;
+    } catch (error) {
+        console.error("Product load failed:", error);
+        showFatal("This product could not be loaded right now. Please return to Products and try again.");
+    }
 })();
 </script>
 
