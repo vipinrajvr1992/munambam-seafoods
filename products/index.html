@@ -484,11 +484,7 @@ body {
         .cart-link{position:relative;width:46px;height:46px;flex:0 0 46px;display:inline-flex;align-items:center;justify-content:center;color:var(--navy);background:rgba(6,27,58,.06);border:1px solid rgba(198,154,58,.22);border-radius:50%;text-decoration:none;transition:.2s ease}
         .cart-link:hover{background:var(--gold);transform:translateY(-2px)}
         .cart-count{position:absolute;top:-3px;right:-3px;min-width:20px;height:20px;padding:0 5px;display:grid;place-items:center;border-radius:20px;background:var(--blue);color:#fff;font-size:.64rem;font-weight:800;border:2px solid var(--cream)}
-        .card-rating{display:flex;align-items:center;justify-content:center;gap:6px;margin:-5px 0 10px;color:#f4b400;font-size:.76rem;letter-spacing:1px}
-        .card-rating .rating-label{color:#718398;font-size:.61rem;letter-spacing:0;font-weight:700}
 
-.card-rating .rating-count{color:#8a9aab;font-weight:650;margin-left:2px}
-.card-rating .rating-label{color:#5a6b7c!important;font-weight:700}
 
 
         /* FILTER / SORT */
@@ -3855,7 +3851,6 @@ footer p{
                         <div>
                             <h2>${escapeHtml(name)}</h2>
                             <p>${escapeHtml(tagline)}</p>
-                            <div class="card-rating" data-rating-slot aria-label="Product rating"><span class="stars" aria-hidden="true">★★★★★</span><span class="rating-label">—</span></div>
                             <div class="card-price">${escapeHtml(formatPrice(row))} <small>100g • 250g • 500g + applicable GST</small></div>
                         </div>
                         <a href="/products/product.html?id=${encodeURIComponent(id)}" class="btn-order" aria-label="View ${escapeHtml(name)} details">View Product</a>
@@ -4222,36 +4217,6 @@ footer p{
 </script>
 
 
-<script>
-(function(){
-  "use strict";
-  var __msq = ["eyJjbGVhbmVkLWRyaWVkLXByYXducyI6eyJyIjo0LjksImMiOjg3fSwid2hv","bGUtZHJpZWQtcHJhd25zIjp7InIiOjQuOCwiYyI6NjR9LCJwcmF3bi1jaGFt","bWFudGhpLXBvZGkiOnsiciI6NC45LCJjIjoxMTJ9LCJwcmVtaXVtLWRyaWVk","LXNoYXJrIjp7InIiOjQuOCwiYyI6NTN9LCJwcmVtaXVtLWRyaWVkLXR1bmEi","OnsiciI6NC45LCJjIjo3OH0sInByZW1pdW0tZHJpZWQtbWFja2VyZWwiOnsi","ciI6NC44LCJjIjo5MX19"];
-  function stars(r){
-    var f = Math.floor(r), h = (r - f) >= 0.5 ? 1 : 0, e = 5 - f - h, s = "";
-    for (var i = 0; i < f; i++) s += "★";
-    if (h) s += "☆";
-    for (var j = 0; j < e; j++) s += "☆";
-    return s;
-  }
-  try {
-    var data = JSON.parse(atob(__msq.join("")));
-    document.querySelectorAll("article.card[data-id]").forEach(function(card){
-      var id = card.getAttribute("data-id");
-      var d = data[id];
-      if (!d) return;
-      var slot = card.querySelector("[data-rating-slot]");
-      if (!slot) return;
-      var r = Number(d.r) || 5;
-      var c = Number(d.c) || 0;
-      slot.setAttribute("aria-label", r.toFixed(1) + " star product rating from " + c + " verified ratings");
-      var starEl = slot.querySelector(".stars");
-      var labEl = slot.querySelector(".rating-label");
-      if (starEl) starEl.textContent = stars(r);
-      if (labEl) labEl.innerHTML = r.toFixed(1) + ' <span class="rating-count">(' + c + ')</span>';
-    });
-  } catch (e) {}
-})();
-</script>
 
 <script>
 (function(){
