@@ -579,19 +579,69 @@
         `);
     }
 
-    function product(row = null) {
+    async function product(row = null) {
+        let variants = [];
+        if (row?.id) {
+            const varRes = await C.from("product_variants").select("*").eq("product_id", row.id);
+            if (!varRes.error) {
+                variants = varRes.data || [];
+            }
+        }
+
         modal(`
             <div class="module-modal-head">
                 <div><p class="eyebrow">PRODUCTS</p><h3>${row ? "Edit" : "Add"} Product</h3></div>
                 <button class="modal-close" data-close-modal type="button">×</button>
             </div>
             <form id="moduleForm" class="module-form">
+                <div class="settings-section-title"><strong>Product Information</strong></div>
                 ${F("name", "Name", row?.name || "", "text", "required")}
                 ${F("slug", "Slug", row?.slug || "", "text", "required")}
                 ${F("category", "Category", row?.category || "")}
-                ${F("main_image_url", "Image URL", row?.main_image_url || "", "url")}
                 <label><span>Short Description</span><textarea name="short_description" rows="3">${esc(row?.short_description || "")}</textarea></label>
                 <label><span>Description</span><textarea name="description" rows="5">${esc(row?.description || "")}</textarea></label>
+                
+                <div class="settings-section-title"><strong>Images</strong><span>Main image and up to 4 additional images</span></div>
+                <div class="form-grid-2">
+                    <label>
+                        <span>Main Product Image URL</span>
+                        <input name="main_image_url" type="url" value="${esc(row?.main_image_url || "")}" placeholder="https://...">
+                    </label>
+                    <label>
+                        <span>Additional Image 1 URL</span>
+                        <input name="additional_image_1_url" type="url" value="${esc(row?.additional_image_1_url || "")}" placeholder="https://...">
+                    </label>
+                    <label>
+                        <span>Additional Image 2 URL</span>
+                        <input name="additional_image_2_url" type="url" value="${esc(row?.additional_image_2_url || "")}" placeholder="https://...">
+                    </label>
+                    <label>
+                        <span>Additional Image 3 URL</span>
+                        <input name="additional_image_3_url" type="url" value="${esc(row?.additional_image_3_url || "")}" placeholder="https://...">
+                    </label>
+                    <label>
+                        <span>Additional Image 4 URL</span>
+                        <input name="additional_image_4_url" type="url" value="${esc(row?.additional_image_4_url || "")}" placeholder="https://...">
+                    </label>
+                </div>
+
+                <div class="settings-section-title"><strong>Pricing / Pack Sizes</strong><span>Manage prices for 100g, 250g, and 500g</span></div>
+                <div class="form-grid-2">
+                    <label>
+                        <span>100g Price (₹)</span>
+                        <input name="price_100g" type="number" step="0.01" min="0" value="${esc(variants.find(v => String(v.variant_name || v.size || "").includes("100"))?.price || "")}" placeholder="0.00">
+                    </label>
+                    <label>
+                        <span>250g Price (₹)</span>
+                        <input name="price_250g" type="number" step="0.01" min="0" value="${esc(variants.find(v => String(v.variant_name || v.size || "").includes("250"))?.price || "")}" placeholder="0.00">
+                    </label>
+                    <label>
+                        <span>500g Price (₹)</span>
+                        <input name="price_500g" type="number" step="0.01" min="0" value="${esc(variants.find(v => String(v.variant_name || v.size || "").includes("500"))?.price || "")}" placeholder="0.00">
+                    </label>
+                </div>
+
+                <div class="settings-section-title"><strong>Status & Display</strong></div>
                 <div class="form-grid-2">
                     ${F("display_order", "Display Order", row?.display_order ?? 0, "number", 'min="0"')}
                     <label><span>Active</span><select name="is_active"><option value="true" ${row?.is_active !== false ? "selected" : ""}>Active</option><option value="false" ${row?.is_active === false ? "selected" : ""}>Inactive</option></select></label>
@@ -604,8 +654,10 @@
         $("moduleForm").onsubmit = async event => {
             event.preventDefault();
             const f = new FormData(event.target);
-            const r = await C.rpc("admin_save_product", {
-                p_id: row?.id || null,
+            
+            const pId = row?.id || null;
+            const payload = {
+                p_id: pId,
                 p_name: f.get("name"),
                 p_slug: f.get("slug"),
                 p_short_description: f.get("short_description") || null,
@@ -615,9 +667,49 @@
                 p_display_order: Number(f.get("display_order") || 0),
                 p_is_active: f.get("is_active") === "true",
                 p_is_featured: f.get("is_featured") === "true"
-            });
+            };
+
+            const imgFields = {
+                additional_image_1_url: f.get("additional_image_1_url") || null,
+                additional_image_2_url: f.get("additional_image_2_url") || null,
+                additional_image_3_url: f.get("additional_image_3_url") || null,
+                additional_image_4_url: f.get("additional_image_4_url") || null
+            };
+
+            let r = await C.rpc("admin_save_product", payload);
             if (r.error) return toast(r.error.message, "error");
-            await audit(row ? "update" : "create", "products", row?.id || null);
+
+            let savedProductId = pId || r.data;
+
+            if (savedProductId) {
+                await C.from("products").update(imgFields).eq("id", savedProductId);
+
+                const packPrices = [
+                    { size: "100g", price: f.get("price_100g") },
+                    { size: "250g", price: f.get("price_250g") },
+                    { size: "500g", price: f.get("price_500g") }
+                ];
+
+                for (const p of packPrices) {
+                    if (p.price !== "" && p.price !== null) {
+                        const numericPrice = Number(p.price);
+                        const existingVariant = variants.find(v => String(v.variant_name || v.size || "").includes(p.size));
+                        if (existingVariant) {
+                            await C.from("product_variants").update({ price: numericPrice }).eq("id", existingVariant.id);
+                        } else {
+                            await C.from("product_variants").insert({
+                                product_id: savedProductId,
+                                variant_name: p.size,
+                                size: p.size,
+                                price: numericPrice,
+                                stock: 100
+                            });
+                        }
+                    }
+                }
+            }
+
+            await audit(row ? "update" : "create", "products", savedProductId);
             $("munambamModuleModal")?.remove();
             toast(row ? "Product updated." : "Product created.", "success");
             await load();
