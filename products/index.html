@@ -3805,9 +3805,17 @@ footer p{
                 return c.replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
             };
 
-            const imageUrl = (value) => {
+            const imageUrl = (value, fallbackOrder) => {
                 const v = String(value || "").trim();
-                if (!v) return "/assets/MUNAMBAM_Seafood_Logo_HQ.png";
+
+                if (!v) {
+                    const order = Number(fallbackOrder);
+                    if (Number.isFinite(order) && order >= 1 && order <= 6) {
+                        return `/products/PRODUCT_${order}.webp`;
+                    }
+                    return "/assets/MUNAMBAM_Seafood_Logo_HQ.png";
+                }
+
                 if (/^(https?:|data:|blob:)/i.test(v)) return v;
                 try { return new URL(v, window.location.href).href; } catch (_) { return v; }
             };
@@ -3840,7 +3848,10 @@ footer p{
                     const category = String(row.category || "").trim();
                     const filterCategory = normaliseCategory(category);
                     const tagline = String(row.short_description || row.tagline || row.description || "").trim();
-                    const image = imageUrl(row.main_image_url || row.image_url || row.image);
+                    const image = imageUrl(
+                        row.main_image_url || row.image_url || row.image,
+                        row.display_order || index + 1
+                    );
                     const article = document.createElement("article");
                     article.className = "card";
                     article.dataset.id = id;
