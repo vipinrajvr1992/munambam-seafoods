@@ -1,32 +1,7 @@
 (() => {
     "use strict";
 
-    /*
-     * ============================================================
-     * MUNAMBAM SEAFOODS — ADMIN MODULE ENGINE
-     * ============================================================
-     *
-     * Modules:
-     * Products
-     * Orders
-     * Customers
-     * Payments
-     * Inventory
-     * Coupons
-     * Reviews
-     * Delivery
-     * Audit Logs
-     * Settings
-     *
-     * Uses existing authenticated Supabase client.
-     * Does NOT use service-role keys.
-     * Existing RLS remains the security boundary.
-     * ============================================================
-     */
-
-    const LOGIN_PAGE = "/admin/login.html";
-
-    const client = window.supabase?.createClient(
+    const C = window.munambamAdminClient || window.supabase?.createClient(
         window.MUNAMBAM_SUPABASE_URL,
         window.MUNAMBAM_SUPABASE_ANON_KEY,
         {
@@ -38,2967 +13,1266 @@
         }
     );
 
+    if (!C) return;
+
     const $ = id => document.getElementById(id);
+    const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    }[c]));
 
-    let currentSection = "overview";
-    let currentRows = [];
-    let currentTable = null;
-    let currentSearch = "";
+    const money = value => new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        maximumFractionDigits: 2
+    }).format(Number(value || 0));
 
-    const PAGE_SIZE = 25;
-
-    const MODULES = {
-
-        products: {
-            title: "Products",
-            subtitle: "Manage your seafood catalogue",
-            table: "products",
-            columns: [
-                ["name", "Product"],
-                ["category", "Category"],
-                ["is_active", "Status"],
-                ["is_featured", "Featured"],
-                ["display_order", "Order"],
-                ["created_at", "Created"]
-            ]
-        },
-
-        orders: {
-            title: "Orders",
-            subtitle: "Manage customer orders",
-            table: "orders",
-            columns: [
-                ["order_number", "Order"],
-                ["customer_id", "Customer"],
-                ["total_amount", "Total"],
-                ["order_status", "Order Status"],
-                ["payment_status", "Payment"],
-                ["created_at", "Created"]
-            ]
-        },
-
-        customers: {
-            title: "Customers",
-            subtitle: "Customer records and checkout information",
-            table: "customers",
-            columns: [
-                ["full_name", "Name"],
-                ["mobile_number", "Mobile"],
-                ["email", "Email"],
-                ["city", "City"],
-                ["state", "State"],
-                ["pincode", "PIN"],
-                ["created_at", "Created"]
-            ]
-        },
-
-        payments: {
-            title: "Payments",
-            subtitle: "Payment transactions",
-            table: "payments",
-            columns: [
-                ["razorpay_payment_id", "Payment ID"],
-                ["razorpay_order_id", "Razorpay Order"],
-                ["amount", "Amount"],
-                ["method", "Method"],
-                ["status", "Status"],
-                ["paid_at", "Paid At"],
-                ["created_at", "Created"]
-            ]
-        },
-
-        inventory: {
-            title: "Inventory",
-            subtitle: "Stock levels and inventory alerts",
-            table: "inventory",
-            columns: [
-                ["variant_id", "Variant"],
-                ["stock_quantity", "Stock"],
-                ["reorder_level", "Reorder Level"],
-                ["updated_at", "Updated"]
-            ]
-        },
-
-        coupons: {
-            title: "Coupons",
-            subtitle: "Discount codes and promotional rules",
-            table: "coupons",
-            columns: []
-        },
-
-        reviews: {
-            title: "Reviews",
-            subtitle: "Customer reviews and moderation",
-            table: "reviews",
-            columns: []
-        },
-
-        delivery: {
-            title: "Delivery",
-            subtitle: "Delivery settings and charges",
-            table: "delivery_settings",
-            columns: [
-                ["name", "Name"],
-                ["min_order_amount", "Minimum Order"],
-                ["delivery_fee", "Delivery Fee"],
-                ["free_delivery_above", "Free Above"],
-                ["is_active", "Status"],
-                ["updated_at", "Updated"]
-            ]
-        },
-
-        audit: {
-            title: "Audit Logs",
-            subtitle: "Administrative activity history",
-            table: "audit_logs",
-            columns: []
-        },
-
-        settings: {
-            title: "Settings",
-            subtitle: "Administrator profile and system settings",
-            table: "profiles",
-            columns: []
-        }
-
-    };
-
-
-    /*
-     * ============================================================
-     * HELPERS
-     * ============================================================
-     */
-
-    function escapeHTML(value) {
-
-        return String(value ?? "")
-            .replace(/[&<>"']/g, char => ({
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#039;"
-            }[char]));
-
-    }
-
-
-    function money(value) {
-
-        return new Intl.NumberFormat(
-            "en-IN",
-            {
-                style: "currency",
-                currency: "INR",
-                maximumFractionDigits: 2
-            }
-        ).format(
-            Number(value || 0)
-        );
-
-    }
-
-
-    function date(value) {
-
+    const fmtDate = value => {
         if (!value) return "—";
-
         const d = new Date(value);
-
-        if (Number.isNaN(d.getTime())) {
-            return escapeHTML(value);
-        }
-
-        return d.toLocaleString(
-            "en-IN",
-            {
+        return Number.isNaN(d.getTime())
+            ? String(value)
+            : d.toLocaleString("en-IN", {
                 day: "2-digit",
                 month: "short",
                 year: "numeric",
                 hour: "2-digit",
                 minute: "2-digit"
-            }
-        );
+            });
+    };
 
-    }
-
-
-    function toast(message) {
-
-        const el = $("toast");
-
-        if (!el) {
-            alert(message);
+    const toast = (message, type = "info") => {
+        if (typeof window.toast === "function") {
+            window.toast(message, type);
             return;
         }
-
+        const el = $("toast");
+        if (!el) return;
         el.textContent = message;
         el.classList.add("show");
+        clearTimeout(window.__moduleToast);
+        window.__moduleToast = setTimeout(() => el.classList.remove("show"), 2800);
+    };
 
-        clearTimeout(
-            window.__munambamModuleToast
-        );
+    let section = "overview";
+    let rows = [];
+    let search = "";
 
-        window.__munambamModuleToast =
-            setTimeout(
-                () => el.classList.remove("show"),
-                2800
-            );
+    const META = {
+        products: ["Products", "Catalogue, status, content and ordering"],
+        orders: ["Orders", "Customer orders, payment and fulfilment"],
+        customers: ["Customers", "Customer records and order history"],
+        payments: ["Payments", "Razorpay transactions and payment status"],
+        inventory: ["Inventory", "Variant stock and manual stock adjustments"],
+        coupons: ["Coupons", "Discount codes and promotional rules"],
+        reviews: ["Reviews", "Customer reviews and moderation"],
+        delivery: ["Delivery", "Delivery settings and delivery zones"],
+        audit: ["Audit Logs", "Administrator activity, login and export history"],
+        settings: ["Settings", "Store, delivery, tax and notification settings"]
+    };
 
-    }
-
-
-    function safeClass(value) {
-
-        return String(value || "")
-            .replace(
-                /[^a-z0-9_-]/gi,
-                ""
-            )
-            .toLowerCase();
-
-    }
-
-
-    function displayValue(
-        key,
-        value
-    ) {
-
-        if (
-            value === null ||
-            value === undefined ||
-            value === ""
-        ) {
-            return "—";
-        }
-
-        if (
-            key === "total_amount" ||
-            key === "amount" ||
-            key === "delivery_fee" ||
-            key === "min_order_amount" ||
-            key === "free_delivery_above" ||
-            key === "price" ||
-            key === "mrp"
-        ) {
-            return money(value);
-        }
-
-        if (
-            key.endsWith("_at") ||
-            key === "created_at" ||
-            key === "updated_at"
-        ) {
-            return date(value);
-        }
-
-        if (
-            key === "is_active" ||
-            key === "is_featured"
-        ) {
-            return value
-                ? "Active"
-                : "Inactive";
-        }
-
-        if (
-            typeof value === "object"
-        ) {
-            try {
-                return JSON.stringify(
-                    value
-                );
-            } catch {
-                return "[object]";
-            }
-        }
-
-        return String(value);
-
-    }
-
-
-    function statusBadge(
-        value
-    ) {
-
-        const clean =
-            String(
-                value || "unknown"
-            )
-            .replace(
-                /_/g,
-                " "
-            );
-
-        return `
-            <span class="module-status ${safeClass(value)}">
-                ${escapeHTML(clean)}
-            </span>
-        `;
-
-    }
-
-
-    /*
-     * ============================================================
-     * ADMIN AUTH CHECK
-     * ============================================================
-     */
-
-    async function verifyAdmin() {
-
-        if (!client) {
-
-            throw new Error(
-                "Supabase client is not configured."
-            );
-
-        }
-
-        const {
-            data: {
-                session
-            }
-        } =
-            await client.auth.getSession();
-
+    async function auth() {
+        const { data: { session } } = await C.auth.getSession();
         if (!session) {
-
-            window.location.replace(
-                LOGIN_PAGE
-            );
-
+            location.replace("/admin/login.html");
             return false;
-
         }
 
-
-        const {
-            data: {
-                user
-            },
-            error: userError
-        } =
-            await client.auth.getUser();
-
-        if (
-            userError ||
-            !user
-        ) {
-
-            await client.auth.signOut();
-
-            window.location.replace(
-                LOGIN_PAGE
-            );
-
+        const { data: { user }, error } = await C.auth.getUser();
+        if (error || !user) {
+            await C.auth.signOut();
+            location.replace("/admin/login.html");
             return false;
-
         }
 
+        const { data: admin } = await C
+            .from("admin_users")
+            .select("user_id")
+            .eq("user_id", user.id)
+            .maybeSingle();
 
-        const {
-            data,
-            error
-        } =
-            await client
-                .from("admin_users")
-                .select("user_id")
-                .eq(
-                    "user_id",
-                    user.id
-                )
-                .maybeSingle();
-
-
-        if (
-            error ||
-            !data
-        ) {
-
-            await client.auth.signOut();
-
-            window.location.replace(
-                LOGIN_PAGE
-            );
-
+        if (!admin) {
+            await C.auth.signOut();
+            location.replace("/admin/login.html");
             return false;
-
         }
 
-        return user;
+        if ($("adminName")) {
+            $("adminName").textContent =
+                user.user_metadata?.full_name ||
+                user.email?.split("@")[0] ||
+                "Admin";
+        }
 
+        if ($("adminEmail")) {
+            $("adminEmail").textContent = user.email || "Administrator";
+        }
+
+        return true;
     }
 
-
-    /*
-     * ============================================================
-     * CONTENT SHELL
-     * ============================================================
-     */
-
-    function createModuleShell() {
-
-        const content =
-            $("dashboardContent");
-
-        if (!content) {
-            return null;
+    async function audit(action, module, targetId = null, metadata = {}) {
+        try {
+            await window.munambamAudit?.moduleAction?.(
+                module,
+                action,
+                module,
+                targetId,
+                metadata
+            );
+        } catch (_) {
+            // Never block an admin operation because logging failed.
         }
+    }
 
+    function shell(title, subtitle, addLabel = null) {
+        const addButton = addLabel
+            ? `<button id="moduleAdd" class="module-btn primary" type="button">${esc(addLabel)}</button>`
+            : "";
 
-        content.innerHTML = `
-
+        $("dashboardContent").innerHTML = `
             <div class="module-page">
-
                 <div class="module-header">
-
                     <div>
-
-                        <span
-                            class="eyebrow"
-                            id="moduleEyebrow"
-                        >
-                            ADMIN MODULE
-                        </span>
-
-                        <h2 id="moduleTitle">
-                            Module
-                        </h2>
-
-                        <p
-                            class="muted"
-                            id="moduleSubtitle"
-                        >
-                            Loading…
-                        </p>
-
+                        <p class="eyebrow">ADMIN MODULE</p>
+                        <h2>${esc(title)}</h2>
+                        <p class="muted">${esc(subtitle)}</p>
                     </div>
-
-
                     <div class="module-actions">
-
-                        <button
-                            type="button"
-                            class="module-btn secondary"
-                            id="moduleRefresh"
-                        >
+                        <button id="moduleRefresh" class="module-btn secondary" type="button">
                             ↻ Refresh
                         </button>
-
-                        <button
-                            type="button"
-                            class="module-btn primary"
-                            id="modulePrimaryAction"
-                        >
-                            + Add
-                        </button>
-
+                        ${addButton}
                     </div>
-
                 </div>
 
-
                 <div class="module-toolbar">
-
                     <label class="module-search">
-
                         <span>⌕</span>
-
                         <input
                             id="moduleSearch"
                             type="search"
                             placeholder="Search this module..."
                             autocomplete="off"
                         >
-
                     </label>
-
-
-                    <div
-                        class="module-count"
-                        id="moduleCount"
-                    >
-                        —
-                    </div>
-
+                    <div id="moduleCount" class="module-count">—</div>
                 </div>
 
-
-                <div
-                    class="module-card"
-                    id="moduleCard"
-                >
-
-                    <div
-                        class="module-loading"
-                        id="moduleLoading"
-                    >
-                        Loading…
-                    </div>
-
-                    <div
-                        id="moduleTableWrap"
-                        hidden
-                    ></div>
-
-                </div>
-
+                <section class="module-card">
+                    <div id="moduleLoading" class="module-loading">Loading…</div>
+                    <div id="moduleTableWrap" hidden></div>
+                </section>
             </div>
-
         `;
 
-        injectStyles();
+        $("moduleSearch")?.addEventListener("input", event => {
+            search = event.target.value.trim().toLowerCase();
+            render();
+        });
 
-        return content;
+        $("moduleRefresh")?.addEventListener("click", async () => {
+            const b = $("moduleRefresh");
+            b.classList.add("is-loading");
+            try {
+                await load();
+                toast(`${title} refreshed.`, "success");
+            } finally {
+                b.classList.remove("is-loading");
+            }
+        });
 
+        if ($("moduleAdd")) {
+            $("moduleAdd").addEventListener("click", add);
+        }
     }
 
+    function auditFilters() {
+        if (section !== "audit") return;
+        const toolbar = document.querySelector(".module-toolbar");
+        if (!toolbar || $("auditFilters")) return;
 
-    /*
-     * ============================================================
-     * LOAD MODULE
-     * ============================================================
-     */
+        const defaultModules = [
+            "auth", "products", "orders", "customers", "payments", "inventory",
+            "coupons", "reviews", "delivery", "delivery_zone", "settings",
+            "reports", "admin"
+        ];
+        const defaultActions = [
+            "login_success", "login_failed", "logout", "create", "update",
+            "delete", "view", "toggle", "approve", "reject", "adjust_stock",
+            "export", "unlock", "status"
+        ];
+        const defaultResults = ["success", "failed"];
 
-    async function openModule(
-        section
-    ) {
+        const actions = [...new Set([
+            ...defaultActions,
+            ...rows.map(r => r.action).filter(Boolean)
+        ])].sort();
+        const modules = [...new Set([
+            ...defaultModules,
+            ...rows.map(r => r.module || r.entity_type).filter(Boolean)
+        ])].sort();
+        const results = [...new Set([
+            ...defaultResults,
+            ...rows.map(r => r.result).filter(Boolean)
+        ])].sort();
 
-        if (
-            !MODULES[section]
-        ) {
-            return;
-        }
+        const operators = window.munambamOperators?.loadOperators?.() || [];
+        const operatorNames = [...new Set([
+            ...operators,
+            ...rows.map(r => {
+                const m = r.metadata;
+                if (m && typeof m === "object" && m.operator_name) return m.operator_name;
+                return null;
+            }).filter(Boolean),
+            ...rows.map(r => r.user_id || r.actor_user_id).filter(Boolean)
+        ])];
 
+        const box = document.createElement("div");
+        box.id = "auditFilters";
+        box.className = "audit-filters";
+        box.innerHTML = `
+            <select id="auditModule" aria-label="Module">
+                <option value="">All modules</option>
+                ${modules.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join("")}
+            </select>
+            <select id="auditAction" aria-label="Action">
+                <option value="">All actions</option>
+                ${actions.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join("")}
+            </select>
+            <select id="auditResult" aria-label="Result">
+                <option value="">All results</option>
+                ${results.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join("")}
+            </select>
+            <select id="auditAdmin" aria-label="Administrator">
+                <option value="">All operators</option>
+                ${operatorNames.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join("")}
+            </select>
+            <input id="auditFrom" type="datetime-local" aria-label="From">
+            <input id="auditTo" type="datetime-local" aria-label="To">
+            <button id="auditClear" type="button" class="module-btn secondary">Clear</button>
+        `;
+        toolbar.appendChild(box);
 
-        currentSection =
-            section;
+        ["auditModule", "auditAction", "auditResult", "auditAdmin", "auditFrom", "auditTo"].forEach(id => {
+            $(id)?.addEventListener("change", render);
+        });
 
-        currentSearch = "";
-
-
-        const module =
-            MODULES[section];
-
-
-        createModuleShell();
-
-
-        $("pageTitle").textContent =
-            module.title;
-
-
-        $("moduleTitle").textContent =
-            module.title;
-
-
-        $("moduleSubtitle").textContent =
-            module.subtitle;
-
-
-        $("moduleSearch").value =
-            "";
-
-
-        const addButton =
-            $("modulePrimaryAction");
-
-
-        /*
-         * Read-only modules
-         */
-
-        if (
-            section === "payments" ||
-            section === "audit"
-        ) {
-
-            addButton.hidden =
-                true;
-
-        } else {
-
-            addButton.hidden =
-                false;
-
-        }
-
-
-        addButton.onclick =
-            () => openAddForm(section);
-
-
-        $("moduleRefresh").onclick =
-            () =>
-                loadModuleData(
-                    section
-                );
-
-
-        $("moduleSearch").addEventListener(
-            "input",
-            event => {
-
-                currentSearch =
-                    event.target.value
-                        .trim()
-                        .toLowerCase();
-
-                renderModuleTable();
-
-            }
-        );
-
-
-        await loadModuleData(
-            section
-        );
-
+        $("auditClear")?.addEventListener("click", () => {
+            ["auditModule", "auditAction", "auditResult", "auditAdmin", "auditFrom", "auditTo"].forEach(id => {
+                if ($(id)) $(id).value = "";
+            });
+            render();
+        });
     }
-
-
-    /*
-     * ============================================================
-     * LOAD DATA
-     * ============================================================
-     */
-
-    async function loadModuleData(
-        section
-    ) {
-
-        const module =
-            MODULES[section];
-
-
-        const loading =
-            $("moduleLoading");
-
-        const wrap =
-            $("moduleTableWrap");
-
-
-        if (!loading || !wrap) {
-            return;
-        }
-
-
-        loading.hidden =
-            false;
-
-        wrap.hidden =
-            true;
-
-
-        try {
-
-            let query =
-                client
-                    .from(module.table)
-                    .select("*")
-                    .limit(500);
-
-
-            if (
-                section ===
-                "products"
-            ) {
-
-                query =
-                    query.order(
-                        "display_order",
-                        {
-                            ascending: true
-                        }
-                    );
-
-            } else {
-
-                query =
-                    query.order(
-                        "created_at",
-                        {
-                            ascending: false
-                        }
-                    );
-
-            }
-
-
-            const {
-                data,
-                error
-            } =
-                await query;
-
-
-            if (error) {
-                throw error;
-            }
-
-
-            currentRows =
-                data || [];
-
-
-            currentTable =
-                module.table;
-
-
-            $("moduleCount").textContent =
-                `${currentRows.length.toLocaleString("en-IN")} records`;
-
-
-            renderModuleTable();
-
-
-        } catch (error) {
-
-            console.error(
-                `Munambam ${section}:`,
-                error
-            );
-
-
-            wrap.innerHTML = `
-
-                <div class="module-error">
-
-                    <strong>
-                        Unable to load ${escapeHTML(
-                            module.title
-                        )}
-                    </strong>
-
-                    <p>
-                        ${escapeHTML(
-                            error?.message ||
-                            "Supabase request failed."
-                        )}
-                    </p>
-
-                    <button
-                        type="button"
-                        class="module-btn primary"
-                        id="retryModule"
-                    >
-                        Try Again
-                    </button>
-
-                </div>
-
-            `;
-
-
-            loading.hidden =
-                true;
-
-            wrap.hidden =
-                false;
-
-
-            $("retryModule")?.addEventListener(
-                "click",
-                () =>
-                    loadModuleData(
-                        section
-                    )
-            );
-
-        }
-
-    }
-
-
-    /*
-     * ============================================================
-     * FILTER
-     * ============================================================
-     */
 
     function filteredRows() {
+        let data = rows.slice();
 
-        if (!currentSearch) {
-            return currentRows;
+        if (search) {
+            data = data.filter(row => Object.values(row || {}).some(value =>
+                String(value ?? "").toLowerCase().includes(search)
+            ));
         }
 
-
-        return currentRows.filter(
-            row =>
-                Object.values(
-                    row || {}
-                )
-                .some(
-                    value =>
-                        String(
-                            value ?? ""
-                        )
-                        .toLowerCase()
-                        .includes(
-                            currentSearch
-                        )
-                )
-        );
-
-    }
-
-
-    /*
-     * ============================================================
-     * TABLE
-     * ============================================================
-     */
-
-    function renderModuleTable() {
-
-        const wrap =
-            $("moduleTableWrap");
-
-        const loading =
-            $("moduleLoading");
-
-
-        if (!wrap) {
-            return;
-        }
-
-
-        loading.hidden =
-            true;
-
-        wrap.hidden =
-            false;
-
-
-        const module =
-            MODULES[
-                currentSection
-            ];
-
-
-        let rows =
-            filteredRows();
-
-
-        /*
-         * Generic columns for tables
-         * where schema is not hard-coded.
-         */
-
-        let columns =
-            module.columns
-                .map(
-                    x => x
-                );
-
-
-        if (
-            !columns.length &&
-            rows.length
-        ) {
-
-            const keys =
-                Object.keys(
-                    rows[0]
-                )
-                .filter(
-                    key =>
-                        ![
-                            "raw_response"
-                        ].includes(
-                            key
-                        )
-                )
-                .slice(
-                    0,
-                    7
-                );
-
-
-            columns =
-                keys.map(
-                    key => [
-                        key,
-                        key
-                            .replace(
-                                /_/g,
-                                " "
-                            )
-                            .replace(
-                                /\b\w/g,
-                                c =>
-                                    c.toUpperCase()
-                            )
-                    ]
-                );
-
-        }
-
-
-        if (!rows.length) {
-
-            wrap.innerHTML = `
-
-                <div class="module-empty">
-
-                    <div class="module-empty-icon">
-                        ${
-                            currentSearch
-                                ? "⌕"
-                                : "□"
-                        }
-                    </div>
-
-                    <strong>
-                        ${
-                            currentSearch
-                                ? "No matching records"
-                                : "No records yet"
-                        }
-                    </strong>
-
-                    <span>
-                        ${
-                            currentSearch
-                                ? "Try another search."
-                                : `No ${escapeHTML(
-                                    module.title.toLowerCase()
-                                )} are available.`
-                        }
-                    </span>
-
-                </div>
-
-            `;
-
-            return;
-
-        }
-
-
-        const visible =
-            rows.slice(
-                0,
-                PAGE_SIZE
-            );
-
-
-        const header =
-            columns
-                .map(
-                    ([, label]) =>
-                        `<th>${escapeHTML(
-                            label
-                        )}</th>`
-                )
-                .join("");
-
-
-        const body =
-            visible
-                .map(
-                    row => {
-
-                        const cells =
-                            columns
-                                .map(
-                                    ([key]) => {
-
-                                        const value =
-                                            displayValue(
-                                                key,
-                                                row[key]
-                                            );
-
-
-                                        if (
-                                            key ===
-                                            "order_status"
-                                        ) {
-
-                                            return `
-                                                <td>
-                                                    ${statusBadge(
-                                                        row[key]
-                                                    )}
-                                                </td>
-                                            `;
-
-                                        }
-
-
-                                        if (
-                                            key ===
-                                            "payment_status"
-                                        ) {
-
-                                            return `
-                                                <td>
-                                                    ${statusBadge(
-                                                        row[key]
-                                                    )}
-                                                </td>
-                                            `;
-
-                                        }
-
-
-                                        if (
-                                            key ===
-                                            "is_active"
-                                        ) {
-
-                                            return `
-                                                <td>
-                                                    ${statusBadge(
-                                                        row[key]
-                                                            ? "active"
-                                                            : "inactive"
-                                                    )}
-                                                </td>
-                                            `;
-
-                                        }
-
-
-                                        return `
-                                            <td
-                                                title="${escapeHTML(
-                                                    value
-                                                )}"
-                                            >
-                                                ${escapeHTML(
-                                                    String(
-                                                        value
-                                                    )
-                                                )}
-                                            </td>
-                                        `;
-
-                                    }
-                                )
-                                .join("");
-
-
-                        return `
-
-                            <tr>
-
-                                ${cells}
-
-                                <td class="module-actions-cell">
-
-                                    <button
-                                        type="button"
-                                        class="row-action"
-                                        data-row-id="${escapeHTML(
-                                            row.id || ""
-                                        )}"
-                                        data-action="view"
-                                    >
-                                        View
-                                    </button>
-
-                                    ${
-                                        currentSection ===
-                                        "orders"
-                                            ? `
-                                                <button
-                                                    type="button"
-                                                    class="row-action"
-                                                    data-row-id="${escapeHTML(
-                                                        row.id
-                                                    )}"
-                                                    data-action="status"
-                                                >
-                                                    Status
-                                                </button>
-                                            `
-                                            : ""
-                                    }
-
-                                    ${
-                                        currentSection ===
-                                        "products"
-                                            ? `
-                                                <button
-                                                    type="button"
-                                                    class="row-action"
-                                                    data-row-id="${escapeHTML(
-                                                        row.id
-                                                    )}"
-                                                    data-action="edit"
-                                                >
-                                                    Edit
-                                                </button>
-                                            `
-                                            : ""
-                                    }
-
-                                </td>
-
-                            </tr>
-
-                        `;
-
-                    }
-                )
-                .join("");
-
-
-        wrap.innerHTML = `
-
-            <div class="module-table-scroll">
-
-                <table class="module-table">
-
-                    <thead>
-
-                        <tr>
-
-                            ${header}
-
-                            <th>
-                                Actions
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        ${body}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-            ${
-                rows.length > PAGE_SIZE
-                    ? `
-                        <div class="module-pagination">
-                            Showing first ${PAGE_SIZE} of ${rows.length}
-                        </div>
-                    `
-                    : ""
-            }
-
-        `;
-
-
-        wrap
-            .querySelectorAll(
-                "[data-action]"
-            )
-            .forEach(
-                button => {
-
-                    button.addEventListener(
-                        "click",
-                        () => {
-
-                            const id =
-                                button.dataset.rowId;
-
-                            const action =
-                                button.dataset.action;
-
-
-                            const row =
-                                currentRows.find(
-                                    item =>
-                                        String(
-                                            item.id
-                                        ) ===
-                                        String(
-                                            id
-                                        )
-                                );
-
-
-                            if (!row) {
-                                return;
-                            }
-
-
-                            if (
-                                action ===
-                                "view"
-                            ) {
-
-                                openView(
-                                    currentSection,
-                                    row
-                                );
-
-                            }
-
-
-                            if (
-                                action ===
-                                "edit"
-                            ) {
-
-                                openEditForm(
-                                    currentSection,
-                                    row
-                                );
-
-                            }
-
-
-                            if (
-                                action ===
-                                "status"
-                            ) {
-
-                                openOrderStatus(
-                                    row
-                                );
-
-                            }
-
-                        }
+        if (section === "audit") {
+            const module = $("auditModule")?.value || "";
+            const action = $("auditAction")?.value || "";
+            const result = $("auditResult")?.value || "";
+            const admin = $("auditAdmin")?.value || "";
+            const from = $("auditFrom")?.value || "";
+            const to = $("auditTo")?.value || "";
+
+            if (module) data = data.filter(r => String(r.module || r.entity_type || "") === module);
+            if (action) data = data.filter(r => String(r.action || "") === action);
+            if (result) data = data.filter(r => String(r.result || "") === result);
+            if (admin) {
+                data = data.filter(r => {
+                    const metaOp =
+                        r.metadata && typeof r.metadata === "object"
+                            ? r.metadata.operator_name
+                            : null;
+                    return (
+                        String(metaOp || "") === admin ||
+                        String(r.user_id || r.actor_user_id || "") === admin
                     );
-
-                }
-            );
-
-    }
-
-
-    /*
-     * ============================================================
-     * VIEW MODAL
-     * ============================================================
-     */
-
-    function openView(
-        section,
-        row
-    ) {
-
-        const module =
-            MODULES[section];
-
-
-        const fields =
-            Object.entries(
-                row
-            )
-            .filter(
-                ([key]) =>
-                    key !==
-                    "raw_response"
-            )
-            .map(
-                ([key, value]) => `
-
-                    <div class="detail-field">
-
-                        <span>
-                            ${escapeHTML(
-                                key
-                                    .replace(
-                                        /_/g,
-                                        " "
-                                    )
-                                    .replace(
-                                        /\b\w/g,
-                                        c =>
-                                            c.toUpperCase()
-                                    )
-                            )}
-                        </span>
-
-                        <strong>
-                            ${escapeHTML(
-                                displayValue(
-                                    key,
-                                    value
-                                )
-                            )}
-                        </strong>
-
-                    </div>
-
-                `
-            )
-            .join("");
-
-
-        openModal(
-            `
-
-                <div class="module-modal-head">
-
-                    <div>
-
-                        <span class="eyebrow">
-                            ${escapeHTML(
-                                module.title
-                            )}
-                        </span>
-
-                        <h3>
-                            Record Details
-                        </h3>
-
-                    </div>
-
-                    <button
-                        type="button"
-                        class="modal-close"
-                        data-close-modal
-                    >
-                        ×
-                    </button>
-
-                </div>
-
-
-                <div class="detail-grid">
-                    ${fields}
-                </div>
-
-            `
-        );
-
-    }
-
-
-    /*
-     * ============================================================
-     * PRODUCT FORM
-     * ============================================================
-     */
-
-    function openAddForm(
-        section
-    ) {
-
-        if (
-            section ===
-            "products"
-        ) {
-
-            openProductForm();
-
-            return;
-
-        }
-
-
-        if (
-            section ===
-            "orders"
-        ) {
-
-            toast(
-                "Orders are created by checkout. Use Status to manage them."
-            );
-
-            return;
-
-        }
-
-
-        if (
-            section ===
-            "customers"
-        ) {
-
-            toast(
-                "Customers are created through checkout."
-            );
-
-            return;
-
-        }
-
-
-        if (
-            section ===
-            "delivery"
-        ) {
-
-            openDeliveryForm();
-
-            return;
-
-        }
-
-
-        if (
-            section ===
-            "inventory"
-        ) {
-
-            toast(
-                "Inventory is managed from product variants."
-            );
-
-            return;
-
-        }
-
-
-        if (
-            section ===
-            "coupons"
-        ) {
-
-            openGenericAdd(
-                "coupons"
-            );
-
-            return;
-
-        }
-
-
-        if (
-            section ===
-            "reviews"
-        ) {
-
-            toast(
-                "Reviews are created by customers."
-            );
-
-            return;
-
-        }
-
-
-        if (
-            section ===
-            "settings"
-        ) {
-
-            toast(
-                "Settings are tied to your authenticated admin profile."
-            );
-
-            return;
-
-        }
-
-    }
-
-
-    /*
-     * ============================================================
-     * PRODUCT FORM
-     * ============================================================
-     *
-     * Product data:
-     * - products: core catalogue information + main image URL
-     * - product_variants: 100g / 250g / 500g price, GST and stock
-     * - product_images: main image + up to 4 additional images
-     *
-     * Product images are uploaded to the Supabase Storage bucket
-     * configured below. The bucket must already exist and its
-     * authenticated-admin storage policies must allow uploads.
-     * ============================================================
-     */
-
-    const PRODUCT_IMAGE_BUCKET = "product-images";
-    const PRODUCT_IMAGE_MAX_BYTES = 10 * 1024 * 1024;
-    const PRODUCT_IMAGE_TYPES = [
-        "image/jpeg",
-        "image/png",
-        "image/webp",
-        "image/avif"
-    ];
-
-    async function loadProductRelations(productId) {
-
-        const [variantResult, imageResult] = await Promise.all([
-
-            client
-                .from("product_variants")
-                .select(
-                    "id,product_id,weight_grams,variant_name,price,mrp,gst_rate,stock_quantity,is_active,sku,hsn_code,compare_price"
-                )
-                .eq("product_id", productId)
-                .order("weight_grams", { ascending: true }),
-
-            client
-                .from("product_images")
-                .select(
-                    "id,product_id,image_url,alt_text,display_order,is_primary"
-                )
-                .eq("product_id", productId)
-                .order("is_primary", { ascending: false })
-                .order("display_order", { ascending: true })
-
-        ]);
-
-
-        if (variantResult.error) throw variantResult.error;
-        if (imageResult.error) throw imageResult.error;
-
-
-        return {
-            variants: variantResult.data || [],
-            images: imageResult.data || []
-        };
-
-    }
-
-
-    function productVariantForPack(variants, weight) {
-
-        return (
-            variants.find(
-                variant => Number(variant.weight_grams) === Number(weight)
-            ) || null
-        );
-
-    }
-
-
-    function productImagePreview(url, label) {
-
-        if (!url) return "";
-
-        return `
-            <div class="product-image-existing">
-
-                <img
-                    src="${escapeHTML(url)}"
-                    alt="${escapeHTML(label)}"
-                    loading="lazy"
-                >
-
-            </div>
-        `;
-
-    }
-
-
-    function selectedImageFiles(form, fieldName) {
-
-        const input =
-            form.querySelector(`[name="${fieldName}"]`);
-
-        return input ? Array.from(input.files || []) : [];
-
-    }
-
-
-    function validateImageFiles(files, label) {
-
-        for (const file of files) {
-
-            if (!PRODUCT_IMAGE_TYPES.includes(file.type)) {
-
-                throw new Error(
-                    `${label}: ${file.name} is not a supported image format. Use JPG, PNG, WEBP or AVIF.`
-                );
-
-            }
-
-
-            if (file.size > PRODUCT_IMAGE_MAX_BYTES) {
-
-                throw new Error(
-                    `${label}: ${file.name} is larger than 10 MB.`
-                );
-
-            }
-
-        }
-
-    }
-
-
-    function sanitiseFileName(name) {
-
-        const extension =
-            String(name || "")
-                .split(".")
-                .pop()
-                ?.toLowerCase()
-                .replace(/[^a-z0-9]/g, "") || "webp";
-
-        return extension.slice(0, 8) || "webp";
-
-    }
-
-
-    async function uploadProductImage(file, productId, slot) {
-
-        const extension = sanitiseFileName(file.name);
-
-        const path =
-            `${productId}/${slot}-${Date.now()}-${crypto.randomUUID()}.${extension}`;
-
-
-        const { error } = await client.storage
-            .from(PRODUCT_IMAGE_BUCKET)
-            .upload(path, file, {
-                cacheControl: "31536000",
-                contentType: file.type,
-                upsert: false
-            });
-
-
-        if (error) throw error;
-
-
-        const {
-            data: publicUrlData
-        } = client.storage
-            .from(PRODUCT_IMAGE_BUCKET)
-            .getPublicUrl(path);
-
-
-        const publicUrl =
-            publicUrlData?.publicUrl || "";
-
-
-        if (!publicUrl) {
-
-            throw new Error(
-                "Image uploaded but its public URL could not be generated."
-            );
-
-        }
-
-
-        return publicUrl;
-
-    }
-
-
-    function productVariantPayload(form, weight, existingVariant) {
-
-        const priceValue = form.get(`price_${weight}`);
-        const mrpValue = form.get(`mrp_${weight}`);
-        const gstValue = form.get(`gst_${weight}`);
-        const stockValue = form.get(`stock_${weight}`);
-        const skuValue = form.get(`sku_${weight}`);
-        const hsnValue = form.get(`hsn_${weight}`);
-        const compareValue = form.get(`compare_price_${weight}`);
-        const activeValue = form.get(`active_${weight}`);
-
-
-        const priceText = String(priceValue ?? "").trim();
-
-
-        if (!priceText) {
-            return null;
-        }
-
-
-        const price = Number(priceText);
-
-
-        if (!Number.isFinite(price) || price < 0) {
-
-            throw new Error(
-                `${weight}g price must be a valid non-negative number.`
-            );
-
-        }
-
-
-        const mrpText = String(mrpValue ?? "").trim();
-        const gstText = String(gstValue ?? "").trim();
-        const stockText = String(stockValue ?? "").trim();
-        const compareText = String(compareValue ?? "").trim();
-
-
-        const mrp =
-            mrpText === ""
-                ? null
-                : Number(mrpText);
-
-
-        const gstRate =
-            gstText === ""
-                ? 0
-                : Number(gstText);
-
-
-        const stockQuantity =
-            stockText === ""
-                ? 0
-                : Number(stockText);
-
-
-        const comparePrice =
-            compareText === ""
-                ? null
-                : Number(compareText);
-
-
-        if (
-            (mrp !== null && (!Number.isFinite(mrp) || mrp < 0)) ||
-            !Number.isFinite(gstRate) ||
-            gstRate < 0 ||
-            !Number.isFinite(stockQuantity) ||
-            stockQuantity < 0 ||
-            (comparePrice !== null &&
-                (!Number.isFinite(comparePrice) || comparePrice < 0))
-        ) {
-
-            throw new Error(
-                `${weight}g has an invalid price/GST/stock value.`
-            );
-
-        }
-
-
-        return {
-
-            id: existingVariant?.id,
-
-            weight_grams: Number(weight),
-
-            variant_name: `${weight}g`,
-
-            price,
-
-            mrp,
-
-            gst_rate: gstRate,
-
-            stock_quantity: Math.floor(stockQuantity),
-
-            is_active: activeValue !== "false",
-
-            sku:
-                String(skuValue ?? "").trim() ||
-                existingVariant?.sku ||
-                null,
-
-            hsn_code:
-                String(hsnValue ?? "").trim() ||
-                existingVariant?.hsn_code ||
-                null,
-
-            compare_price: comparePrice
-
-        };
-
-    }
-
-
-    async function saveProductVariants(productId, form, existingVariants) {
-
-        const weights = [100, 250, 500];
-
-        const submitted = [];
-
-
-        for (const weight of weights) {
-
-            const existing =
-                productVariantForPack(
-                    existingVariants,
-                    weight
-                );
-
-
-            const payload =
-                productVariantPayload(
-                    form,
-                    weight,
-                    existing
-                );
-
-
-            if (!payload) {
-
-                if (existing?.id) {
-
-                    const { error } = await client
-                        .from("product_variants")
-                        .update({
-                            is_active: false,
-                            updated_at: new Date().toISOString()
-                        })
-                        .eq("id", existing.id);
-
-
-                    if (error) throw error;
-
-                }
-
-                continue;
-
-            }
-
-
-            delete payload.id;
-
-
-            if (existing?.id) {
-
-                const { error } = await client
-                    .from("product_variants")
-                    .update({
-                        ...payload,
-                        updated_at: new Date().toISOString()
-                    })
-                    .eq("id", existing.id);
-
-
-                if (error) throw error;
-
-            } else {
-
-                const { error } = await client
-                    .from("product_variants")
-                    .insert({
-                        ...payload,
-                        product_id: productId
-                    });
-
-
-                if (error) throw error;
-
-            }
-
-
-            submitted.push(weight);
-
-        }
-
-
-        return submitted;
-
-    }
-
-
-    async function saveProductImages(
-        productId,
-        productName,
-        form,
-        existingImages
-    ) {
-
-        const mainFiles =
-            selectedImageFiles(
-                form,
-                "main_image_file"
-            );
-
-
-        const additionalFiles =
-            selectedImageFiles(
-                form,
-                "additional_images"
-            );
-
-
-        validateImageFiles(
-            mainFiles,
-            "Main photo"
-        );
-
-
-        validateImageFiles(
-            additionalFiles,
-            "Additional photos"
-        );
-
-
-        if (mainFiles.length > 1) {
-
-            throw new Error(
-                "Select only one main photo."
-            );
-
-        }
-
-
-        if (additionalFiles.length > 4) {
-
-            throw new Error(
-                "You can upload a maximum of 4 additional photos."
-            );
-
-        }
-
-
-        if (
-            mainFiles.length === 0 &&
-            additionalFiles.length === 0
-        ) {
-
-            return {
-                mainUrl: null,
-                changed: false
-            };
-
-        }
-
-
-        const existingPrimary =
-            existingImages.find(
-                image => image.is_primary
-            ) ||
-            existingImages[0] ||
-            null;
-
-
-        let mainUrl =
-            mainFiles.length
-                ? await uploadProductImage(
-                    mainFiles[0],
-                    productId,
-                    "main"
-                )
-                : (
-                    existingPrimary?.image_url ||
-                    null
-                );
-
-
-        /*
-         * If the main photo was changed, replace the complete
-         * gallery with the newly selected main + additional photos.
-         * If only additional photos were selected, keep the current
-         * main image and replace/add the additional gallery.
-         */
-
-        if (mainFiles.length) {
-
-            const { error: deleteError } = await client
-                .from("product_images")
-                .delete()
-                .eq("product_id", productId);
-
-
-            if (deleteError) throw deleteError;
-
-
-            const rows = [
-
-                {
-                    product_id: productId,
-                    image_url: mainUrl,
-                    alt_text: productName,
-                    display_order: 0,
-                    is_primary: true
-                }
-
-            ];
-
-
-            for (
-                let index = 0;
-                index < additionalFiles.length;
-                index += 1
-            ) {
-
-                const url =
-                    await uploadProductImage(
-                        additionalFiles[index],
-                        productId,
-                        `gallery-${index + 1}`
-                    );
-
-
-                rows.push({
-
-                    product_id: productId,
-                    image_url: url,
-                    alt_text: `${productName} product image ${index + 1}`,
-                    display_order: index + 1,
-                    is_primary: false
-
                 });
-
             }
+            if (from) data = data.filter(r => new Date(r.created_at).getTime() >= new Date(from).getTime());
+            if (to) data = data.filter(r => new Date(r.created_at).getTime() <= new Date(to).getTime());
 
-
-            const { error } =
-                await client
-                    .from("product_images")
-                    .insert(rows);
-
-
-            if (error) throw error;
-
-
-            return {
-                mainUrl,
-                changed: true
-            };
-
+            window.munambamAuditExportRows = data.slice();
         }
 
-
-        /*
-         * Additional-only update:
-         * preserve the primary image and replace only non-primary
-         * gallery records so the total remains at a maximum of 5.
-         */
-
-        const { error: deleteGalleryError } =
-            await client
-                .from("product_images")
-                .delete()
-                .eq("product_id", productId)
-                .eq("is_primary", false);
-
-
-        if (deleteGalleryError) {
-            throw deleteGalleryError;
-        }
-
-
-        const rows = [];
-
-
-        for (
-            let index = 0;
-            index < additionalFiles.length;
-            index += 1
-        ) {
-
-            const url =
-                await uploadProductImage(
-                    additionalFiles[index],
-                    productId,
-                    `gallery-${index + 1}`
-                );
-
-
-            rows.push({
-
-                product_id: productId,
-                image_url: url,
-                alt_text: `${productName} product image ${index + 1}`,
-                display_order: index + 1,
-                is_primary: false
-
-            });
-
-        }
-
-
-        if (rows.length) {
-
-            const { error } =
-                await client
-                    .from("product_images")
-                    .insert(rows);
-
-
-            if (error) throw error;
-
-        }
-
-
-        return {
-            mainUrl,
-            changed: true
-        };
-
+        return data;
     }
 
+    function render() {
+        const W = $("moduleTableWrap");
+        const L = $("moduleLoading");
+        if (!W || !L) return;
 
-    async function openProductForm(
-        row = null
-    ) {
+        L.hidden = true;
+        W.hidden = false;
 
-        const editing = !!row;
-
-
-        let relations = {
-            variants: [],
-            images: []
+        const data = filteredRows();
+        window.munambamModuleExportRows = {
+            ...(window.munambamModuleExportRows || {}),
+            [section]: data.slice()
         };
 
-
-        if (editing) {
-
-            try {
-
-                relations =
-                    await loadProductRelations(
-                        row.id
-                    );
-
-            } catch (error) {
-
-                toast(
-                    error?.message ||
-                    "Unable to load product variants and images."
-                );
-
-                return;
-
-            }
-
+        if (!data.length) {
+            W.innerHTML = `
+                <div class="module-empty">
+                    <div class="module-empty-icon">□</div>
+                    <strong>No records found</strong>
+                    <span>${search ? "Nothing matches the current filter." : "No records are available yet."}</span>
+                </div>
+            `;
+            return;
         }
 
-
-        const variants =
-            relations.variants || [];
-
-
-        const images =
-            relations.images || [];
-
-
-        const primaryImage =
-            images.find(
-                image => image.is_primary
-            ) ||
-            images[0] ||
-            null;
-
-
-        const additionalImages =
-            images
-                .filter(
-                    image =>
-                        !image.is_primary &&
-                        image.id !== primaryImage?.id
-                )
-                .slice(0, 4);
-
-
-        const packRows =
-            [100, 250, 500]
-                .map(weight => {
-
-                    const variant =
-                        productVariantForPack(
-                            variants,
-                            weight
-                        );
-
-
-                    return `
-                        <div class="product-variant-row">
-
-                            <div class="product-variant-title">
-
-                                <strong>${weight}g</strong>
-
-                                <span>Pack / selling details</span>
-
-                            </div>
-
-                            <div class="form-grid-2">
-
-                                <label>
-
-                                    <span>Price (₹) *</span>
-
-                                    <input
-                                        name="price_${weight}"
-                                        type="number"
-                                        min="0"
-                                        step="0.01"
-                                        inputmode="decimal"
-                                        value="${escapeHTML(
-                                            variant?.price ?? ""
-                                        )}"
-                                        placeholder="e.g. 120"
-                                    >
-
-                                </label>
-
-                                <label>
-
-                                    <span>MRP (₹)</span>
-
-                                    <input
-                                        name="mrp_${weight}"
-                                        type="number"
-                                        min="0"
-                                        step="0.01"
-                                        inputmode="decimal"
-                                        value="${escapeHTML(
-                                            variant?.mrp ?? ""
-                                        )}"
-                                        placeholder="Optional"
-                                    >
-
-                                </label>
-
-                                <label>
-
-                                    <span>GST (%)</span>
-
-                                    <input
-                                        name="gst_${weight}"
-                                        type="number"
-                                        min="0"
-                                        step="0.01"
-                                        inputmode="decimal"
-                                        value="${escapeHTML(
-                                            variant?.gst_rate ?? 0
-                                        )}"
-                                    >
-
-                                </label>
-
-                                <label>
-
-                                    <span>Stock Quantity</span>
-
-                                    <input
-                                        name="stock_${weight}"
-                                        type="number"
-                                        min="0"
-                                        step="1"
-                                        inputmode="numeric"
-                                        value="${escapeHTML(
-                                            variant?.stock_quantity ?? 0
-                                        )}"
-                                    >
-
-                                </label>
-
-                                <label>
-
-                                    <span>SKU</span>
-
-                                    <input
-                                        name="sku_${weight}"
-                                        value="${escapeHTML(
-                                            variant?.sku ?? ""
-                                        )}"
-                                        placeholder="Optional"
-                                    >
-
-                                </label>
-
-                                <label>
-
-                                    <span>HSN Code</span>
-
-                                    <input
-                                        name="hsn_${weight}"
-                                        value="${escapeHTML(
-                                            variant?.hsn_code ?? ""
-                                        )}"
-                                        placeholder="Optional"
-                                    >
-
-                                </label>
-
-                                <label>
-
-                                    <span>Compare Price (₹)</span>
-
-                                    <input
-                                        name="compare_price_${weight}"
-                                        type="number"
-                                        min="0"
-                                        step="0.01"
-                                        inputmode="decimal"
-                                        value="${escapeHTML(
-                                            variant?.compare_price ?? ""
-                                        )}"
-                                        placeholder="Optional"
-                                    >
-
-                                </label>
-
-                                <label>
-
-                                    <span>Variant Status</span>
-
-                                    <select name="active_${weight}">
-
-                                        <option
-                                            value="true"
-                                            ${
-                                                variant?.is_active !== false
-                                                    ? "selected"
-                                                    : ""
-                                            }
-                                        >
-                                            Active
-                                        </option>
-
-                                        <option
-                                            value="false"
-                                            ${
-                                                variant?.is_active === false
-                                                    ? "selected"
-                                                    : ""
-                                            }
-                                        >
-                                            Inactive
-                                        </option>
-
-                                    </select>
-
-                                </label>
-
-                            </div>
-
-                        </div>
-                    `;
-
-                })
-                .join("");
-
-
-        const existingGallery =
-            additionalImages.length
-                ? additionalImages
-                    .map(
-                        (image, index) =>
-                            productImagePreview(
-                                image.image_url,
-                                `${row?.name || "Product"} additional image ${index + 1}`
-                            )
-                    )
-                    .join("")
-                : `<span class="product-image-empty">No additional photos uploaded.</span>`;
-
-
-        openModal(
-            `
-
-                <div class="module-modal-head">
-
-                    <div>
-
-                        <span class="eyebrow">
-                            PRODUCTS
-                        </span>
-
-                        <h3>
-                            ${
-                                editing
-                                    ? "Edit Product"
-                                    : "Add Product"
-                            }
-                        </h3>
-
-                    </div>
-
-
-                    <button
-                        type="button"
-                        class="modal-close"
-                        data-close-modal
-                    >
-                        ×
-                    </button>
-
+        const keys = Object.keys(data[0] || {})
+            .filter(k => !["raw_response", "before_data", "after_data"].includes(k))
+            .slice(0, 10);
+
+        const head = keys.map(k => `
+            <th>${esc(k.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()))}</th>
+        `).join("") + "<th>Actions</th>";
+
+        const body = data.slice(0, 50).map(row => {
+            const cells = keys.map(key => {
+                let value = row[key];
+
+                if ([
+                    "amount", "total_amount", "delivery_fee", "min_order_amount",
+                    "free_delivery_above", "discount_value", "minimum_order_amount",
+                    "max_discount_amount", "base_fee", "step_fee"
+                ].includes(key)) {
+                    value = money(value);
+                } else if (
+                    key.endsWith("_at") ||
+                    ["created_at", "updated_at"].includes(key)
+                ) {
+                    value = fmtDate(value);
+                } else if ([
+                    "is_active", "is_featured", "is_remote",
+                    "delivery_enabled", "email_notifications", "order_notifications"
+                ].includes(key)) {
+                    value = value ? "Active" : "Inactive";
+                } else if (typeof value === "object") {
+                    try { value = JSON.stringify(value); } catch { value = "[object]"; }
+                }
+
+                if (["order_status", "payment_status", "moderation_status", "result"].includes(key)) {
+                    return `<td><span class="module-status">${esc(String(value || "—").replace(/_/g, " "))}</span></td>`;
+                }
+
+                return `<td title="${esc(value)}">${esc(value)}</td>`;
+            }).join("");
+
+            let actions = `<button class="row-action" type="button" data-a="view" data-id="${esc(row.id || row.variant_id || "")}">View</button>`;
+
+            if (section === "products") {
+                actions += `
+                    <button class="row-action" type="button" data-a="edit" data-id="${esc(row.id)}">Edit</button>
+                    <button class="row-action danger" type="button" data-a="delete" data-id="${esc(row.id)}">Delete</button>
+                `;
+            }
+
+            if (section === "orders") {
+                actions += `<button class="row-action" type="button" data-a="status" data-id="${esc(row.id)}">Status</button>`;
+            }
+
+            if (section === "customers") {
+                actions += `<button class="row-action" type="button" data-a="customer" data-id="${esc(row.id)}">Edit</button>`;
+            }
+
+            if (section === "inventory") {
+                actions += `<button class="row-action" type="button" data-a="stock" data-id="${esc(row.variant_id)}">Adjust Stock</button>`;
+            }
+
+            if (section === "coupons") {
+                actions += `
+                    <button class="row-action" type="button" data-a="edit" data-id="${esc(row.id)}">Edit</button>
+                    <button class="row-action" type="button" data-a="toggle" data-id="${esc(row.id)}">Toggle</button>
+                    <button class="row-action danger" type="button" data-a="delete" data-id="${esc(row.id)}">Delete</button>
+                `;
+            }
+
+            if (section === "reviews") {
+                actions += `
+                    <button class="row-action" type="button" data-a="approve" data-id="${esc(row.id)}">Approve</button>
+                    <button class="row-action danger" type="button" data-a="reject" data-id="${esc(row.id)}">Reject</button>
+                    <button class="row-action danger" type="button" data-a="delete" data-id="${esc(row.id)}">Delete</button>
+                `;
+            }
+
+            if (section === "delivery" && row.record_type === "setting") {
+                actions += `<button class="row-action" type="button" data-a="edit-setting" data-id="${esc(row.id)}">Edit</button>`;
+            }
+
+            if (section === "delivery" && row.record_type === "zone") {
+                actions += `
+                    <button class="row-action" type="button" data-a="edit-zone" data-id="${esc(row.id)}">Edit</button>
+                    <button class="row-action danger" type="button" data-a="delete-zone" data-id="${esc(row.id)}">Delete</button>
+                `;
+            }
+
+            return `<tr>${cells}<td class="module-actions-cell">${actions}</td></tr>`;
+        }).join("");
+
+        W.innerHTML = `
+            <div class="module-table-scroll">
+                <table class="module-table">
+                    <thead><tr>${head}</tr></thead>
+                    <tbody>${body}</tbody>
+                </table>
+            </div>
+            ${data.length > 50 ? `<div class="module-pagination">Showing 50 of ${data.length} records</div>` : ""}
+        `;
+
+        W.querySelectorAll("[data-a]").forEach(button => {
+            button.addEventListener("click", () => {
+                const row = rows.find(x =>
+                    String(x.id || x.variant_id || "") === String(button.dataset.id)
+                );
+                if (row) act(button.dataset.a, row);
+            });
+        });
+    }
+
+    async function load() {
+        const L = $("moduleLoading");
+        const W = $("moduleTableWrap");
+        if (!L || !W) return;
+
+        L.hidden = false;
+        W.hidden = true;
+
+        try {
+            let data = [];
+
+            if (section === "products") {
+                const r = await C.from("products").select("*").order("display_order", { ascending: true }).limit(1000);
+                if (r.error) throw r.error;
+                data = r.data || [];
+            } else if (section === "orders") {
+                const r = await C.from("orders").select("*").order("created_at", { ascending: false }).limit(1000);
+                if (r.error) throw r.error;
+                data = r.data || [];
+            } else if (section === "customers") {
+                const r = await C.from("customers").select("*").order("created_at", { ascending: false }).limit(1000);
+                if (r.error) throw r.error;
+                data = r.data || [];
+            } else if (section === "payments") {
+                const r = await C.rpc("admin_get_payments");
+                if (r.error) throw r.error;
+                data = r.data || [];
+            } else if (section === "inventory") {
+                const r = await C.rpc("admin_get_inventory");
+                if (r.error) throw r.error;
+                data = r.data || [];
+            } else if (section === "coupons") {
+                const r = await C.from("coupons").select("*").order("created_at", { ascending: false }).limit(1000);
+                if (r.error) throw r.error;
+                data = r.data || [];
+            } else if (section === "reviews") {
+                const r = await C.rpc("admin_get_reviews");
+                if (r.error) throw r.error;
+                data = r.data || [];
+            } else if (section === "delivery") {
+                const [a, b] = await Promise.all([
+                    C.from("delivery_settings").select("*").order("created_at", { ascending: false }),
+                    C.from("delivery_zones").select("*").order("created_at", { ascending: false })
+                ]);
+                if (a.error) throw a.error;
+                if (b.error) throw b.error;
+                data = [
+                    ...(a.data || []).map(x => ({ ...x, record_type: "setting" })),
+                    ...(b.data || []).map(x => ({ ...x, record_type: "zone" }))
+                ];
+            } else if (section === "audit") {
+                const [legacy, rich, login] = await Promise.all([
+                    C.rpc("admin_get_audit_logs"),
+                    C.from("admin_activity_logs").select("*").order("created_at", { ascending: false }).limit(1000),
+                    C.from("admin_login_activity").select("*").order("created_at", { ascending: false }).limit(1000)
+                ]);
+
+                if (legacy.error) throw legacy.error;
+
+                data = [
+                    ...(legacy.data || []).map(x => ({ ...x, source: "database_audit" })),
+                    ...(rich.error ? [] : (rich.data || []).map(x => ({ ...x, source: "admin_activity" }))),
+                    ...(login.error ? [] : (login.data || []).map(x => ({ ...x, source: "login_activity", module: "auth" })))
+                ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            } else if (section === "settings") {
+                await settings();
+                return;
+            }
+
+            rows = data;
+            window.munambamModuleExportRows = window.munambamModuleExportRows || {};
+            delete window.munambamModuleExportRows[section];
+            $("moduleCount").textContent = `${data.length.toLocaleString("en-IN")} records`;
+
+            if (section === "audit") {
+                window.munambamAuditExportRows = rows.slice();
+                auditFilters();
+            } else {
+                window.munambamAuditExportRows = null;
+            }
+
+            render();
+        } catch (error) {
+            L.hidden = true;
+            W.hidden = false;
+            W.innerHTML = `
+                <div class="module-error">
+                    <strong>Unable to load ${esc(META[section]?.[0] || section)}</strong>
+                    <p>${esc(error?.message || "Supabase request failed.")}</p>
+                    <button id="retryModule" class="module-btn primary" type="button">Try Again</button>
                 </div>
+            `;
+            $("retryModule")?.addEventListener("click", load);
+        }
+    }
 
+    function modal(html) {
+        $("munambamModuleModal")?.remove();
+        const overlay = document.createElement("div");
+        overlay.id = "munambamModuleModal";
+        overlay.className = "module-modal-overlay";
+        overlay.innerHTML = `<div class="module-modal">${html}</div>`;
+        document.body.appendChild(overlay);
+        overlay.addEventListener("click", event => {
+            if (event.target === overlay || event.target.closest("[data-close-modal]")) {
+                overlay.remove();
+            }
+        });
+    }
 
-                <form
-                    id="productForm"
-                    class="module-form product-form"
-                >
+    const F = (name, label, value = "", type = "text", attrs = "") => `
+        <label>
+            <span>${label}</span>
+            <input name="${name}" type="${type}" value="${esc(value)}" ${attrs}>
+        </label>
+    `;
 
-                    <label>
-
-                        <span>Product Name</span>
-
-                        <input
-                            name="name"
-                            required
-                            value="${escapeHTML(
-                                row?.name || ""
-                            )}"
-                        >
-
-                    </label>
-
-
-                    <label>
-
-                        <span>Slug</span>
-
-                        <input
-                            name="slug"
-                            required
-                            value="${escapeHTML(
-                                row?.slug || ""
-                            )}"
-                        >
-
-                    </label>
-
-
-                    <label>
-
-                        <span>Category</span>
-
-                        <input
-                            name="category"
-                            value="${escapeHTML(
-                                row?.category || ""
-                            )}"
-                        >
-
-                    </label>
-
-
-                    <label>
-
-                        <span>Short Description</span>
-
-                        <textarea
-                            name="short_description"
-                            rows="3"
-                        >${escapeHTML(
-                            row?.short_description || ""
-                        )}</textarea>
-
-                    </label>
-
-
-                    <label>
-
-                        <span>Description</span>
-
-                        <textarea
-                            name="description"
-                            rows="5"
-                        >${escapeHTML(
-                            row?.description || ""
-                        )}</textarea>
-
-                    </label>
-
-
-                    <div class="product-form-section">
-
-                        <div class="product-form-section-head">
-
-                            <div>
-
-                                <strong>Product Photos</strong>
-
-                                <span>Main photo + up to 4 additional photos</span>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="product-photo-grid">
-
-                            <label class="product-photo-field product-photo-main">
-
-                                <span>Main Product Photo</span>
-
-                                <input
-                                    name="main_image_file"
-                                    type="file"
-                                    accept="image/jpeg,image/png,image/webp,image/avif"
-                                >
-
-                                ${
-                                    primaryImage?.image_url
-                                        ? productImagePreview(
-                                            primaryImage.image_url,
-                                            "Current main product photo"
-                                        )
-                                        : `<span class="product-image-empty">No main photo uploaded.</span>`
-                                }
-
-                            </label>
-
-
-                            <label class="product-photo-field">
-
-                                <span>Additional Photos (maximum 4)</span>
-
-                                <input
-                                    name="additional_images"
-                                    type="file"
-                                    accept="image/jpeg,image/png,image/webp,image/avif"
-                                    multiple
-                                >
-
-                                <span class="product-upload-help">
-                                    Select up to 4 product photos.
-                                </span>
-
-                                <div class="product-existing-gallery">
-                                    ${existingGallery}
-                                </div>
-
-                            </label>
-
-                        </div>
-
-
-                        <label>
-
-                            <span>Main Image URL (optional fallback)</span>
-
-                            <input
-                                name="main_image_url"
-                                type="url"
-                                value="${escapeHTML(
-                                    row?.main_image_url || ""
-                                )}"
-                                placeholder="Use a URL only if you are not uploading a main photo"
-                            >
-
-                        </label>
-
+    function view(row) {
+        modal(`
+            <div class="module-modal-head">
+                <div><p class="eyebrow">${esc(META[section]?.[0] || section)}</p><h3>Details</h3></div>
+                <button class="modal-close" data-close-modal type="button">×</button>
+            </div>
+            <div class="detail-grid">
+                ${Object.entries(row || {}).map(([key, value]) => `
+                    <div class="detail-field">
+                        <span>${esc(key.replace(/_/g, " "))}</span>
+                        <strong>${esc(typeof value === "object" ? JSON.stringify(value) : value ?? "—")}</strong>
                     </div>
+                `).join("")}
+            </div>
+        `);
+    }
 
+    function product(row = null) {
+        modal(`
+            <div class="module-modal-head">
+                <div><p class="eyebrow">PRODUCTS</p><h3>${row ? "Edit" : "Add"} Product</h3></div>
+                <button class="modal-close" data-close-modal type="button">×</button>
+            </div>
+            <form id="moduleForm" class="module-form">
+                ${F("name", "Name", row?.name || "", "text", "required")}
+                ${F("slug", "Slug", row?.slug || "", "text", "required")}
+                ${F("category", "Category", row?.category || "")}
+                ${F("main_image_url", "Image URL", row?.main_image_url || "", "url")}
+                <label><span>Short Description</span><textarea name="short_description" rows="3">${esc(row?.short_description || "")}</textarea></label>
+                <label><span>Description</span><textarea name="description" rows="5">${esc(row?.description || "")}</textarea></label>
+                <div class="form-grid-2">
+                    ${F("display_order", "Display Order", row?.display_order ?? 0, "number", 'min="0"')}
+                    <label><span>Active</span><select name="is_active"><option value="true" ${row?.is_active !== false ? "selected" : ""}>Active</option><option value="false" ${row?.is_active === false ? "selected" : ""}>Inactive</option></select></label>
+                    <label><span>Featured</span><select name="is_featured"><option value="false" ${row?.is_featured ? "" : "selected"}>No</option><option value="true" ${row?.is_featured ? "selected" : ""}>Yes</option></select></label>
+                </div>
+                <div class="form-actions"><button class="module-btn secondary" type="button" data-close-modal>Cancel</button><button class="module-btn primary" type="submit">${row ? "Save Changes" : "Create Product"}</button></div>
+            </form>
+        `);
 
-                    <div class="product-form-section">
+        $("moduleForm").onsubmit = async event => {
+            event.preventDefault();
+            const f = new FormData(event.target);
+            const r = await C.rpc("admin_save_product", {
+                p_id: row?.id || null,
+                p_name: f.get("name"),
+                p_slug: f.get("slug"),
+                p_short_description: f.get("short_description") || null,
+                p_description: f.get("description") || null,
+                p_category: f.get("category") || null,
+                p_main_image_url: f.get("main_image_url") || null,
+                p_display_order: Number(f.get("display_order") || 0),
+                p_is_active: f.get("is_active") === "true",
+                p_is_featured: f.get("is_featured") === "true"
+            });
+            if (r.error) return toast(r.error.message, "error");
+            await audit(row ? "update" : "create", "products", row?.id || null);
+            $("munambamModuleModal")?.remove();
+            toast(row ? "Product updated." : "Product created.", "success");
+            await load();
+        };
+    }
 
-                        <div class="product-form-section-head">
+    function coupon(row = null) {
+        modal(`
+            <div class="module-modal-head">
+                <div><p class="eyebrow">COUPONS</p><h3>${row ? "Edit" : "New"} Coupon</h3></div>
+                <button class="modal-close" data-close-modal type="button">×</button>
+            </div>
+            <form id="moduleForm" class="module-form">
+                ${F("code", "Code", row?.code || "", "text", "required")}
+                ${F("title", "Title", row?.title || "")}
+                <label><span>Description</span><textarea name="description" rows="3">${esc(row?.description || "")}</textarea></label>
+                <div class="form-grid-2">
+                    <label><span>Discount Type</span><select name="discount_type"><option value="fixed" ${row?.discount_type === "percentage" ? "" : "selected"}>Fixed</option><option value="percentage" ${row?.discount_type === "percentage" ? "selected" : ""}>Percentage</option></select></label>
+                    ${F("discount_value", "Discount Value", row?.discount_value ?? 0, "number", 'min="0" step="0.01" required')}
+                    ${F("minimum_order_amount", "Minimum Order", row?.minimum_order_amount ?? 0, "number", 'min="0" step="0.01"')}
+                    ${F("max_discount_amount", "Max Discount", row?.max_discount_amount ?? "", "number", 'min="0" step="0.01"')}
+                    ${F("usage_limit", "Usage Limit", row?.usage_limit ?? "", "number", 'min="0" step="1"')}
+                    ${F("starts_at", "Starts At", row?.starts_at ? String(row.starts_at).slice(0,16) : "", "datetime-local")}
+                    ${F("expires_at", "Expires At", row?.expires_at ? String(row.expires_at).slice(0,16) : "", "datetime-local")}
+                </div>
+                <label><span>Active</span><select name="is_active"><option value="true" ${row?.is_active !== false ? "selected" : ""}>Active</option><option value="false" ${row?.is_active === false ? "selected" : ""}>Inactive</option></select></label>
+                <div class="form-actions"><button class="module-btn secondary" type="button" data-close-modal>Cancel</button><button class="module-btn primary" type="submit">${row ? "Save Changes" : "Create Coupon"}</button></div>
+            </form>
+        `);
 
-                            <div>
+        $("moduleForm").onsubmit = async event => {
+            event.preventDefault();
+            const f = new FormData(event.target);
+            const iso = value => value ? new Date(value).toISOString() : null;
+            const r = await C.rpc("admin_save_coupon", {
+                p_id: row?.id || null,
+                p_code: f.get("code"),
+                p_title: f.get("title") || null,
+                p_description: f.get("description") || null,
+                p_discount_type: f.get("discount_type"),
+                p_discount_value: Number(f.get("discount_value") || 0),
+                p_minimum_order_amount: Number(f.get("minimum_order_amount") || 0),
+                p_max_discount_amount: f.get("max_discount_amount") ? Number(f.get("max_discount_amount")) : null,
+                p_usage_limit: f.get("usage_limit") ? Number(f.get("usage_limit")) : null,
+                p_starts_at: iso(f.get("starts_at")),
+                p_expires_at: iso(f.get("expires_at")),
+                p_is_active: f.get("is_active") === "true"
+            });
+            if (r.error) return toast(r.error.message, "error");
+            await audit(row ? "update" : "create", "coupons", row?.id || null);
+            $("munambamModuleModal")?.remove();
+            toast(row ? "Coupon updated." : "Coupon created.", "success");
+            await load();
+        };
+    }
 
-                                <strong>Pack Sizes & Prices</strong>
+    function order(row) {
+        modal(`
+            <div class="module-modal-head"><div><p class="eyebrow">ORDER ${esc(row.order_number)}</p><h3>Update Status</h3></div><button class="modal-close" data-close-modal type="button">×</button></div>
+            <form id="moduleForm" class="module-form">
+                <label><span>Order Status</span><select name="os">${["pending","confirmed","processing","packed","shipped","delivered","cancelled","failed","refund_pending","refunded"].map(s => `<option value="${s}" ${row.order_status === s ? "selected" : ""}>${s}</option>`).join("")}</select></label>
+                <label><span>Payment Status</span><select name="ps">${["pending","authorized","paid","failed","refunded","partially_refunded"].map(s => `<option value="${s}" ${row.payment_status === s ? "selected" : ""}>${s}</option>`).join("")}</select></label>
+                <div class="form-actions"><button class="module-btn secondary" data-close-modal type="button">Cancel</button><button class="module-btn primary" type="submit">Update</button></div>
+            </form>
+        `);
+        $("moduleForm").onsubmit = async event => {
+            event.preventDefault();
+            const f = new FormData(event.target);
+            const r = await C.rpc("admin_update_order_status", {
+                p_order_id: row.id,
+                p_order_status: f.get("os"),
+                p_payment_status: f.get("ps")
+            });
+            if (r.error) return toast(r.error.message, "error");
+            await audit("update_status", "orders", row.id, {
+                order_status: f.get("os"),
+                payment_status: f.get("ps")
+            });
+            $("munambamModuleModal")?.remove();
+            toast("Order updated.", "success");
+            await load();
+        };
+    }
 
-                                <span>Enter a price for each pack you want to sell.</span>
+    function customer(row) {
+        modal(`
+            <div class="module-modal-head"><div><p class="eyebrow">CUSTOMER</p><h3>Edit Customer</h3></div><button class="modal-close" data-close-modal type="button">×</button></div>
+            <form id="moduleForm" class="module-form">
+                ${F("name", "Full Name", row.full_name, "text", "required")}
+                ${F("mobile", "Mobile", row.mobile_number, "tel", "required")}
+                ${F("email", "Email", row.email || "", "email")}
+                <label><span>Address</span><textarea name="address" rows="3" required>${esc(row.address)}</textarea></label>
+                <div class="form-grid-2">${F("city", "City", row.city, "text", "required")}${F("state", "State", row.state, "text", "required")}${F("pincode", "PIN", row.pincode, "text", "required")}${F("landmark", "Landmark", row.landmark || "")}</div>
+                <div class="form-actions"><button class="module-btn secondary" data-close-modal type="button">Cancel</button><button class="module-btn primary" type="submit">Save</button></div>
+            </form>
+        `);
+        $("moduleForm").onsubmit = async event => {
+            event.preventDefault();
+            const f = new FormData(event.target);
+            const r = await C.rpc("admin_update_customer", {
+                p_id: row.id,
+                p_full_name: f.get("name"),
+                p_mobile_number: f.get("mobile"),
+                p_email: f.get("email") || null,
+                p_address: f.get("address"),
+                p_city: f.get("city"),
+                p_state: f.get("state"),
+                p_pincode: f.get("pincode"),
+                p_landmark: f.get("landmark") || null
+            });
+            if (r.error) return toast(r.error.message, "error");
+            await audit("update", "customers", row.id);
+            $("munambamModuleModal")?.remove();
+            toast("Customer updated.", "success");
+            await load();
+        };
+    }
 
-                            </div>
+    function stock(row) {
+        modal(`
+            <div class="module-modal-head"><div><p class="eyebrow">INVENTORY</p><h3>Adjust Stock</h3></div><button class="modal-close" data-close-modal type="button">×</button></div>
+            <form id="moduleForm" class="module-form">
+                <div class="detail-grid">
+                    <div class="detail-field"><span>Product</span><strong>${esc(row.product_name || "—")}</strong></div>
+                    <div class="detail-field"><span>Variant</span><strong>${esc(row.variant_name || row.variant_id)}</strong></div>
+                    <div class="detail-field"><span>Current Stock</span><strong>${esc(row.stock ?? 0)}</strong></div>
+                    <div class="detail-field"><span>Available Stock</span><strong>${esc(row.available_stock ?? 0)}</strong></div>
+                </div>
+                ${F("delta", "Quantity Change", "", "number", 'required step="1"')}
+                ${F("reason", "Reason", "", "text", "required")}
+                <div class="form-actions"><button class="module-btn secondary" data-close-modal type="button">Cancel</button><button class="module-btn primary" type="submit">Apply Adjustment</button></div>
+            </form>
+        `);
+        $("moduleForm").onsubmit = async event => {
+            event.preventDefault();
+            const f = new FormData(event.target);
+            const delta = Number(f.get("delta"));
+            if (!Number.isInteger(delta) || delta === 0) return toast("Enter a non-zero whole number.", "error");
+            const r = await C.rpc("admin_adjust_inventory", {
+                p_variant_id: row.variant_id,
+                p_delta: delta,
+                p_reason: f.get("reason")
+            });
+            if (r.error) return toast(r.error.message, "error");
+            await audit("adjust_stock", "inventory", row.id, { delta, reason: f.get("reason") });
+            $("munambamModuleModal")?.remove();
+            toast("Stock updated.", "success");
+            await load();
+        };
+    }
 
-                        </div>
+    function deliveryChoice() {
+        modal(`
+            <div class="module-modal-head"><div><p class="eyebrow">DELIVERY</p><h3>Add Delivery</h3></div><button class="modal-close" data-close-modal type="button">×</button></div>
+            <div class="form-actions" style="padding:20px; justify-content:stretch">
+                <button id="addDeliverySetting" class="module-btn primary" type="button">Delivery Setting</button>
+                <button id="addDeliveryZone" class="module-btn secondary" type="button">Delivery Zone</button>
+            </div>
+        `);
+        $("addDeliverySetting").onclick = () => deliverySetting();
+        $("addDeliveryZone").onclick = () => deliveryZone();
+    }
 
+    function deliverySetting(row = null) {
+        modal(`
+            <div class="module-modal-head"><div><p class="eyebrow">DELIVERY SETTINGS</p><h3>${row ? "Edit" : "Add"} Setting</h3></div><button class="modal-close" data-close-modal type="button">×</button></div>
+            <form id="moduleForm" class="module-form">
+                ${F("name", "Name", row?.name || "Kerala Delivery", "text", "required")}
+                ${F("min_order_amount", "Minimum Order", row?.min_order_amount ?? 0, "number", 'min="0" step="0.01"')}
+                ${F("delivery_fee", "Delivery Fee", row?.delivery_fee ?? 0, "number", 'min="0" step="0.01"')}
+                ${F("free_delivery_above", "Free Delivery Above", row?.free_delivery_above ?? "", "number", 'min="0" step="0.01"')}
+                <label><span>Active</span><select name="active"><option value="true" ${row?.is_active !== false ? "selected" : ""}>Active</option><option value="false" ${row?.is_active === false ? "selected" : ""}>Inactive</option></select></label>
+                <div class="form-actions"><button class="module-btn secondary" data-close-modal type="button">Cancel</button><button class="module-btn primary" type="submit">Save</button></div>
+            </form>
+        `);
+        $("moduleForm").onsubmit = async event => {
+            event.preventDefault();
+            const f = new FormData(event.target);
+            const r = await C.rpc("admin_save_delivery", {
+                p_id: row?.id || null,
+                p_name: f.get("name"),
+                p_min_order_amount: Number(f.get("min_order_amount") || 0),
+                p_delivery_fee: Number(f.get("delivery_fee") || 0),
+                p_free_delivery_above: f.get("free_delivery_above") ? Number(f.get("free_delivery_above")) : null,
+                p_is_active: f.get("active") === "true"
+            });
+            if (r.error) return toast(r.error.message, "error");
+            await audit(row ? "update" : "create", "delivery", row?.id || null);
+            $("munambamModuleModal")?.remove();
+            toast("Delivery setting saved.", "success");
+            await load();
+        };
+    }
 
-                        ${packRows}
+    function deliveryZone(row = null) {
+        modal(`
+            <div class="module-modal-head"><div><p class="eyebrow">DELIVERY ZONE</p><h3>${row ? "Edit" : "Add"} Zone</h3></div><button class="modal-close" data-close-modal type="button">×</button></div>
+            <form id="moduleForm" class="module-form">
+                ${F("zone_code", "Zone Code", row?.zone_code || "", "text", "required")}
+                ${F("name", "Zone Name", row?.name || "", "text", "required")}
+                ${F("state", "State", row?.state || "")}
+                ${F("district", "District", row?.district || "")}
+                ${F("pincode", "Pincode", row?.pincode || "")}
+                <div class="form-grid-2">
+                    ${F("base_fee", "Base Fee", row?.base_fee ?? 0, "number", 'min="0" step="0.01"')}
+                    ${F("step_fee", "Step Fee", row?.step_fee ?? 0, "number", 'min="0" step="0.01"')}
+                    ${F("eta_min_days", "ETA Min", row?.eta_min_days ?? "", "number", 'min="0" step="1"')}
+                    ${F("eta_max_days", "ETA Max", row?.eta_max_days ?? "", "number", 'min="0" step="1"')}
+                </div>
+                <label><span>Remote</span><select name="remote"><option value="false" ${row?.is_remote ? "" : "selected"}>No</option><option value="true" ${row?.is_remote ? "selected" : ""}>Yes</option></select></label>
+                <label><span>Active</span><select name="active"><option value="true" ${row?.is_active !== false ? "selected" : ""}>Active</option><option value="false" ${row?.is_active === false ? "selected" : ""}>Inactive</option></select></label>
+                <div class="form-actions"><button class="module-btn secondary" data-close-modal type="button">Cancel</button><button class="module-btn primary" type="submit">Save Zone</button></div>
+            </form>
+        `);
+        $("moduleForm").onsubmit = async event => {
+            event.preventDefault();
+            const f = new FormData(event.target);
+            const r = await C.rpc("admin_save_delivery_zone", {
+                p_id: row?.id || null,
+                p_zone_code: f.get("zone_code"),
+                p_name: f.get("name"),
+                p_state: f.get("state") || null,
+                p_district: f.get("district") || null,
+                p_pincode: f.get("pincode") || null,
+                p_base_fee: Number(f.get("base_fee") || 0),
+                p_step_fee: Number(f.get("step_fee") || 0),
+                p_eta_min_days: f.get("eta_min_days") ? Number(f.get("eta_min_days")) : null,
+                p_eta_max_days: f.get("eta_max_days") ? Number(f.get("eta_max_days")) : null,
+                p_is_remote: f.get("remote") === "true",
+                p_is_active: f.get("active") === "true"
+            });
+            if (r.error) return toast(r.error.message, "error");
+            await audit(row ? "update" : "create", "delivery_zone", row?.id || null);
+            $("munambamModuleModal")?.remove();
+            toast(row ? "Delivery zone updated." : "Delivery zone created.", "success");
+            await load();
+        };
+    }
 
+    async function deleteRecord(row) {
+        const label = section === "coupons" ? "coupon" : section === "reviews" ? "review" : section === "products" ? "product" : "record";
+        if (!confirm(`Delete this ${label} permanently?`)) return;
 
-                        <div class="product-upload-help">
-                            Leave a pack price empty if that pack should not be sold.
-                        </div>
+        let r;
+        if (section === "coupons") {
+            r = await C.rpc("admin_delete_coupon", { p_id: row.id });
+        } else if (section === "reviews") {
+            r = await C.rpc("admin_delete_review", { p_id: row.id });
+        } else if (section === "delivery" && row.record_type === "zone") {
+            r = await C.rpc("admin_delete_delivery_zone", { p_id: row.id });
+        } else if (section === "products") {
+            r = await C.from("products").delete().eq("id", row.id);
+        } else {
+            return;
+        }
 
-                    </div>
+        if (r.error) return toast(r.error.message, "error");
+        await audit("delete", section, row.id);
+        toast(`${label[0].toUpperCase()}${label.slice(1)} deleted.`, "success");
+        await load();
+    }
 
+    async function toggleCoupon(row) {
+        const r = await C.from("coupons").update({
+            is_active: !row.is_active,
+            updated_at: new Date().toISOString()
+        }).eq("id", row.id);
 
+        if (r.error) return toast(r.error.message, "error");
+        await audit("toggle", "coupons", row.id, { is_active: !row.is_active });
+        toast(row.is_active ? "Coupon deactivated." : "Coupon activated.", "success");
+        await load();
+    }
+
+    async function moderateReview(row, status) {
+        const r = await C.rpc("admin_moderate_review", {
+            p_review_id: row.id,
+            p_status: status
+        });
+        if (r.error) return toast(r.error.message, "error");
+        await audit(status === "approved" ? "approve" : "reject", "reviews", row.id);
+        toast(status === "approved" ? "Review approved." : "Review rejected.", "success");
+        await load();
+    }
+
+    function showSettingsPinGate() {
+        shell("Settings", "Protected — enter 4-digit code to continue");
+        $("moduleAdd")?.remove();
+        const L = $("moduleLoading");
+        const W = $("moduleTableWrap");
+        if (L) L.hidden = true;
+        if (!W) return;
+        W.hidden = false;
+        W.innerHTML = `
+            <form id="settingsPinForm" class="module-form settings-runtime-card" style="max-width:420px;margin:0 auto">
+                <div class="settings-section-title">
+                    <strong>Settings lock</strong>
+                    <span>Enter the 4-digit security code to open store settings, operators and PIN change.</span>
+                </div>
+                <label>
+                    <span>4-digit code</span>
+                    <input name="pin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" minlength="4" placeholder="••••" required autocomplete="one-time-code">
+                </label>
+                <div class="form-actions">
+                    <button type="submit" class="module-btn primary">Unlock Settings</button>
+                </div>
+                <div class="settings-meta">Default code is <strong>2580</strong> until you change it after unlock.</div>
+            </form>
+        `;
+        $("settingsPinForm").onsubmit = async (event) => {
+            event.preventDefault();
+            const pin = new FormData(event.target).get("pin");
+            const ok = await window.munambamOperators?.verifyPin?.(pin);
+            if (!ok) {
+                toast("Incorrect code.", "error");
+                return;
+            }
+            window.munambamOperators?.unlockSettings?.();
+            await audit("unlock", "settings", null, { method: "pin" });
+            toast("Settings unlocked.", "success");
+            settings();
+        };
+    }
+
+    function settings() {
+        shell("Settings", "Store, delivery, tax and notification settings");
+        $("moduleAdd")?.remove();
+
+        if (!window.munambamOperators?.isSettingsUnlocked?.()) {
+            showSettingsPinGate();
+            return;
+        }
+
+        const L = $("moduleLoading");
+        const W = $("moduleTableWrap");
+        const operators = window.munambamOperators?.loadOperators?.() || ["Vipinraj", "Prasoon"];
+        const activeOp = window.munambamOperators?.getActiveOperator?.() || "—";
+        const hwid = window.munambamOperators?.deviceFingerprint?.() || "—";
+
+        C.from("settings").select("*").limit(1).maybeSingle().then(async ({ data, error }) => {
+            if (error) {
+                L.hidden = true;
+                W.hidden = false;
+                W.innerHTML = `<div class="module-error"><strong>Settings could not be loaded</strong><p>${esc(error.message)}</p></div>`;
+                return;
+            }
+
+            if (!data) {
+                L.hidden = true;
+                W.hidden = false;
+                W.innerHTML = `<div class="module-empty"><strong>Settings record not found</strong><span>Create the global settings record in Supabase.</span></div>`;
+                return;
+            }
+
+            L.hidden = true;
+            W.hidden = false;
+            W.innerHTML = `
+                <form id="settingsForm" class="module-form settings-runtime-card">
+                    <div class="settings-section-title"><strong>Store Profile</strong><span>Business and administrator details</span></div>
                     <div class="form-grid-2">
+                        ${F("store_name", "Store Name", data.store_name, "text", "required")}
+                        ${F("admin_name", "Admin Name", data.admin_name)}
+                        ${F("admin_email", "Admin Email", data.admin_email || "", "email")}
+                        ${F("phone", "Phone", data.phone || "", "tel")}
+                        ${F("whatsapp", "WhatsApp", data.whatsapp || "", "tel")}
+                        ${F("currency", "Currency", data.currency || "INR")}
+                    </div>
+                    <label><span>Address</span><textarea name="address" rows="3">${esc(data.address || "")}</textarea></label>
 
-                        <label>
-
-                            <span>Active</span>
-
-                            <select name="is_active">
-
-                                <option
-                                    value="true"
-                                    ${
-                                        row?.is_active !== false
-                                            ? "selected"
-                                            : ""
-                                    }
-                                >
-                                    Active
-                                </option>
-
-                                <option
-                                    value="false"
-                                    ${
-                                        row?.is_active === false
-                                            ? "selected"
-                                            : ""
-                                    }
-                                >
-                                    Inactive
-                                </option>
-
-                            </select>
-
-                        </label>
-
-
-                        <label>
-
-                            <span>Featured</span>
-
-                            <select name="is_featured">
-
-                                <option
-                                    value="false"
-                                    ${
-                                        row?.is_featured
-                                            ? ""
-                                            : "selected"
-                                    }
-                                >
-                                    No
-                                </option>
-
-                                <option
-                                    value="true"
-                                    ${
-                                        row?.is_featured
-                                            ? "selected"
-                                            : ""
-                                    }
-                                >
-                                    Yes
-                                </option>
-
-                            </select>
-
-                        </label>
-
+                    <div class="settings-section-title"><strong>Commerce</strong><span>Tax, delivery and stock controls</span></div>
+                    <div class="form-grid-2">
+                        ${F("tax_rate", "Tax Rate (%)", data.tax_rate, "number", 'min="0" max="100" step="0.01"')}
+                        ${F("free_delivery_threshold", "Free Delivery Threshold", data.free_delivery_threshold, "number", 'min="0" step="0.01"')}
+                        ${F("low_stock_threshold", "Low Stock Threshold", data.low_stock_threshold, "number", 'min="0"')}
                     </div>
 
+                    <div class="settings-toggle-grid">
+                        <label class="settings-toggle"><input name="delivery_enabled" type="checkbox" ${data.delivery_enabled ? "checked" : ""}><span><strong>Delivery Enabled</strong><small>Allow delivery orders</small></span></label>
+                        <label class="settings-toggle"><input name="email_notifications" type="checkbox" ${data.email_notifications ? "checked" : ""}><span><strong>Email Notifications</strong><small>Administrative alerts</small></span></label>
+                        <label class="settings-toggle"><input name="order_notifications" type="checkbox" ${data.order_notifications ? "checked" : ""}><span><strong>Order Notifications</strong><small>Order activity notifications</small></span></label>
+                    </div>
 
+                    <div class="settings-section-title"><strong>Operators</strong><span>Names shown in audit logs (login identity). Device HWID still identifies the machine.</span></div>
+                    <div class="detail-grid">
+                        <div class="detail-field"><span>Active operator (this session)</span><strong>${esc(activeOp)}</strong></div>
+                        <div class="detail-field"><span>This device HWID</span><strong>${esc(hwid)}</strong></div>
+                    </div>
                     <label>
-
-                        <span>Display Order</span>
-
-                        <input
-                            name="display_order"
-                            type="number"
-                            value="${Number(
-                                row?.display_order || 0
-                            )}"
-                        >
-
+                        <span>Operator list (one name per line)</span>
+                        <textarea id="operatorsList" name="operators_list" rows="4">${esc(operators.join("\n"))}</textarea>
                     </label>
+                    <div class="form-actions" style="justify-content:flex-start">
+                        <button id="saveOperatorsBtn" type="button" class="module-btn secondary">Save operators</button>
+                    </div>
 
+                    <div class="settings-section-title"><strong>Security code</strong><span>Change the 4-digit code that protects Settings</span></div>
+                    <div class="form-grid-2">
+                        ${F("current_pin", "Current code", "", "password", 'inputmode="numeric" maxlength="4" pattern="[0-9]{4}"')}
+                        ${F("new_pin", "New 4-digit code", "", "password", 'inputmode="numeric" maxlength="4" pattern="[0-9]{4}"')}
+                    </div>
+                    <div class="form-actions" style="justify-content:flex-start">
+                        <button id="changePinBtn" type="button" class="module-btn secondary">Update security code</button>
+                        <button id="lockSettingsBtn" type="button" class="module-btn secondary">Lock settings now</button>
+                    </div>
 
                     <div class="form-actions">
-
-                        <button
-                            type="button"
-                            class="module-btn secondary"
-                            data-close-modal
-                        >
-                            Cancel
-                        </button>
-
-                        <button
-                            type="submit"
-                            class="module-btn primary"
-                        >
-                            ${
-                                editing
-                                    ? "Save Changes"
-                                    : "Create Product"
-                            }
-                        </button>
-
+                        <button id="settingsReload" type="button" class="module-btn secondary">↻ Reload</button>
+                        <button type="submit" class="module-btn primary">Save Changes</button>
                     </div>
-
+                    <div class="settings-meta">Last updated: <strong>${esc(fmtDate(data.updated_at))}</strong></div>
                 </form>
-
-            `
-        );
-
-
-        $("productForm")
-            ?.addEventListener(
-                "submit",
-                async event => {
-
-                    event.preventDefault();
-
-
-                    const form =
-                        new FormData(
-                            event.target
-                        );
-
-
-                    const submitButton =
-                        event.target.querySelector(
-                            'button[type="submit"]'
-                        );
-
-
-                    if (submitButton) {
-
-                        submitButton.disabled = true;
-
-                        submitButton.textContent = "Saving…";
-
-                    }
-
-
-                    try {
-
-                        const name =
-                            String(
-                                form.get("name") || ""
-                            ).trim();
-
-
-                        const slug =
-                            String(
-                                form.get("slug") || ""
-                            ).trim();
-
-
-                        if (!name || !slug) {
-
-                            throw new Error(
-                                "Product name and slug are required."
-                            );
-
-                        }
-
-
-                        const mainFiles =
-                            selectedImageFiles(
-                                event.target,
-                                "main_image_file"
-                            );
-
-
-                        const additionalFiles =
-                            selectedImageFiles(
-                                event.target,
-                                "additional_images"
-                            );
-
-
-                        validateImageFiles(
-                            mainFiles,
-                            "Main photo"
-                        );
-
-
-                        validateImageFiles(
-                            additionalFiles,
-                            "Additional photos"
-                        );
-
-
-                        if (mainFiles.length > 1) {
-
-                            throw new Error(
-                                "Select only one main photo."
-                            );
-
-                        }
-
-
-                        if (additionalFiles.length > 4) {
-
-                            throw new Error(
-                                "You can upload a maximum of 4 additional photos."
-                            );
-
-                        }
-
-
-                        const payload = {
-
-                            name,
-
-                            slug,
-
-                            category:
-                                String(
-                                    form.get("category") || ""
-                                ).trim() || null,
-
-                            short_description:
-                                String(
-                                    form.get("short_description") || ""
-                                ).trim() || null,
-
-                            description:
-                                String(
-                                    form.get("description") || ""
-                                ).trim() || null,
-
-                            main_image_url:
-                                String(
-                                    form.get("main_image_url") || ""
-                                ).trim() || null,
-
-                            is_active:
-                                form.get("is_active") === "true",
-
-                            is_featured:
-                                form.get("is_featured") === "true",
-
-                            display_order:
-                                Number(
-                                    form.get("display_order") || 0
-                                ),
-
-                            updated_at:
-                                new Date().toISOString()
-
-                        };
-
-
-                        let productId =
-                            row?.id || null;
-
-
-                        if (editing) {
-
-                            const { error } =
-                                await client
-                                    .from("products")
-                                    .update(payload)
-                                    .eq(
-                                        "id",
-                                        productId
-                                    );
-
-
-                            if (error) throw error;
-
-                        } else {
-
-                            const {
-                                data,
-                                error
-                            } =
-                                await client
-                                    .from("products")
-                                    .insert({
-                                        ...payload
-                                    })
-                                    .select("id")
-                                    .single();
-
-
-                            if (error) throw error;
-
-
-                            productId =
-                                data?.id || null;
-
-
-                            if (!productId) {
-
-                                throw new Error(
-                                    "Product was created but its ID was not returned."
-                                );
-
-                            }
-
-                        }
-
-
-                        const imageResult =
-                            await saveProductImages(
-                                productId,
-                                name,
-                                event.target,
-                                images
-                            );
-
-
-                        if (
-                            imageResult.mainUrl &&
-                            mainFiles.length
-                        ) {
-
-                            const { error } =
-                                await client
-                                    .from("products")
-                                    .update({
-                                        main_image_url:
-                                            imageResult.mainUrl,
-                                        updated_at:
-                                            new Date().toISOString()
-                                    })
-                                    .eq(
-                                        "id",
-                                        productId
-                                    );
-
-
-                            if (error) throw error;
-
-                        }
-
-
-                        await saveProductVariants(
-                            productId,
-                            form,
-                            variants
-                        );
-
-
-                        closeModal();
-
-
-                        toast(
-                            editing
-                                ? "Product updated."
-                                : "Product created."
-                        );
-
-
-                        await loadModuleData(
-                            "products"
-                        );
-
-
-                    } catch (error) {
-
-                        console.error(
-                            "Munambam product save:",
-                            error
-                        );
-
-
-                        toast(
-                            error?.message ||
-                            "Unable to save product."
-                        );
-
-
-                        if (submitButton) {
-
-                            submitButton.disabled = false;
-
-                            submitButton.textContent =
-                                editing
-                                    ? "Save Changes"
-                                    : "Create Product";
-
-                        }
-
-                    }
-
+            `;
+
+            $("settingsReload").onclick = () => settings();
+
+            $("saveOperatorsBtn")?.addEventListener("click", async () => {
+                const text = $("operatorsList")?.value || "";
+                const list = text.split(/\n/).map((s) => s.trim()).filter(Boolean);
+                if (!list.length) return toast("Add at least one operator name.", "error");
+                window.munambamOperators?.saveOperators?.(list);
+                await audit("update", "settings", null, { operators: list });
+                toast("Operator list saved.", "success");
+            });
+
+            $("changePinBtn")?.addEventListener("click", async () => {
+                const current = document.querySelector('[name="current_pin"]')?.value || "";
+                const next = document.querySelector('[name="new_pin"]')?.value || "";
+                const ok = await window.munambamOperators?.verifyPin?.(current);
+                if (!ok) return toast("Current code is incorrect.", "error");
+                try {
+                    await window.munambamOperators.setPin(next);
+                    await audit("update", "settings", null, { action: "pin_changed" });
+                    toast("Security code updated.", "success");
+                    document.querySelector('[name="current_pin"]').value = "";
+                    document.querySelector('[name="new_pin"]').value = "";
+                } catch (e) {
+                    toast(e.message || "Could not update code.", "error");
                 }
-            );
+            });
 
+            $("lockSettingsBtn")?.addEventListener("click", () => {
+                window.munambamOperators?.lockSettings?.();
+                toast("Settings locked.", "info");
+                showSettingsPinGate();
+            });
+
+            $("settingsForm").onsubmit = async event => {
+                event.preventDefault();
+                if (!window.munambamOperators?.isSettingsUnlocked?.()) {
+                    toast("Settings are locked.", "error");
+                    showSettingsPinGate();
+                    return;
+                }
+                const f = new FormData(event.target);
+                const r = await C.from("settings").update({
+                    store_name: f.get("store_name"),
+                    admin_name: f.get("admin_name"),
+                    admin_email: f.get("admin_email") || null,
+                    phone: f.get("phone") || null,
+                    whatsapp: f.get("whatsapp") || null,
+                    address: f.get("address") || null,
+                    currency: f.get("currency") || "INR",
+                    tax_rate: Number(f.get("tax_rate") || 0),
+                    free_delivery_threshold: Number(f.get("free_delivery_threshold") || 0),
+                    low_stock_threshold: Number(f.get("low_stock_threshold") || 0),
+                    delivery_enabled: f.has("delivery_enabled"),
+                    email_notifications: f.has("email_notifications"),
+                    order_notifications: f.has("order_notifications"),
+                    updated_at: new Date().toISOString()
+                }).eq("id", data.id);
+
+                if (r.error) return toast(r.error.message, "error");
+                await audit("update", "settings", data.id);
+                toast("Settings saved successfully.", "success");
+                settings();
+            };
+        });
     }
 
+    async function act(action, row) {
+        if (action === "view") return view(row);
+        if (action === "edit") return section === "products" ? product(row) : section === "coupons" ? coupon(row) : view(row);
+        if (action === "edit-setting") return deliverySetting(row);
+        if (action === "edit-zone") return deliveryZone(row);
+        if (action === "delete" || action === "delete-zone") return deleteRecord(row);
+        if (action === "toggle") return toggleCoupon(row);
+        if (action === "status") return order(row);
+        if (action === "customer") return customer(row);
+        if (action === "stock") return stock(row);
+        if (action === "approve") return moderateReview(row, "approved");
+        if (action === "reject") return moderateReview(row, "rejected");
+    }
 
-    function openEditForm(
-        section,
-        row
-    ) {
+    function add() {
+        if (section === "products") return product();
+        if (section === "coupons") return coupon();
+        if (section === "delivery") return deliveryChoice();
+        toast("This module is created through checkout or its dedicated workflow.", "info");
+    }
 
-        if (
-            section ===
-            "products"
-        ) {
+    async function restoreOverview() {
+        const content = $("dashboardContent");
+        if (!content) return;
 
-            openProductForm(
-                row
-            );
-
+        if (window.__munambamOverviewHTML) {
+            content.innerHTML = window.__munambamOverviewHTML;
+        } else {
+            window.location.href = "./index.html";
             return;
-
         }
 
+        if ($("pageTitle")) $("pageTitle").textContent = "Dashboard";
 
-        openView(
-            section,
-            row
+        if (typeof window.munambamLoadDashboard === "function") {
+            const range = $("salesRange");
+            const custom = $("customRange");
+            const apply = $("applySalesRange");
+
+            if (range && !range.dataset.bound) {
+                range.dataset.bound = "1";
+                range.addEventListener("change", async () => {
+                    if (range.value === "custom") {
+                        if (custom) custom.hidden = false;
+                        return;
+                    }
+                    if (custom) custom.hidden = true;
+                    try {
+                        await window.munambamLoadDashboard();
+                    } catch (e) {
+                        toast(e.message || "Could not load sales.");
+                    }
+                });
+            }
+
+            if (apply && !apply.dataset.bound) {
+                apply.dataset.bound = "1";
+                apply.addEventListener("click", async () => {
+                    try {
+                        await window.munambamLoadDashboard();
+                        if (custom) custom.hidden = true;
+                    } catch (e) {
+                        toast(e.message || "Could not load sales.");
+                    }
+                });
+            }
+
+            if ($("datePill")) {
+                $("datePill").textContent = new Date().toLocaleDateString("en-IN", {
+                    day: "2-digit", month: "short", year: "numeric"
+                });
+            }
+
+            await window.munambamLoadDashboard();
+        }
+    }
+
+    async function open() {
+        if (section === "overview") {
+            await restoreOverview();
+            return;
+        }
+
+        if ($("pageTitle")) $("pageTitle").textContent = META[section]?.[0] || "Dashboard";
+        if (section === "settings") {
+            settings();
+            return;
+        }
+
+        const addLabel = section === "delivery"
+            ? "＋ Add"
+            : ["payments", "audit"].includes(section)
+                ? null
+                : "+ Add";
+
+        shell(
+            META[section]?.[0] || section,
+            META[section]?.[1] || "",
+            addLabel
         );
 
+        await load();
     }
+
+    function navigation() {
+        document.addEventListener("click", async event => {
+            const link = event.target.closest(".nav-link[data-section]");
+            if (!link) return;
+
+            const next = link.dataset.section;
+            if (!next) return;
+
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            // Close mobile drawer after nav
+            if (window.matchMedia("(max-width:760px)").matches) {
+                document.getElementById("sidebar")?.classList.remove("open");
+                document.body.classList.remove("menu-open");
+                document.getElementById("menuBtn")?.setAttribute("aria-expanded", "false");
+            }
+
+            document.querySelectorAll(".nav-link").forEach(item =>
+                item.classList.toggle("active", item === link)
+            );
+
+            section = next;
+            search = "";
+
+            if (next === "overview") {
+                await restoreOverview();
+                return;
+            }
+
+            if (!META[next]) {
+                toast("This section is not available yet.");
+                return;
+            }
+
+            await open();
+        }, true);
+
+        document.addEventListener("click", async event => {
+            const btn = event.target.closest(".text-btn[data-section]");
+            if (!btn) return;
+
+            const next = btn.dataset.section;
+            if (!META[next] && next !== "overview") return;
+
+            event.preventDefault();
+            document.querySelectorAll(".nav-link").forEach(item =>
+                item.classList.toggle("active", item.dataset.section === next)
+            );
+            section = next;
+            search = "";
+            await open();
+        });
+    }
+
+    function globalSearch() {
+        $("globalSearch")?.addEventListener("input", event => {
+            if (section === "overview") return;
+            search = event.target.value.trim().toLowerCase();
+            render();
+        });
+    }
+
+    async function init() {
+        if (!(await auth())) return;
+        navigation();
+        globalSearch();
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init, { once: true });
+    } else {
+        init();
+    }
+})();
