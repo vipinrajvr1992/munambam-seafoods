@@ -1723,3 +1723,7 @@ footer {
         scroll-behavior: auto !important;
     }
 }
+
+
+/* Admin navigation and table drag usability */
+.admin-page-nav{display:inline-flex;align-items:center;gap:4px;margin-right:2px}.admin-page-nav button{width:30px;height:30px;padding:0;border:1px solid rgba(148,173,205,.18);border-radius:8px;background:#0d1b2d;color:#dce8f5;font:700 15px/1 system-ui,sans-serif;cursor:pointer}.admin-page-nav button:hover{background:#142944;border-color:rgba(47,134,255,.45)}.module-table-scroll{cursor:grab;touch-action:auto;overscroll-behavior:contain}.module-table-scroll.is-dragging{cursor:grabbing;user-select:none}.module-table-scroll.is-dragging *{user-select:none}@media(max-width:760px){.admin-page-nav{gap:3px}.admin-page-nav button{width:34px;height:34px}.top-actions{gap:6px}.admin-chip{min-width:0}.admin-chip>div:last-child{min-width:0}.admin-chip strong,.admin-chip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90px}.module-table-scroll{overflow-x:auto;overflow-y:visible}}
