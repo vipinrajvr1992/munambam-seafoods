@@ -359,14 +359,15 @@ nav{
     letter-spacing:.8px;
     text-transform:uppercase;
 }
-.thumbnails{
+ .thumbnails{
     display:grid;
-    grid-template-columns:repeat(5,1fr);
+    grid-template-columns:repeat(5,minmax(0,1fr));
     gap:10px;
     margin-top:12px;
 }
 .thumb{
     height:82px;
+    width:100%;
     padding:6px;
     border-radius:16px;
     border:1px solid rgba(198,154,58,.20);
@@ -375,13 +376,54 @@ nav{
     opacity:.72;
     transition:.2s ease;
 }
+button.thumb{cursor:none!important}
 .thumb.active,
 .thumb:hover{
     opacity:1;
     border-color:var(--gold);
     box-shadow:0 7px 18px rgba(198,154,58,.14);
 }
+.thumb.is-empty{
+    display:grid;
+    place-items:center;
+    opacity:.42;
+    background:rgba(255,255,255,.38);
+    border-style:dashed;
+    box-shadow:none;
+}
+.thumb.is-empty::after{
+    content:"";
+    width:18px;
+    height:18px;
+    border:1px solid rgba(104,125,149,.34);
+    border-radius:5px;
+    box-shadow:inset 0 0 0 4px rgba(104,125,149,.05);
+}
 .thumb img{width:100%;height:100%;object-fit:contain}
+
+/* Customer-visible custom pack dropdown. */
+.pack-picker{position:relative;width:100%}
+.pack-picker .pack-select{position:absolute!important;inset:0;width:100%;height:100%;opacity:0;pointer-events:none;z-index:-1}
+.pack-picker-trigger{
+    width:100%;min-height:48px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:13px 15px;border-radius:14px;border:1px solid rgba(198,154,58,.30);
+    background:#fffdf7;color:var(--navy);outline:none;font:inherit;text-align:left;cursor:none!important;
+}
+.pack-picker-trigger:focus-visible,.pack-picker.open .pack-picker-trigger{border-color:var(--gold);box-shadow:0 0 0 3px rgba(198,154,58,.12)}
+.pack-picker-trigger i{flex:0 0 auto;color:#8091a2;transition:transform .18s ease}
+.pack-picker.open .pack-picker-trigger i{transform:rotate(180deg)}
+.pack-picker-menu{
+    position:absolute;left:0;right:0;top:calc(100% + 7px);z-index:7000;padding:6px;
+    border:1px solid rgba(198,154,58,.20);border-radius:16px;background:rgba(255,253,247,.99);
+    box-shadow:0 18px 42px rgba(0,0,0,.18);backdrop-filter:blur(14px);max-height:240px;overflow:auto;display:none;
+}
+.pack-picker.open .pack-picker-menu{display:grid;gap:3px}
+.pack-picker-option{
+    width:100%;min-height:42px;padding:10px 12px;border:0;border-radius:11px;background:transparent;
+    color:var(--navy);font:inherit;font-size:.78rem;font-weight:650;text-align:left;cursor:none!important;
+}
+.pack-picker-option:hover,.pack-picker-option[aria-selected="true"]{background:rgba(198,154,58,.10)}
+@media(max-width:700px){.thumbnails{gap:6px}.pack-picker-menu{max-height:220px}}
 
 .info-card{padding:36px}
 .product-category{
@@ -2014,12 +2056,16 @@ body.nav-drawer-open {
                 <label for="packSize">Pack Size</label>
                 <span>Choose your preferred quantity</span>
             </div>
-            <select id="packSize" class="pack-select" aria-label="Select pack size">
-                <option value="default">Select pack size</option>
-                <option value="100g">100 g</option>
-                <option value="250g">250 g</option>
-                <option value="500g">500 g</option>
-            </select>
+            <div class="pack-picker" id="packPicker">
+                <select id="packSize" class="pack-select" aria-hidden="true" tabindex="-1">
+                    <option value="default">Select pack size</option>
+                </select>
+                <button type="button" class="pack-picker-trigger" id="packPickerTrigger" aria-haspopup="listbox" aria-expanded="false">
+                    <span id="packPickerValue">Select pack size</span>
+                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                </button>
+                <div class="pack-picker-menu" id="packPickerMenu" role="listbox" aria-label="Select pack size"></div>
+            </div>
 
             <div class="quantity-row">
                 <span class="quantity-label">Quantity</span>
@@ -2259,9 +2305,6 @@ body.nav-drawer-open {
     let product = null;
     let variants = [];
     let galleryImages = [];
-    let storeSettings = {
-        taxRate: null
-    };
 
     function showFatal(message) {
         const title = $("productTitle");
@@ -2286,28 +2329,6 @@ body.nav-drawer-open {
 
     function normaliseImage(url) {
         return String(url || "").trim();
-    }
-
-    async function loadStoreSettings() {
-        try {
-            const { data, error } = await supabase
-                .from("settings")
-                .select("tax_rate")
-                .limit(1)
-                .maybeSingle();
-
-            if (error) {
-                console.warn("Store settings could not be loaded:", error.message);
-                return;
-            }
-
-            const rawTax = Number(data?.tax_rate);
-            if (Number.isFinite(rawTax) && rawTax >= 0) {
-                storeSettings.taxRate = rawTax;
-            }
-        } catch (error) {
-            console.warn("Store settings lookup failed:", error);
-        }
     }
 
     async function loadProduct() {
@@ -2366,9 +2387,7 @@ body.nav-drawer-open {
             stock,
             variantByPack,
             hsn: firstVariant?.hsn_code || "—",
-            gstRate: storeSettings.taxRate !== null
-                ? storeSettings.taxRate
-                : (firstVariant ? Number(firstVariant.gst_rate) || 0 : 0),
+            gstRate: firstVariant ? Number(firstVariant.gst_rate) || 0 : 0,
         };
 
         if (!product.image && galleryImages.length) {
@@ -2439,14 +2458,17 @@ body.nav-drawer-open {
             }
         });
         const visibleImages = images.slice(0, 5);
-        thumbHost.innerHTML = visibleImages.map((item, index) => `
-            <button class="thumb${index === 0 ? " active" : ""}" type="button" data-image="${escapeHtml(item.url)}" aria-label="Product image ${index + 1}">
+        const gallerySlots = Array.from({ length: 5 }, (_, index) => visibleImages[index] || null);
+        thumbHost.innerHTML = gallerySlots.map((item, index) => item
+            ? `<button class="thumb${index === 0 ? " active" : ""}" type="button" data-image="${escapeHtml(item.url)}" aria-label="Product image ${index + 1}">
                 <img src="${escapeHtml(item.url)}" alt="${escapeHtml(item.alt)}" loading="lazy" decoding="async">
-            </button>`).join("");
+              </button>`
+            : `<div class="thumb is-empty" aria-hidden="true"></div>`
+        ).join("");
 
-        thumbHost.querySelectorAll(".thumb").forEach((thumb) => {
+        thumbHost.querySelectorAll("button.thumb").forEach((thumb) => {
             thumb.addEventListener("click", () => {
-                thumbHost.querySelectorAll(".thumb").forEach((item) => item.classList.remove("active"));
+                thumbHost.querySelectorAll("button.thumb").forEach((item) => item.classList.remove("active"));
                 thumb.classList.add("active");
                 $("mainImage").src = thumb.dataset.image;
             });
@@ -2459,6 +2481,7 @@ body.nav-drawer-open {
             const label = grams ? `${grams} g` : pack;
             return `<option value="${escapeHtml(pack)}">${escapeHtml(label)}</option>`;
         }).join("");
+        setupPackPicker();
 
         updatePriceDisplay();
         renderStock();
@@ -2481,12 +2504,9 @@ body.nav-drawer-open {
 
         if (selectedPrice !== null) {
             $("price").textContent = money(selectedPrice);
-            const applicableTaxRate = storeSettings.taxRate !== null
-                ? storeSettings.taxRate
-                : (Number(variant.gst_rate) || 0);
-            $("priceNote").textContent = `${variant.variant_name || variant.weight_grams + "g"} selling price • ${applicableTaxRate}% GST calculated separately at checkout.`;
-            $("gstRateLabel").textContent = `${applicableTaxRate}%`;
-            $("detailGst").textContent = `${applicableTaxRate}%`;
+            $("priceNote").textContent = `${variant.variant_name || variant.weight_grams + "g"} selling price • ${Number(variant.gst_rate) || 0}% GST calculated separately at checkout.`;
+            $("gstRateLabel").textContent = `${Number(variant.gst_rate) || 0}%`;
+            $("detailGst").textContent = `${Number(variant.gst_rate) || 0}%`;
             $("detailHsn").textContent = variant.hsn_code || "—";
         } else {
             $("price").textContent = fromPrice !== null ? `From ${money(fromPrice)}` : "₹ —";
@@ -2539,9 +2559,7 @@ body.nav-drawer-open {
             pack,
             quantity,
             price: Number(variant.price),
-            gstRate: storeSettings.taxRate !== null
-                ? storeSettings.taxRate
-                : (Number(variant.gst_rate) || 0),
+            gstRate: Number(variant.gst_rate) || 0,
             hsn: variant.hsn_code || "",
             sku: variant.sku || "",
             weightGrams: packWeightGrams(pack)
@@ -2565,6 +2583,64 @@ body.nav-drawer-open {
         quantity = Math.min(99, quantity + 1);
         $("qtyValue").textContent = quantity;
     });
+    function setupPackPicker() {
+        const select = $("packSize");
+        const picker = $("packPicker");
+        const trigger = $("packPickerTrigger");
+        const valueEl = $("packPickerValue");
+        const menu = $("packPickerMenu");
+        if (!select || !picker || !trigger || !valueEl || !menu) return;
+
+        menu.innerHTML = Array.from(select.options).map((option) => `
+            <button type="button" class="pack-picker-option" role="option" data-value="${escapeHtml(option.value)}" aria-selected="${option.value === select.value ? "true" : "false"}">
+                ${escapeHtml(option.textContent || option.value)}
+            </button>`).join("");
+
+        const sync = () => {
+            const selected = select.options[select.selectedIndex];
+            valueEl.textContent = selected ? selected.textContent : "Select pack size";
+            menu.querySelectorAll(".pack-picker-option").forEach((option) => {
+                option.setAttribute("aria-selected", option.dataset.value === select.value ? "true" : "false");
+            });
+        };
+
+        const close = () => {
+            picker.classList.remove("open");
+            trigger.setAttribute("aria-expanded", "false");
+        };
+
+        trigger.onclick = () => (picker.classList.contains("open") ? close() : (picker.classList.add("open"), trigger.setAttribute("aria-expanded", "true")));
+        trigger.onkeydown = (event) => {
+            if (event.key === "Enter" || event.key === " ") { event.preventDefault(); trigger.click(); }
+            if (event.key === "Escape") { event.preventDefault(); close(); }
+        };
+
+        menu.querySelectorAll(".pack-picker-option").forEach((option) => {
+            option.addEventListener("click", () => {
+                select.value = option.dataset.value;
+                select.dispatchEvent(new Event("change", { bubbles: true }));
+                close();
+                trigger.focus({ preventScroll: true });
+            });
+        });
+
+        select.addEventListener("change", sync);
+        sync();
+
+        if (!window.__munambamPackPickerDocumentHandler) {
+            document.addEventListener("click", (event) => {
+                document.querySelectorAll(".pack-picker.open").forEach((openPicker) => {
+                    if (!openPicker.contains(event.target)) {
+                        openPicker.classList.remove("open");
+                        const openTrigger = openPicker.querySelector(".pack-picker-trigger");
+                        if (openTrigger) openTrigger.setAttribute("aria-expanded", "false");
+                    }
+                });
+            });
+            window.__munambamPackPickerDocumentHandler = true;
+        }
+    }
+
     $("packSize").addEventListener("change", () => {
         const variant = selectedVariant();
         $("detailWeight").textContent = variant ? `${variant.weight_grams} g` : "Select pack";
@@ -2590,6 +2666,7 @@ body.nav-drawer-open {
             if (frame) return;
             frame = true;
             requestAnimationFrame(() => {
+                cursor.style.display = "block";
                 cursor.style.transform = `translate3d(${x - 6}px,${y - 14}px,0)`;
                 frame = false;
             });
@@ -2624,7 +2701,6 @@ body.nav-drawer-open {
     }
 
     try {
-        await loadStoreSettings();
         await loadProduct();
         renderProduct();
         updateCartCount();
@@ -2649,23 +2725,6 @@ document.addEventListener("keydown", function(e){
 });
 </script>
 
-<script>
-(function(){
-  var cursor=document.getElementById("fish-cursor");
-  if(!cursor)return;
-  var fine=window.matchMedia("(hover:hover) and (pointer:fine)").matches;
-  if(!fine){cursor.style.display="none";return;}
-  var x=0,y=0,raf=false;
-  document.addEventListener("mousemove",function(e){
-    x=e.clientX;y=e.clientY;
-    if(raf)return;raf=true;
-    requestAnimationFrame(function(){
-      cursor.style.transform="translate3d("+(x-6)+"px,"+(y-14)+"px,0)";
-      raf=false;
-    });
-  },{passive:true});
-})();
-</script>
 
 <script>
 (() => {
