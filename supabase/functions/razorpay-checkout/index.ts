@@ -289,7 +289,7 @@ function calculateGst(
     );
 
     const rate =
-      globalTaxRate !== null
+      globalTaxRate !== null && globalTaxRate > 0
         ? globalTaxRate
         : item.gst_rate;
 
@@ -461,9 +461,11 @@ async function getSettings(
   const taxValue = Number(data?.tax_rate);
 
   return {
+    // A stored value of 0 means "no global override".
+    // In that case, calculateGst() must use each variant's own gst_rate.
     taxRate:
       Number.isFinite(taxValue) &&
-      taxValue >= 0
+      taxValue > 0
         ? taxValue
         : null,
 
@@ -1121,6 +1123,10 @@ async function handleCreateOrder(
       settings.freeDeliveryThreshold,
     );
 
+  // Final payable amount is always:
+  // (subtotal - discount) + GST + delivery.
+  // GST falls back to each product variant's gst_rate when no
+  // positive global tax override is configured.
   const total = round2(
     Math.max(
       0,
