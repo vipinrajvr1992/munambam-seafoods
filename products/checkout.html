@@ -298,16 +298,12 @@ h1{
 .pin-status{margin-top:7px;color:#718398;font-size:.62rem;line-height:1.55;min-height:17px}.pin-status strong{color:var(--navy)}
 
 
-/* CHECKOUT COUPON + REQUIRED CONFIRMATION */
+/* CHECKOUT COUPON */
 .coupon-checkout{margin:12px 0 5px;padding:12px 13px;border-radius:15px;background:rgba(198,154,58,.055);border:1px solid rgba(198,154,58,.16)}
 .coupon-checkout-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .coupon-checkout-row span{color:#687d95;font-size:.66rem}
 .coupon-checkout-row strong{color:var(--navy);font-size:.69rem}
 .coupon-checkout small{display:block;margin-top:5px;color:#7a8c9e;font-size:.58rem;line-height:1.5}
-.order-confirm{display:flex;align-items:flex-start;gap:9px;margin-top:16px;padding:12px 13px;border-radius:14px;background:rgba(6,27,58,.045);border:1px solid rgba(6,27,58,.08)}
-.order-confirm input{width:17px;height:17px;flex:0 0 auto;margin:1px 0 0;accent-color:var(--gold)}
-.order-confirm label{color:#62758a;font-size:.62rem;line-height:1.55}
-.order-confirm a{color:var(--navy);font-weight:800}
 .checkout-status{margin-top:9px;color:#718398;font-size:.61rem;line-height:1.55;min-height:16px}
 
 .back-link{
@@ -2192,8 +2188,26 @@ body.nav-drawer-open {
     function renderOrder(){const cart=readCart();updateCartCount(cart);$("orderItems").innerHTML="";if(!cart.length){$("emptyState").classList.add("show");$("summaryContent").style.display="none";return}$("emptyState").classList.remove("show");$("summaryContent").style.display="block";cart.forEach(item=>{const quantity=Math.max(1,Number(item.quantity)||1),meta=fallbackMeta[item.id]||{gstRate:5,hsn:""};item.gstRate=storeSettings.taxRate!==null
             ? storeSettings.taxRate
             : (Number.isFinite(Number(item.gstRate))?Number(item.gstRate):meta.gstRate);const row=document.createElement("div");row.className="order-item";const thumb=document.createElement("div");thumb.className="order-thumb";const img=document.createElement("img");img.src=item.image||"./PRODUCT_1.webp";img.alt=item.name||"Product";thumb.appendChild(img);const info=document.createElement("div");const name=document.createElement("p");name.className="order-name";name.textContent=item.name||"Munambam Product";const metaEl=document.createElement("p");metaEl.className="order-meta";metaEl.textContent=`${item.pack||"Pack"} × ${quantity} • GST ${item.gstRate}%`;info.append(name,metaEl);const price=document.createElement("div");price.className="order-price";price.textContent=money((Number(item.price)||0)*quantity);row.append(thumb,info,price);$("orderItems").appendChild(row)});const saved=JSON.parse(localStorage.getItem("munambam_delivery_info")||"null");if(saved&&saved.pin){$("pincode").value=saved.pin;$("state").value=saved.state||"";if(!$('city').value.trim())$('city').value=saved.city||""}const quote=saved?calculateDelivery(cart,saved):null;updateSummary(cart,quote);if(saved)verifyPincode()}
-    function requiredFieldsReady(){const fields=["fullName","phone","email","address","city","district","state","pincode"];return fields.every(id=>$(id)&&$(id).value.trim())&&isValidIndianMobile($("phone").value)&&$("pincode").value.replace(/\D/g,"").length===6&&Boolean(localStorage.getItem("munambam_delivery_quote"))}
-    function updatePayState(){const ready=requiredFieldsReady(),btn=$("payBtn");btn.disabled=!ready;$("checkoutStatus").textContent=ready?"All required details are complete. You can continue to secure payment.":"Complete your delivery details and verify your PIN to continue to payment."}
+    function requiredFieldsReady(){
+        const fields=["fullName","phone","email","address","city","district","state","pincode"];
+        const complete = fields.every(id => {
+            const el = $(id);
+            return el && String(el.value || "").trim();
+        });
+        const phoneOK = isValidIndianMobile($("phone").value);
+        const pinOK = $("pincode").value.replace(/\D/g,"").length === 6;
+        const deliveryVerified = Boolean(localStorage.getItem("munambam_delivery_quote"));
+        return complete && phoneOK && pinOK && deliveryVerified;
+    }
+    function updatePayState(){
+        const ready = requiredFieldsReady();
+        const btn = $("payBtn");
+        if(!btn) return;
+        btn.disabled = !ready;
+        $("checkoutStatus").textContent = ready
+            ? "Your delivery details are complete. You can continue to secure payment."
+            : "Complete your delivery details and verify your PIN to continue to payment.";
+    }
     function validateForm(){
         const fields=[
             ["fullName","Please enter your full name."],
@@ -2341,6 +2355,7 @@ body.nav-drawer-open {
         if(paymentBusy) return;
         if(!readCart().length){showToast("Your cart is empty.");return}
         if(!validateForm()) return;
+        /* Checkout has no consent/confirmation checkbox dependency. */
         if(!window.Razorpay){showToast("Secure payment service is still loading. Please try again.");return}
 
         paymentBusy = true;
