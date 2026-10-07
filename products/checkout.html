@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <meta http-equiv="Content-Security-Policy"
-content="default-src 'self'; script-src 'self' 'unsafe-inline' https://esm.sh; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self' https://api.postalpincode.in https://ydfsglzcacagkofyefcd.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self' https://wa.me; upgrade-insecure-requests;">
+content="default-src 'self'; script-src 'self' 'unsafe-inline' https://esm.sh https://checkout.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self' https://api.postalpincode.in https://ydfsglzcacagkofyefcd.supabase.co https://api.razorpay.com https://checkout.razorpay.com; frame-src 'self' https://api.razorpay.com https://checkout.razorpay.com https://razorpay.com; object-src 'none'; base-uri 'self'; form-action 'self' https://wa.me; upgrade-insecure-requests;">
 
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="permissions-policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
@@ -1124,6 +1124,68 @@ body.nav-drawer-open {
   border-top: 1px solid rgba(198,154,58,.18) !important;
 }
 
+
+
+/* =========================================================
+   RAZORPAY PAYMENT SUCCESS OVERLAY
+   Added only for the payment result state.
+   ========================================================= */
+#munambamPaymentSuccess{
+    position:fixed;
+    inset:0;
+    z-index:2147483000;
+    display:grid;
+    place-items:center;
+    padding:24px;
+    background:rgba(3,18,39,.78);
+    backdrop-filter:blur(12px);
+}
+.mns-success-card{
+    width:min(100%,560px);
+    padding:42px 34px 34px;
+    text-align:center;
+    border-radius:30px;
+    background:linear-gradient(135deg,#fffaf0,#f7f0df);
+    border:1px solid rgba(255,255,255,.75);
+    box-shadow:0 30px 90px rgba(0,0,0,.35);
+    color:#142943;
+}
+.mns-success-icon{
+    width:72px;height:72px;margin:0 auto 18px;
+    display:grid;place-items:center;border-radius:50%;
+    background:#168dcc;color:#fff;font-size:1.6rem;
+    box-shadow:0 14px 35px rgba(22,141,204,.28);
+}
+.mns-success-eyebrow{
+    color:#c69a3a;font-size:.68rem;font-weight:800;
+    letter-spacing:2.2px;margin-bottom:8px;
+}
+.mns-success-card h2{
+    margin:0;color:#061b3a;
+    font-family:"Space Grotesk","Segoe UI",sans-serif;
+    font-size:clamp(1.7rem,4vw,2.25rem);
+}
+.mns-success-card p{
+    margin:10px auto 22px;max-width:430px;
+    color:#687d95;font-size:.82rem;line-height:1.7;
+}
+.mns-success-details{
+    display:grid;gap:1px;margin:0 0 22px;
+    border:1px solid rgba(6,27,58,.09);border-radius:16px;overflow:hidden;
+    background:rgba(6,27,58,.05);
+}
+.mns-success-details div{
+    display:flex;justify-content:space-between;gap:20px;
+    padding:12px 15px;background:rgba(255,253,247,.82);
+    text-align:left;
+}
+.mns-success-details span{color:#718398;font-size:.68rem}
+.mns-success-details strong{color:#061b3a;font-size:.72rem;word-break:break-word}
+#mnsContinueBtn{
+    width:100%;border:0;border-radius:14px;padding:14px 18px;
+    background:#c69a3a;color:#061b3a;font-weight:800;font-size:.78rem;
+    box-shadow:0 10px 25px rgba(198,154,58,.22);
+}
 </style>
 <style id="home-footer-final">
 
@@ -1665,15 +1727,11 @@ body.nav-drawer-open {
                     <i class="fa-solid fa-shield-halved"></i>
                     <div>
                         <strong>Secure online payment</strong>
-                        <span>Secure online payment will be available after your order details are confirmed.</span>
+                        <span>Pay securely with Razorpay after entering your delivery details.</span>
                     </div>
                 </div>
 
-                <div class="order-confirm">
-                    <input type="checkbox" id="orderConsent" aria-describedby="orderConsentText">
-                    <label for="orderConsent" id="orderConsentText">I confirm that the delivery details above are accurate, and I agree to the <a href="/terms/" target="_blank" rel="noopener noreferrer">Terms</a> and <a href="/privacy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.</label>
-                </div>
-                <p class="checkout-status" id="checkoutStatus" aria-live="polite">Complete all required details, verify your PIN, and confirm the order details to continue.</p>
+                <p class="checkout-status" id="checkoutStatus" aria-live="polite">Complete your delivery details and verify your PIN to continue to payment.</p>
             </div>
 
         </section>
@@ -1885,6 +1943,7 @@ body.nav-drawer-open {
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="/admin/assets/config.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 (async () => {
     "use strict";
@@ -2133,8 +2192,8 @@ body.nav-drawer-open {
     function renderOrder(){const cart=readCart();updateCartCount(cart);$("orderItems").innerHTML="";if(!cart.length){$("emptyState").classList.add("show");$("summaryContent").style.display="none";return}$("emptyState").classList.remove("show");$("summaryContent").style.display="block";cart.forEach(item=>{const quantity=Math.max(1,Number(item.quantity)||1),meta=fallbackMeta[item.id]||{gstRate:5,hsn:""};item.gstRate=storeSettings.taxRate!==null
             ? storeSettings.taxRate
             : (Number.isFinite(Number(item.gstRate))?Number(item.gstRate):meta.gstRate);const row=document.createElement("div");row.className="order-item";const thumb=document.createElement("div");thumb.className="order-thumb";const img=document.createElement("img");img.src=item.image||"./PRODUCT_1.webp";img.alt=item.name||"Product";thumb.appendChild(img);const info=document.createElement("div");const name=document.createElement("p");name.className="order-name";name.textContent=item.name||"Munambam Product";const metaEl=document.createElement("p");metaEl.className="order-meta";metaEl.textContent=`${item.pack||"Pack"} × ${quantity} • GST ${item.gstRate}%`;info.append(name,metaEl);const price=document.createElement("div");price.className="order-price";price.textContent=money((Number(item.price)||0)*quantity);row.append(thumb,info,price);$("orderItems").appendChild(row)});const saved=JSON.parse(localStorage.getItem("munambam_delivery_info")||"null");if(saved&&saved.pin){$("pincode").value=saved.pin;$("state").value=saved.state||"";if(!$('city').value.trim())$('city').value=saved.city||""}const quote=saved?calculateDelivery(cart,saved):null;updateSummary(cart,quote);if(saved)verifyPincode()}
-    function requiredFieldsReady(){const fields=["fullName","phone","email","address","city","district","state","pincode"];return fields.every(id=>$(id)&&$(id).value.trim())&&isValidIndianMobile($("phone").value)&&$("pincode").value.replace(/\D/g,"").length===6&&Boolean(localStorage.getItem("munambam_delivery_quote"))&&$("orderConsent").checked}
-    function updatePayState(){const ready=requiredFieldsReady(),btn=$("payBtn");btn.disabled=!ready;$("checkoutStatus").textContent=ready?"All required checkout details are complete. You can continue to secure payment.":"Complete all required details, verify your PIN, and confirm the order details to continue."}
+    function requiredFieldsReady(){const fields=["fullName","phone","email","address","city","district","state","pincode"];return fields.every(id=>$(id)&&$(id).value.trim())&&isValidIndianMobile($("phone").value)&&$("pincode").value.replace(/\D/g,"").length===6&&Boolean(localStorage.getItem("munambam_delivery_quote"))}
+    function updatePayState(){const ready=requiredFieldsReady(),btn=$("payBtn");btn.disabled=!ready;$("checkoutStatus").textContent=ready?"All required details are complete. You can continue to secure payment.":"Complete your delivery details and verify your PIN to continue to payment."}
     function validateForm(){
         const fields=[
             ["fullName","Please enter your full name."],
@@ -2162,16 +2221,209 @@ body.nav-drawer-open {
         if(!localStorage.getItem("munambam_delivery_quote")){
             showToast("Please verify your PIN before payment.");verifyPincode();return false;
         }
-        if(!$("orderConsent").checked){
-            $("orderConsent").focus();showToast("Please confirm your order details and policies.");return false;
-        }
         saveCustomer();
         return true;
     }
-    $("payBtn").addEventListener("click",()=>{if(!readCart().length){showToast("Your cart is empty.");return}if(!validateForm())return;showToast("Your order details are ready to continue.")});
+    const RAZORPAY_FUNCTION_URL = (window.MUNAMBAM_CONFIG && window.MUNAMBAM_CONFIG.razorpay && window.MUNAMBAM_CONFIG.razorpay.checkoutUrl)
+        || ((window.MUNAMBAM_SUPABASE_URL || "").replace(/\\/$/, "") + "/functions/v1/razorpay-checkout");
+
+    let paymentBusy = false;
+
+    function getCheckoutPayload(){
+        const cart = readCart();
+        const savedQuote = JSON.parse(localStorage.getItem("munambam_delivery_quote") || "null");
+        const coupon = selectedCoupon();
+        return {
+            action: "create_order",
+            idempotency_key: (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`),
+            customer: {
+                full_name: $("fullName").value.trim(),
+                phone: normalizeIndianMobile($("phone").value),
+                email: $("email").value.trim(),
+                address: $("address").value.trim(),
+                city: $("city").value.trim(),
+                district: $("district").value.trim(),
+                state: $("state").value.trim(),
+                pincode: $("pincode").value.replace(/\\D/g, "").slice(0, 6),
+                landmark: $("landmark").value.trim()
+            },
+            cart: cart.map(item => ({
+                product_id: item.productUuid || null,
+                product_slug: item.id || null,
+                pack: item.pack || null,
+                weight_grams: Number(item.weightGrams) || 0,
+                quantity: Math.max(1, Number(item.quantity) || 1)
+            })),
+            coupon_code: coupon?.code || null,
+            delivery_quote: savedQuote ? {
+                amount: Number(savedQuote.amount) || 0,
+                weight: Number(savedQuote.weight) || 0
+            } : null
+        };
+    }
+
+    async function createPaymentOrder(){
+        const response = await fetch(RAZORPAY_FUNCTION_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify(getCheckoutPayload())
+        });
+        const data = await response.json().catch(() => ({}));
+        if(!response.ok || !data.ok){
+            throw new Error(data.error || "Unable to create secure payment order.");
+        }
+        return data;
+    }
+
+    async function verifyPaymentOnServer(result){
+        const response = await fetch(RAZORPAY_FUNCTION_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                action: "verify_payment",
+                order_id: result.internal_order_id,
+                razorpay_order_id: result.razorpay_order_id,
+                razorpay_payment_id: result.razorpay_payment_id,
+                razorpay_signature: result.razorpay_signature
+            })
+        });
+        const data = await response.json().catch(() => ({}));
+        if(!response.ok || !data.ok){
+            throw new Error(data.error || "Payment verification failed.");
+        }
+        return data;
+    }
+
+    function showPaymentSuccess(data){
+        localStorage.setItem("munambam_purchase_completed", "1");
+        localStorage.removeItem(CART_KEY);
+        localStorage.removeItem(COUPON_KEY);
+        localStorage.removeItem("munambam_delivery_quote");
+        localStorage.removeItem("munambam_delivery_info");
+
+        const panel = document.createElement("div");
+        panel.id = "munambamPaymentSuccess";
+        panel.innerHTML = `
+            <div class="mns-success-card" role="status" aria-live="polite">
+                <div class="mns-success-icon"><i class="fa-solid fa-check"></i></div>
+                <div class="mns-success-eyebrow">PAYMENT SUCCESSFUL</div>
+                <h2>Thank you for your order.</h2>
+                <p>Your payment has been securely verified and your order is now confirmed.</p>
+                <div class="mns-success-details">
+                    <div><span>Order</span><strong>${escapeHtmlSafe(data.order_number || "—")}</strong></div>
+                    <div><span>Payment</span><strong>${escapeHtmlSafe(data.razorpay_payment_id || "—")}</strong></div>
+                    <div><span>Total</span><strong>${money(Number(data.amount) || 0)}</strong></div>
+                </div>
+                <button type="button" id="mnsContinueBtn">Continue Shopping <i class="fa-solid fa-arrow-right"></i></button>
+            </div>`;
+        document.body.appendChild(panel);
+        document.getElementById("mnsContinueBtn").addEventListener("click", () => {
+            window.location.href = "/products/";
+        });
+    }
+
+    function escapeHtmlSafe(value){
+        return String(value ?? "")
+            .replace(/&/g,"&amp;")
+            .replace(/</g,"&lt;")
+            .replace(/>/g,"&gt;")
+            .replace(/"/g,"&quot;")
+            .replace(/'/g,"&#039;");
+    }
+
+    async function startRazorpayPayment(){
+        if(paymentBusy) return;
+        if(!readCart().length){showToast("Your cart is empty.");return}
+        if(!validateForm()) return;
+        if(!window.Razorpay){showToast("Secure payment service is still loading. Please try again.");return}
+
+        paymentBusy = true;
+        const btn = $("payBtn");
+        const original = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = 'Preparing Secure Payment <i class="fa-solid fa-spinner fa-spin"></i>';
+        $("checkoutStatus").textContent = "Creating your secure Razorpay order…";
+
+        try{
+            const order = await createPaymentOrder();
+            const options = {
+                key: order.key_id,
+                amount: order.amount,
+                currency: order.currency || "INR",
+                name: "Munambam Seafoods",
+                description: order.description || "Munambam Seafoods Order",
+                order_id: order.razorpay_order_id,
+                prefill: {
+                    name: $("fullName").value.trim(),
+                    email: $("email").value.trim(),
+                    contact: normalizeIndianMobile($("phone").value)
+                },
+                notes: {
+                    order_number: order.order_number
+                },
+                theme: {
+                    color: "#c69a3a"
+                },
+                modal: {
+                    ondismiss: () => {
+                        paymentBusy = false;
+                        btn.disabled = false;
+                        btn.innerHTML = original;
+                        $("checkoutStatus").textContent = "Payment window closed. Your order is still pending and can be retried safely.";
+                    }
+                },
+                handler: async function(response){
+                    btn.disabled = true;
+                    btn.innerHTML = 'Verifying Payment <i class="fa-solid fa-spinner fa-spin"></i>';
+                    $("checkoutStatus").textContent = "Payment received. Verifying securely…";
+                    try{
+                        const verified = await verifyPaymentOnServer({
+                            internal_order_id: order.internal_order_id,
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature
+                        });
+                        showPaymentSuccess(verified);
+                    }catch(error){
+                        console.error("Payment verification error:", error);
+                        showToast(error.message || "Payment verification failed.");
+                        $("checkoutStatus").textContent = "Payment was received but verification needs attention. Please do not pay again until the order status is checked.";
+                        btn.disabled = false;
+                        btn.innerHTML = original;
+                        paymentBusy = false;
+                    }
+                }
+            };
+
+            const razorpay = new Razorpay(options);
+            razorpay.on("payment.failed", function(response){
+                console.error("Razorpay payment failed:", response.error);
+                showToast(response.error?.description || "Payment failed. Please try again.");
+                $("checkoutStatus").textContent = "Payment failed. Your order remains pending; you can retry securely.";
+                paymentBusy = false;
+                btn.disabled = false;
+                btn.innerHTML = original;
+            });
+            razorpay.open();
+        }catch(error){
+            console.error("Secure checkout error:", error);
+            showToast(error.message || "Unable to start payment.");
+            $("checkoutStatus").textContent = "We could not start secure payment. Please try again.";
+            btn.disabled = false;
+            btn.innerHTML = original;
+            paymentBusy = false;
+        }
+    }
+
+    $("payBtn").addEventListener("click", startRazorpayPayment);
     ["fullName","email","address","city","district"].forEach(id=>$(id).addEventListener("input",()=>{saveCustomer();updatePayState()}));
     $("state").addEventListener("change",updatePayState);
-    $("orderConsent").addEventListener("change",updatePayState);
     
     
     
