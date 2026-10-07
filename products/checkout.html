@@ -2041,23 +2041,57 @@ body.nav-drawer-open {
     function subtotalFor(cart){return cart.reduce((sum,item)=>sum+(Number(item.price)||0)*Math.max(1,Number(item.quantity)||1),0)}
     function selectedCoupon(){try{return JSON.parse(localStorage.getItem(COUPON_KEY)||"null")}catch{return null}}
     const CUSTOMER_KEY="munambam_customer";
+
+    /*
+      Persist the complete customer + delivery form locally.
+      Browser/password-manager autofill is also supported; the checkout
+      refreshes automatically when values appear without requiring a
+      confirmation checkbox.
+    */
     function loadSavedCustomer(){
         try{
             const saved=JSON.parse(localStorage.getItem(CUSTOMER_KEY)||"null");
             if(!saved)return;
+
             if(saved.fullName&&$("fullName"))$("fullName").value=saved.fullName;
-            if(saved.email&&$("email"))$("email").value=saved.email;
             if(saved.phone&&$("phone"))$("phone").value=normalizeIndianMobile(saved.phone);
+            if(saved.email&&$("email"))$("email").value=saved.email;
+            if(saved.address&&$("address"))$("address").value=saved.address;
+            if(saved.city&&$("city"))$("city").value=saved.city;
+            if(saved.district&&$("district"))$("district").value=saved.district;
+
+            if(saved.state&&$("state")){
+                const state=$("state");
+                const match=Array.from(state.options).find(
+                    o=>o.value===saved.state || o.textContent.trim()===saved.state
+                );
+                if(match)state.value=match.value;
+            }
+
+            if(saved.pincode&&$("pincode")){
+                $("pincode").value=String(saved.pincode).replace(/\D/g,"").slice(0,6);
+            }
+            if(saved.landmark&&$("landmark"))$("landmark").value=saved.landmark;
         }catch{}
     }
+
     function saveCustomer(){
         const data={
             fullName:$("fullName").value.trim(),
+            phone:normalizeIndianMobile($("phone").value),
             email:$("email").value.trim(),
-            phone:normalizeIndianMobile($("phone").value)
+            address:$("address").value.trim(),
+            city:$("city").value.trim(),
+            district:$("district").value.trim(),
+            state:$("state").value.trim(),
+            pincode:$("pincode").value.replace(/\D/g,"").slice(0,6),
+            landmark:$("landmark").value.trim()
         };
-        if(data.fullName||data.email||data.phone)localStorage.setItem(CUSTOMER_KEY,JSON.stringify(data));
+        if(Object.values(data).some(Boolean)){
+            localStorage.setItem(CUSTOMER_KEY,JSON.stringify(data));
+        }
     }
+
     function getCoupon(code){return couponCatalog.find(c=>c.code===code)||null}
     function couponEligibility(coupon,subtotal){
         if(!coupon)return {ok:false};
@@ -2197,7 +2231,10 @@ body.nav-drawer-open {
         const phoneOK = isValidIndianMobile($("phone").value);
         const pinOK = $("pincode").value.replace(/\D/g,"").length === 6;
         const deliveryVerified = Boolean(localStorage.getItem("munambam_delivery_quote"));
-        return complete && phoneOK && pinOK && deliveryVerified;
+        const cartReady = readCart().length > 0;
+
+        /* Never enable payment when there are no cart items. */
+        return cartReady && complete && phoneOK && pinOK && deliveryVerified;
     }
     function updatePayState(){
         const ready = requiredFieldsReady();
@@ -2239,7 +2276,7 @@ body.nav-drawer-open {
         return true;
     }
     const RAZORPAY_FUNCTION_URL = (window.MUNAMBAM_CONFIG && window.MUNAMBAM_CONFIG.razorpay && window.MUNAMBAM_CONFIG.razorpay.checkoutUrl)
-        || ((window.MUNAMBAM_SUPABASE_URL || "").replace(/\\/$/, "") + "/functions/v1/razorpay-checkout");
+        || ((window.MUNAMBAM_SUPABASE_URL || "").replace(/\/$/, "") + "/functions/v1/razorpay-checkout");
 
     let paymentBusy = false;
 
@@ -2258,7 +2295,7 @@ body.nav-drawer-open {
                 city: $("city").value.trim(),
                 district: $("district").value.trim(),
                 state: $("state").value.trim(),
-                pincode: $("pincode").value.replace(/\\D/g, "").slice(0, 6),
+                pincode: $("pincode").value.replace(/\D/g, "").slice(0, 6),
                 landmark: $("landmark").value.trim()
             },
             cart: cart.map(item => ({
@@ -2437,26 +2474,84 @@ body.nav-drawer-open {
     }
 
     $("payBtn").addEventListener("click", startRazorpayPayment);
-    ["fullName","email","address","city","district"].forEach(id=>$(id).addEventListener("input",()=>{saveCustomer();updatePayState()}));
-    $("state").addEventListener("change",updatePayState);
-    
-    
-    
-    
+
     function applyPhoneNormalize(){
         const el=$("phone");
         if(!el)return;
         const n=normalizeIndianMobile(el.value);
         if(el.value!==n)el.value=n;
-        updatePayState();
         saveCustomer();
+        updatePayState();
     }
+
+    function refreshCheckoutState(){
+        saveCustomer();
+        const cart=readCart();
+        const savedInfo=JSON.parse(localStorage.getItem("munambam_delivery_info")||"null");
+        const savedQuote=JSON.parse(localStorage.getItem("munambam_delivery_quote")||"null");
+        const quote=savedInfo ? calculateDelivery(cart,savedInfo) : savedQuote;
+        updateSummary(cart,quote);
+        updatePayState();
+    }
+
+    ["fullName","email","address","city","district","landmark"].forEach(id=>{
+        const field=$(id);
+        if(!field)return;
+        field.addEventListener("input",()=>{saveCustomer();updatePayState()});
+        field.addEventListener("change",()=>{saveCustomer();updatePayState()});
+        field.addEventListener("blur",()=>{saveCustomer();updatePayState()});
+    });
+
+    $("state").addEventListener("change",()=>{saveCustomer();updatePayState()});
+
     $("phone").addEventListener("input",applyPhoneNormalize);
     $("phone").addEventListener("blur",applyPhoneNormalize);
     $("phone").addEventListener("change",applyPhoneNormalize);
-    $("phone").addEventListener("paste",function(){setTimeout(applyPhoneNormalize,0);});
+    $("phone").addEventListener("paste",()=>setTimeout(applyPhoneNormalize,0));
 
-    $("pincode").addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,6);if(e.target.value.length===6)verifyPincode();else{localStorage.removeItem("munambam_delivery_quote");$("pinStatus").textContent="Enter a valid 6-digit PIN to verify the delivery zone and estimated charge.";updateSummary(readCart(),null)}});
+    $("pincode").addEventListener("input",e=>{
+        e.target.value=e.target.value.replace(/\D/g,"").slice(0,6);
+        saveCustomer();
+
+        if(e.target.value.length===6){
+            verifyPincode();
+        }else{
+            localStorage.removeItem("munambam_delivery_quote");
+            $("pinStatus").textContent="Enter a valid 6-digit PIN to verify the delivery zone and estimated charge.";
+            updateSummary(readCart(),null);
+        }
+    });
+
+    /*
+      Chrome/password-manager autofill can populate fields without firing
+      normal input/change events. A short post-load sync catches those values
+      and refreshes the checkout automatically.
+    */
+    function startAutofillSync(){
+        const passes=[80,180,350,700,1200,2000];
+
+        passes.forEach(delay=>{
+            setTimeout(()=>{
+                applyPhoneNormalize();
+
+                const pin=$("pincode").value.replace(/\D/g,"").slice(0,6);
+                if(pin.length===6){
+                    const savedQuote=localStorage.getItem("munambam_delivery_quote");
+                    let savedInfo=null;
+                    try{savedInfo=JSON.parse(localStorage.getItem("munambam_delivery_info")||"null")}catch{}
+
+                    if(!savedQuote || !savedInfo || String(savedInfo.pin||"")!==pin){
+                        verifyPincode();
+                    }else{
+                        refreshCheckoutState();
+                    }
+                }else{
+                    refreshCheckoutState();
+                }
+            },delay);
+        });
+    }
+
     function showToast(message){$("toast").textContent=message;$("toast").classList.add("show");clearTimeout(window.__munambamToast);window.__munambamToast=setTimeout(()=>$('toast').classList.remove("show"),2500)}
     const cursor=$("fish-cursor"),mouseDevice=window.matchMedia("(hover:hover) and (pointer:fine)").matches;if(cursor&&mouseDevice){let x=0,y=0,frame=false;document.addEventListener("mousemove",e=>{x=e.clientX;y=e.clientY;if(frame)return;frame=true;requestAnimationFrame(()=>{cursor.style.transform=`translate3d(${x-6}px,${y-14}px,0)`;frame=false;});},{passive:true});}
     const ocean=$("oceanLayer"),creatureData=[["shark",110,17,46000,-9000,"/assets/icon/icon-shark.svg"],["fish",38,27,33000,-15000,"/assets/icon/icon-fish.svg"],["prawn",32,36,37000,-6000,"/assets/icon/icon-prawn.svg"],["octopus",58,46,41000,-19000,"/assets/icon/icon-octopus.svg"]];if(ocean&&!window.matchMedia("(prefers-reduced-motion:reduce)").matches){creatureData.forEach((item,index)=>{const el=document.createElement("div");el.className="creature";el.style.width=`${item[1]}px`;el.style.height=`${item[1]}px`;el.style.top=`${item[2]}vh`;el.style.left=item[0]==="shark"?"110%":"-120px";el.style.animation=`swim${index} ${item[3]}ms linear ${item[4]}ms infinite`;el.innerHTML=`<img src="${item[5]}" alt="">`;ocean.appendChild(el);const style=document.createElement("style"),to=item[0]==="shark"?"translateX(-125vw)":"translateX(125vw)";style.textContent=`@keyframes swim${index}{from{transform:translateX(0)}to{transform:${to}}}`;document.head.appendChild(style);});}
@@ -2464,8 +2559,28 @@ body.nav-drawer-open {
     loadSavedCustomer();
     applyPhoneNormalize();
     renderOrder();
+    updatePayState();
+    startAutofillSync();
+
+    window.addEventListener("pageshow",()=>{
+        renderOrder();
+        updatePayState();
+        startAutofillSync();
+    });
+
+    document.addEventListener("visibilitychange",()=>{
+        if(!document.hidden){
+            renderOrder();
+            updatePayState();
+            startAutofillSync();
+        }
+    });
+
     window.addEventListener("storage",event=>{
-        if(event.key===CART_KEY||event.key===COUPON_KEY)renderOrder();
+        if(event.key===CART_KEY||event.key===COUPON_KEY){
+            renderOrder();
+            updatePayState();
+        }
     });
 })();
 </script>
